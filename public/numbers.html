@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Admin – Nummern erstellen</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__title">Nummern erstellen</div>
+      <div class="brand__subtitle">Jede Nummer ist 10 Minuten gültig</div>
+    </div>
+    <div class="row row--wrap row--end">
+      <a class="btn" href="/admin">Bestellungen</a>
+      <a class="btn" href="/access.html">Kundenzugang</a>
+      <button id="logoutBtn" class="btn">Abmelden</button>
+      <button id="refreshBtn" class="btn btn--primary">Aktualisieren</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid2">
+      <section class="card">
+        <div class="card__header">
+          <h2>Neue Nummer</h2>
+        </div>
+        <div class="list stack">
+          <button id="createNumberBtn" class="btn btn--primary">Nummer freigeben</button>
+          <div class="muted small">Mit dieser Nummer kann der Kunde die Speisekarte öffnen.</div>
+          <div id="createInfo" class="small muted"></div>
+          <div id="createError" class="small err"></div>
+          <div id="lastCreatedBox" class="numberCard hidden">
+            <div class="numberCard__value" id="lastCreatedNumber">----</div>
+            <div class="numberCard__meta" id="lastCreatedMeta"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card__header">
+          <h2>Aktive Nummern</h2>
+          <span id="activeCount" class="badge">0</span>
+        </div>
+        <div id="accessNumbersList" class="list"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="/numbers.js?v=2"></script>
+</body>
+</html>

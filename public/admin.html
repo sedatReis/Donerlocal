@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Admin – Bestellungen</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__title">Bestellübersicht</div>
+      <div class="brand__subtitle">Küche: offene Bestellungen zuerst, automatische Löschung nach 15 Minuten</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="/numbers.html">Nummern erstellen</a>
+      <a class="btn" href="/completed.html" target="_blank" rel="noopener">Erledigt-Bildschirm</a>
+      <a id="customerViewLink" class="btn" href="/access.html">Kundenzugang</a>
+      <button id="logoutBtn" class="btn">Abmelden</button>
+      <button id="refreshBtn" class="btn btn--primary">Aktualisieren</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid2 adminOrdersGrid">
+      <section class="card">
+        <div class="card__header">
+          <h2>Offen</h2>
+          <span id="pendingCount" class="badge">0</span>
+        </div>
+        <div id="pendingList" class="list"></div>
+      </section>
+
+      <section class="card">
+        <div class="card__header">
+          <h2>Erledigt</h2>
+          <span id="doneCount" class="badge">0</span>
+        </div>
+        <div id="doneList" class="list"></div>
+      </section>
+    </div>
+
+    <p class="muted small" style="margin-top:16px">
+      Hinweis: Oben stehen immer die ältesten offenen Bestellungen, damit nichts untergeht.
+    </p>
+  </main>
+
+  <script src="/admin.js?v=7"></script>
+</body>
+</html>

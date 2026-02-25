@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Admin-Anmeldung</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .login-wrap{max-width:460px;margin:36px auto}
+    .login-form{display:grid;gap:12px}
+    .field{display:grid;gap:6px}
+    .err{color:#ff8f95;min-height:18px}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__title">Admin-Anmeldung</div>
+      <div class="brand__subtitle">Nur mit Zugangsdaten</div>
+    </div>
+    <a class="btn" href="/access.html">Kundenzugang</a>
+  </header>
+
+  <main class="container">
+    <section class="card login-wrap">
+      <div class="card__header">
+        <h2>Anmelden</h2>
+      </div>
+      <div class="list">
+        <form id="loginForm" class="login-form">
+          <label class="field" for="usernameInput">
+            <span>Benutzername</span>
+            <input id="usernameInput" class="input" autocomplete="username" />
+          </label>
+
+          <label class="field" for="passwordInput">
+            <span>Passwort</span>
+            <input id="passwordInput" class="input" type="password" autocomplete="current-password" />
+          </label>
+
+          <div id="errorBox" class="small err"></div>
+          <button id="loginBtn" type="submit" class="btn btn--primary btn--full">Einloggen</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="/admin-login.js?v=2"></script>
+</body>
+</html>

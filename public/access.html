@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Zugangsnummer</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__title">Zugangsnummer</div>
+      <div class="brand__subtitle">Bitte Nummer eingeben, um bestellen zu können</div>
+    </div>
+    <a class="btn" href="/admin-login.html">Admin</a>
+  </header>
+
+  <main class="container">
+    <section class="card panel panel--narrow">
+      <div class="card__header">
+        <h2>Geben Sie ihre Nummer ein um zu bestellen</h2>
+      </div>
+      <div class="list">
+        <form id="verifyForm" class="stack">
+          <label for="numberInput" class="field">
+            <span>Freigegebene Bestellnummer</span>
+            <input
+              id="numberInput"
+              class="input"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              autocomplete="one-time-code"
+              placeholder="z.B. 4821"
+              autofocus
+            />
+          </label>
+          <div class="muted small">Ohne diese Nummer kannst du nicht bestellen. Die Nummer wird vom System erstellt und ist 10 Minuten gültig.</div>
+          <div id="errorBox" class="small err"></div>
+          <button id="verifyBtn" type="submit" class="btn btn--primary btn--full">Mit Nummer zur Speisekarte</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="/access.js?v=3"></script>
+</body>
+</html>

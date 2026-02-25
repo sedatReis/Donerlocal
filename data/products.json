@@ -1,0 +1,174 @@
+{
+  "currency": "EUR",
+  "categories": [
+    {
+      "id": "chicken_veal",
+      "title": "HÜHNER & KALBFLEISCH",
+      "items": [
+        {
+          "id": "doner",
+          "name": "Döner",
+          "price": 4.5,
+          "image": "img/doner.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "doner_box",
+          "name": "Döner Box",
+          "price": 5.0,
+          "image": "img/doner-box.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "durum",
+          "name": "Dürüm",
+          "price": 6.0,
+          "image": "img/durum.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "lahmacun",
+          "name": "Lahmacun",
+          "price": 7.0,
+          "image": "img/lahmacun.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "doner_teller",
+          "name": "Döner Teller",
+          "price": 9.5,
+          "image": "img/doner-teller.png",
+          "optionsEnabled": true
+        }
+      ]
+    },
+    {
+      "id": "steak",
+      "title": "STEAKFLEISCH",
+      "items": [
+        {
+          "id": "steak_doner",
+          "name": "Steak Döner",
+          "price": 6.0,
+          "image": "img/doner.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "steak_doner_box_klein",
+          "name": "Steak Döner Box-Klein",
+          "price": 6.0,
+          "image": "img/doner-box.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "steak_durum",
+          "name": "Steak Dürüm",
+          "price": 7.0,
+          "image": "img/durum.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "steak_lahmacun",
+          "name": "Steak Lahmacun",
+          "price": 8.0,
+          "image": "img/lahmacun.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "steak_teller",
+          "name": "Steak Teller",
+          "price": 12.0,
+          "image": "img/doner-teller.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "pommes",
+          "name": "Pommes",
+          "price": 2.5,
+          "image": "img/pommes.png",
+          "optionsEnabled": false
+        }
+      ]
+    },
+    {
+      "id": "pide",
+      "title": "PIDE",
+      "items": [
+        { "id": "pide_19", "number": 19, "name": "Pide mit K\u00e4se", "price": 10.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "pide_20", "number": 20, "name": "Pide mit K\u00e4se & Ei", "price": 11.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "pide_21", "number": 21, "name": "Pide mit Fleisch", "price": 12.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "pide_22", "number": 22, "name": "Pide Aksaray", "price": 12.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "pide_23", "number": 23, "name": "Pide mit D\u00f6nerfleisch", "price": 13.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "pide_24", "number": 24, "name": "Pide mit Sucuk", "price": 13.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "pide_25", "number": 25, "name": "Pide mit Sucuk & K\u00e4se", "price": 15.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "pide_26", "number": 26, "name": "Linsensuppe", "price": 5.0, "image": "img/placeholder.svg", "optionsEnabled": false }
+      ]
+    },
+    {
+      "id": "dessert",
+      "title": "NACHSPEISE",
+      "items": [
+        { "id": "dessert_27", "number": 27, "name": "Baklava Walnuss", "price": 3.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "dessert_28", "number": 28, "name": "Baklava Pistazie", "price": 4.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "dessert_29", "number": 29, "name": "Tulumba", "price": 3.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "dessert_30", "number": 30, "name": "Halka", "price": 1.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "dessert_31", "number": 31, "name": "Katmer", "price": 7.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "dessert_32", "number": 32, "name": "K\u00fcnefe", "price": 7.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "dessert_33", "number": 33, "name": "Helva", "price": 3.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "dessert_34", "number": 34, "name": "Milchreis", "price": 5.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "dessert_35", "number": 35, "name": "Kekse", "price": 3.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "dessert_36", "number": 36, "name": "Baklava Walnuss 1Kg", "price": 30.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "dessert_37", "number": 37, "name": "Baklava Pistazie 1Kg", "price": 40.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "dessert_38", "number": 38, "name": "Kekse 1KG", "price": 25.0, "image": "img/placeholder.svg", "optionsEnabled": false }
+      ]
+    },
+    {
+      "id": "falafel",
+      "title": "FALAFEL",
+      "items": [
+        { "id": "falafel_39", "number": 39, "name": "Falafel im Brot", "price": 6.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "falafel_40", "number": 40, "name": "Falafel Box", "price": 6.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "falafel_41", "number": 41, "name": "Falafel D\u00fcr\u00fcm", "price": 7.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "falafel_42", "number": 42, "name": "Falafel Lahmacun-D\u00fcr\u00fcm", "price": 8.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "falafel_43", "number": 43, "name": "Falafel-Teller", "price": 10.0, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "falafel_44", "number": 44, "name": "Pommes", "price": 2.5, "image": "img/pommes.png", "optionsEnabled": false }
+      ]
+    },
+    {
+      "id": "drinks",
+      "title": "GETR\u00c4NKE",
+      "items": [
+        { "id": "drink_45", "number": 45, "name": "Schwarzer Tee", "price": 1.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_46", "number": 46, "name": "T\u00fcrkischer Kaffee", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_47", "number": 47, "name": "Wasser", "price": 1.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_48", "number": 48, "name": "Ayran", "price": 1.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_49", "number": 49, "name": "Limonade", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_50", "number": 50, "name": "Cola / Zero", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_51", "number": 51, "name": "Cola Turka", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_52", "number": 52, "name": "Fanta / Exotic", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_53", "number": 53, "name": "Eistee Pfirsich / Zitrone", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_54", "number": 54, "name": "MezzoMix", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_55", "number": 55, "name": "Gazoz", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_56", "number": 56, "name": "Traubensaft", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_57", "number": 57, "name": "Kirsch-/Pfirsichnektar", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_58", "number": 58, "name": "Nigde Gazozu", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_59", "number": 59, "name": "Mineralwasser prickelnd", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_60", "number": 60, "name": "Uludag", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_61", "number": 61, "name": "Multivitamin", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_62", "number": 62, "name": "Frii Mandarinen / Limetten Limo", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_63", "number": 63, "name": "Kizilay Zitronen Limo", "price": 2.5, "image": "img/placeholder.svg", "optionsEnabled": false },
+        { "id": "drink_64", "number": 64, "name": "Red Bull", "price": 3.0, "image": "img/placeholder.svg", "optionsEnabled": false }
+      ]
+    }
+  ],
+  "defaultOptions": [
+    "Kopfsalat",
+    "Weißkraut",
+    "Rotkraut",
+    "Tomaten",
+    "Zwiebel",
+    "Döner-Sauce",
+    "Käse",
+    "Scharf"
+  ]
+}

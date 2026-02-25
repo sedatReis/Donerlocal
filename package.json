@@ -1,0 +1,14 @@
+{
+  "name": "doner-local-webapp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file=.env server.js",
+    "start": "node --env-file=.env server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "nanoid": "^5.0.7"
+  }
+}

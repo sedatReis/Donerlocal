@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Speisekarte</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__title">Speisekarte</div>
+      <div class="brand__subtitle">Bestellung mit freigegebener Nummer</div>
+    </div>
+    <div class="row row--wrap row--end">
+      <div id="guestMeta" class="sessionBadge hidden"></div>
+      <button id="switchNumberBtn" class="btn">Nummer wechseln</button>
+      <button id="openCartBtn" class="btn btn--primary">
+        Warenkorb <span id="cartCount" class="badge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="menu"></div>
+  </main>
+
+  <!-- Options Modal -->
+  <div id="modalBackdrop" class="backdrop hidden"></div>
+  <div id="optionsModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal__header">
+      <div>
+        <div id="modalTitle" class="modal__title"></div>
+        <div id="modalPrice" class="muted"></div>
+      </div>
+      <button class="iconbtn" id="closeOptionsBtn" aria-label="Schließen">✕</button>
+    </div>
+
+    <div class="modal__body">
+      <div id="optionsArea"></div>
+      <div class="qtyRow">
+        <span class="muted">Menge</span>
+        <div class="qty">
+          <button id="qtyMinus" class="btn">−</button>
+          <span id="qtyValue" class="qty__value">1</span>
+          <button id="qtyPlus" class="btn">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal__footer">
+      <button id="addToCartBtn" class="btn btn--primary">In den Warenkorb</button>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div id="cartDrawer" class="drawer hidden" aria-hidden="true">
+    <div class="drawer__header">
+      <div class="drawer__title">Warenkorb</div>
+      <button id="closeCartBtn" class="iconbtn" aria-label="Schließen">✕</button>
+    </div>
+
+    <div id="cartItems" class="drawer__body"></div>
+
+    <div class="drawer__footer">
+      <div class="totalRow">
+        <span>Summe</span>
+        <strong id="cartTotal">0,00 €</strong>
+      </div>
+      <button id="checkoutBtn" class="btn btn--primary btn--full">Weiter zur Bestellung</button>
+    </div>
+  </div>
+
+  <!-- Table Number Modal -->
+  <div id="tableModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal__header">
+      <div>
+        <div class="modal__title">Tischnummer</div>
+        <div class="muted">Bitte die Tischnummer für diese Bestellung eingeben.</div>
+      </div>
+      <button class="iconbtn" id="closeTableBtn" aria-label="Schließen">✕</button>
+    </div>
+    <div class="modal__body">
+      <input id="tableNumberInput" class="input" placeholder="z.B. 7" />
+      <div class="muted small" style="margin-top:8px">
+        Deine Zugangsnummer bleibt aktiv, aber die Bestellung braucht zusätzlich eine Tischnummer.
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button id="sendOrderBtn" class="btn btn--primary btn--full">Bestellung senden</button>
+    </div>
+  </div>
+
+  <div id="appNotice" class="appNotice hidden" role="status" aria-live="polite"></div>
+
+  <script src="/app.js?v=12"></script>
+</body>
+</html>

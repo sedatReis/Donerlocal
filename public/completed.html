@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Erledigte Bestellungen (5 Minuten)</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .completedScreen {
+      max-width: 1400px;
+    }
+    .completedGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 14px;
+    }
+    .completedCard {
+      background: rgba(18,19,26,.88);
+      border: 1px solid var(--line);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+    }
+    .completedCard__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .completedCard__title {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: .3px;
+    }
+    .completedCard__meta {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .completedCard__items {
+      display: grid;
+      gap: 8px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+    .completedCard__item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 18px;
+    }
+    .completedCard__name {
+      font-weight: 700;
+    }
+    .completedCard__muted {
+      color: var(--muted);
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand__title">Erledigte Bestellungen</div>
+      <div class="brand__subtitle">Anzeige der letzten 5 Minuten</div>
+    </div>
+    <div class="row row--wrap">
+      <a class="btn" href="/admin.html">Admin</a>
+      <button id="refreshBtn" class="btn btn--primary">Aktualisieren</button>
+    </div>
+  </header>
+
+  <main class="container completedScreen">
+    <div class="card">
+      <div class="card__header">
+        <h2>Erledigt (letzte 5 Minuten)</h2>
+        <span id="doneCount" class="badge">0</span>
+      </div>
+      <div id="doneList" class="completedGrid"></div>
+    </div>
+  </main>
+
+  <script src="/completed.js?v=1"></script>
+</body>
+</html>
