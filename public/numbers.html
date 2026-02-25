@@ -3,51 +3,129 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Admin – Nummern erstellen</title>
+  <title>Nummer ziehen</title>
   <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .kioskShell {
+      min-height: calc(100dvh - 84px);
+      display: grid;
+      place-items: center;
+    }
+    .kioskCard {
+      width: min(760px, 100%);
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(79, 140, 255, .24);
+      background: linear-gradient(180deg, rgba(18,19,26,.92), rgba(18,19,26,.84));
+      box-shadow: 0 18px 50px rgba(0,0,0,.28);
+    }
+    .kioskHero {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .kioskHero h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 40px);
+      line-height: 1.05;
+      letter-spacing: .2px;
+    }
+    .kioskHero p {
+      margin: 10px auto 0;
+      color: var(--muted);
+      font-size: clamp(14px, 2.2vw, 17px);
+      max-width: 34ch;
+    }
+    .kioskDrawBtn {
+      width: 100%;
+      min-height: clamp(96px, 18vh, 150px);
+      border-radius: 20px;
+      border: none;
+      color: #fff;
+      font-weight: 900;
+      letter-spacing: .4px;
+      font-size: clamp(24px, 5vw, 38px);
+      cursor: pointer;
+      background: linear-gradient(135deg, rgba(79,140,255,.98), rgba(53,208,127,.9));
+      box-shadow: 0 16px 35px rgba(53,208,127,.18), inset 0 -8px 16px rgba(0,0,0,.14);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .kioskDrawBtn:disabled {
+      opacity: .72;
+      cursor: default;
+    }
+    .kioskHint {
+      text-align: center;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .kioskResult {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.02);
+      text-align: center;
+    }
+    .kioskResult__label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .kioskResult__number {
+      font-size: clamp(34px, 8vw, 58px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+    .kioskResult__meta {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 760px) {
+      .kioskCard {
+        padding: 14px;
+        border-radius: 18px;
+      }
+      .kioskDrawBtn {
+        min-height: 120px;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="topbar">
     <div class="brand">
-      <div class="brand__title">Nummern erstellen</div>
-      <div class="brand__subtitle">Jede Nummer ist 10 Minuten gültig</div>
-    </div>
-    <div class="row row--wrap row--end">
-      <a class="btn" href="/admin">Bestellungen</a>
-      <a class="btn" href="/access.html">Kundenzugang</a>
-      <button id="logoutBtn" class="btn">Abmelden</button>
-      <button id="refreshBtn" class="btn btn--primary">Aktualisieren</button>
+      <div class="brand__title">Nummer ziehen</div>
+      <div class="brand__subtitle">Kundentablet • Nummer wird automatisch gedruckt</div>
     </div>
   </header>
 
   <main class="container">
-    <div class="grid2">
-      <section class="card">
-        <div class="card__header">
-          <h2>Neue Nummer</h2>
+    <div class="kioskShell">
+      <section class="kioskCard">
+        <div class="kioskHero">
+          <h1>Nummer für Bestellung ziehen</h1>
+          <p>Tippen Sie auf den Button. Ihre Nummer wird sofort erstellt und ausgedruckt.</p>
         </div>
-        <div class="list stack">
-          <button id="createNumberBtn" class="btn btn--primary">Nummer freigeben</button>
-          <div class="muted small">Mit dieser Nummer kann der Kunde die Speisekarte öffnen.</div>
-          <div id="createInfo" class="small muted"></div>
-          <div id="createError" class="small err"></div>
-          <div id="lastCreatedBox" class="numberCard hidden">
-            <div class="numberCard__value" id="lastCreatedNumber">----</div>
-            <div class="numberCard__meta" id="lastCreatedMeta"></div>
-          </div>
-        </div>
-      </section>
 
-      <section class="card">
-        <div class="card__header">
-          <h2>Aktive Nummern</h2>
-          <span id="activeCount" class="badge">0</span>
+        <button id="createNumberBtn" class="kioskDrawBtn" type="button">NUMMER ZIEHEN</button>
+        <div class="kioskHint">Die Nummer ist 10 Minuten gültig.</div>
+
+        <div id="createInfo" class="small muted" style="text-align:center; margin-top:12px;"></div>
+        <div id="createError" class="small err" style="text-align:center;"></div>
+
+        <div id="lastCreatedBox" class="kioskResult hidden">
+          <div class="kioskResult__label">Ihre Nummer</div>
+          <div class="kioskResult__number" id="lastCreatedNumber">----</div>
+          <div class="kioskResult__meta" id="lastCreatedMeta"></div>
         </div>
-        <div id="accessNumbersList" class="list"></div>
       </section>
     </div>
   </main>
 
-  <script src="/numbers.js?v=2"></script>
+  <script src="/numbers.js?v=3"></script>
 </body>
 </html>

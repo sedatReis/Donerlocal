@@ -1158,23 +1158,22 @@ app.get("/api/admin/me", requireAdminApi, (req, res) => {
   return res.json({ ok: true, username: session?.username ?? ADMIN_USER });
 });
 
-app.post("/api/admin/access-numbers", requireAdminApi, async (req, res) => {
+async function createAndPrintAccessNumber(createdBy) {
   cleanupExpiredAccessNumbers();
   cleanupExpiredGuestSessions();
 
   const number = generateAccessNumber();
   if (!number) {
-    return res.status(503).json({ error: "No free access numbers available" });
+    return { ok: false, status: 503, error: "No free access numbers available" };
   }
 
-  const session = getAdminSession(req);
   const createdAt = nowMs();
   const entry = {
     id: nanoid(10),
     number,
     createdAt,
     expiresAt: createdAt + ACCESS_NUMBER_TTL_MS,
-    createdBy: session?.username ?? ADMIN_USER
+    createdBy: createdBy || ADMIN_USER
   };
 
   accessNumbers.push(entry);
@@ -1185,7 +1184,16 @@ app.post("/api/admin/access-numbers", requireAdminApi, async (req, res) => {
     console.error(`Failed to print access number ${entry.number}: ${print.error}`);
   }
 
-  return res.json({ ok: true, accessNumber: entry, print });
+  return { ok: true, entry, print };
+}
+
+app.post("/api/admin/access-numbers", requireAdminApi, async (req, res) => {
+  const session = getAdminSession(req);
+  const result = await createAndPrintAccessNumber(session?.username ?? ADMIN_USER);
+  if (!result.ok) {
+    return res.status(result.status || 500).json({ error: result.error || "Cannot create access number" });
+  }
+  return res.json({ ok: true, accessNumber: result.entry, print: result.print });
 });
 
 app.get("/api/admin/access-numbers", requireAdminApi, (req, res) => {
@@ -1207,6 +1215,14 @@ app.delete("/api/admin/access-numbers/:number", requireAdminApi, async (req, res
   invalidateGuestSessionsForNumber(number);
   await queueWriteAccessNumbers();
   return res.json({ ok: true });
+});
+
+app.post("/api/kiosk/access-numbers", async (req, res) => {
+  const result = await createAndPrintAccessNumber("KIOSK");
+  if (!result.ok) {
+    return res.status(result.status || 500).json({ error: result.error || "Cannot create access number" });
+  }
+  return res.json({ ok: true, accessNumber: result.entry, print: result.print });
 });
 
 app.post("/api/guest/verify-number", (req, res) => {
@@ -1367,9 +1383,6 @@ app.get(["/admin", "/admin/", "/admin.html"], (req, res) => {
   return res.sendFile(path.join(PUBLIC_DIR, "admin.html"));
 });
 app.get(["/numbers", "/numbers/", "/numbers.html"], (req, res) => {
-  if (!isAdminAuthenticated(req)) {
-    return res.redirect("/admin-login.html");
-  }
   res.setHeader("Cache-Control", "no-store");
   return res.sendFile(path.join(PUBLIC_DIR, "numbers.html"));
 });
