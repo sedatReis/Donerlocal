@@ -51,11 +51,11 @@ function renderOrders(orders) {
 function orderCard(order) {
   const wrap = document.createElement("div");
   wrap.className = "completedCard";
-  const number = String(order.accessNumber || "").trim() || "-";
+  const name = String(order.customerName || "").trim() || "-";
 
   wrap.innerHTML = `
     <div class="completedCard__top" style="justify-content:center">
-      <div class="completedCard__title" style="font-size:52px; line-height:1; letter-spacing:1px;">${escapeHtml(number)}</div>
+      <div class="completedCard__title" style="font-size:52px; line-height:1; letter-spacing:1px;">${escapeHtml(name)}</div>
     </div>
   `;
   return wrap;

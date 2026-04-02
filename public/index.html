@@ -3,29 +3,87 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Speisekarte</title>
+  <title>Sark Kebab - Speisekarte</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
-<body>
-  <header class="topbar">
+<body class="page--kiosk">
+  <header class="topbar kioskTopbar">
     <div class="brand">
-      <div class="brand__title">Speisekarte</div>
-      <div class="brand__subtitle">Bestellung mit freigegebener Nummer</div>
+      <img src="/img/logo-speisekarte.jpg" alt="Sark Kebab" class="brand__logo" />
     </div>
     <div class="row row--wrap row--end">
-      <div id="guestMeta" class="sessionBadge hidden"></div>
-      <button id="switchNumberBtn" class="btn">Nummer wechseln</button>
+      <div class="langDropdown langDropdown--topbar" id="langDropdownTopbar">
+        <button class="langDropdown__toggle langDropdown__toggle--small" id="langToggleTopbar" type="button">
+          <span id="langCurrentFlagTopbar"></span>
+          <span id="langCurrentLabelTopbar"></span>
+          <span class="langDropdown__arrow">▾</span>
+        </button>
+        <div class="langDropdown__list hidden" id="langListTopbar">
+          <button class="langDropdown__item" data-lang="de">
+            <svg width="20" height="13" viewBox="0 0 24 16"><rect width="24" height="5.33" fill="#ed2939"/><rect y="5.33" width="24" height="5.34" fill="#fff"/><rect y="10.67" width="24" height="5.33" fill="#ed2939"/></svg>
+            DE
+          </button>
+          <button class="langDropdown__item" data-lang="en">
+            <svg width="20" height="13" viewBox="0 0 24 16"><rect width="24" height="16" fill="#012169"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="2.5"/><path d="M0 0l24 16M24 0L0 16" stroke="#C8102E" stroke-width="1.5"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="4"/><path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="2.5"/></svg>
+            EN
+          </button>
+          <button class="langDropdown__item" data-lang="tr">
+            <svg width="20" height="13" viewBox="0 0 24 16"><rect width="24" height="16" fill="#E30A17"/><circle cx="10" cy="8" r="4.5" fill="#fff"/><circle cx="11.2" cy="8" r="3.6" fill="#E30A17"/><polygon points="14,8 14.8,6.5 13.2,7.4 15,7.4 13.4,6.5" fill="#fff"/></svg>
+            TR
+          </button>
+        </div>
+      </div>
+      <div id="customerNameBadge" class="sessionBadge"></div>
+      <button id="cancelOrderBtn" class="btn btn--danger" data-i18n="cancelOrder">Bestellung abbrechen</button>
+      <button id="changeNameBtn" class="btn" data-i18n="changeName">Name ändern</button>
       <button id="openCartBtn" class="btn btn--primary">
-        Warenkorb <span id="cartCount" class="badge">0</span>
+        <span data-i18n="order">Bestellung</span> <span id="cartCount" class="badge">0</span>
       </button>
     </div>
   </header>
 
-  <main class="container">
-    <div id="menu"></div>
+  <main class="container kioskShell">
+    <div class="kioskLayout">
+      <section class="kioskLayout__menu" aria-label="Speisekarte">
+        <div id="menu"></div>
+      </section>
+
+      <aside class="kioskSummary" aria-label="Bestellübersicht">
+        <div class="kioskSummary__header">
+          <div>
+            <div class="kioskSummary__eyebrow" data-i18n="yourSelection">Deine Auswahl</div>
+            <div class="kioskSummary__title" data-i18n="orderSummary">Bestellübersicht</div>
+          </div>
+          <button id="kioskOpenCartBtn" class="iconbtn" aria-label="Details im Warenkorb öffnen">≡</button>
+        </div>
+        <div id="kioskSidebarItems" class="kioskSummary__body"></div>
+        <div class="kioskSummary__footer">
+          <div class="totalRow">
+            <span data-i18n="total">Summe</span>
+            <strong id="kioskSidebarTotal">0,00 €</strong>
+          </div>
+          <button id="kioskCheckoutBtn" class="btn btn--primary btn--full" data-i18n="submitOrder">Bestellung absenden</button>
+          <button id="clearCartBtn" class="btn btn--ghost btn--full" data-i18n="clearCart">Warenkorb leeren</button>
+        </div>
+      </aside>
+    </div>
   </main>
 
-  <!-- Options Modal -->
+  <div class="kioskMobileDock" aria-label="Mobile Bestellaktionen">
+    <div class="kioskMobileDock__meta">
+      <div class="kioskMobileDock__label" data-i18n="order">Bestellung</div>
+      <div>
+        <strong id="kioskMobileTotal">0,00 €</strong>
+        <span id="kioskMobileCount" class="badge">0</span>
+      </div>
+    </div>
+    <div class="kioskMobileDock__actions">
+      <button id="kioskMobileCartBtn" class="btn" data-i18n="cart">Warenkorb</button>
+      <button id="kioskMobileCheckoutBtn" class="btn btn--primary" data-i18n="orderNow">Bestellen</button>
+    </div>
+  </div>
+
+  <!-- Options Modal (ingredients) -->
   <div id="modalBackdrop" class="backdrop hidden"></div>
   <div id="optionsModal" class="modal hidden" role="dialog" aria-modal="true">
     <div class="modal__header">
@@ -39,7 +97,7 @@
     <div class="modal__body">
       <div id="optionsArea"></div>
       <div class="qtyRow">
-        <span class="muted">Menge</span>
+        <span class="muted" data-i18n="quantity">Menge</span>
         <div class="qty">
           <button id="qtyMinus" class="btn">−</button>
           <span id="qtyValue" class="qty__value">1</span>
@@ -49,14 +107,32 @@
     </div>
 
     <div class="modal__footer">
-      <button id="addToCartBtn" class="btn btn--primary">In den Warenkorb</button>
+      <button id="addToCartBtn" class="btn btn--primary" data-i18n="continue">Weiter</button>
+    </div>
+  </div>
+
+  <!-- Extras Modal -->
+  <div id="extrasModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal__header">
+      <div>
+        <div class="modal__title" data-i18n="addExtras">Extras hinzufügen?</div>
+        <div class="muted" id="extrasProductName"></div>
+      </div>
+      <button class="iconbtn" id="closeExtrasBtn" aria-label="Schließen">✕</button>
+    </div>
+    <div class="modal__body">
+      <div id="extrasArea"></div>
+    </div>
+    <div class="modal__footer" style="display:flex;gap:10px">
+      <button id="skipExtrasBtn" class="btn btn--full" data-i18n="skip">Überspringen</button>
+      <button id="addExtrasBtn" class="btn btn--primary btn--full" data-i18n="addWithExtras">Mit Extras hinzufügen</button>
     </div>
   </div>
 
   <!-- Cart Drawer -->
   <div id="cartDrawer" class="drawer hidden" aria-hidden="true">
     <div class="drawer__header">
-      <div class="drawer__title">Warenkorb</div>
+      <div class="drawer__title" data-i18n="cart">Warenkorb</div>
       <button id="closeCartBtn" class="iconbtn" aria-label="Schließen">✕</button>
     </div>
 
@@ -64,35 +140,113 @@
 
     <div class="drawer__footer">
       <div class="totalRow">
-        <span>Summe</span>
+        <span data-i18n="total">Summe</span>
         <strong id="cartTotal">0,00 €</strong>
       </div>
-      <button id="checkoutBtn" class="btn btn--primary btn--full">Weiter zur Bestellung</button>
+      <button id="checkoutBtn" class="btn btn--primary btn--full" data-i18n="submitOrder">Bestellung absenden</button>
+      <button id="drawerClearCartBtn" class="btn btn--ghost btn--full" style="margin-top:10px" data-i18n="clearCart">Warenkorb leeren</button>
     </div>
   </div>
 
-  <!-- Table Number Modal -->
-  <div id="tableModal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="modal__header">
-      <div>
-        <div class="modal__title">Tischnummer</div>
-        <div class="muted">Bitte die Tischnummer für diese Bestellung eingeben.</div>
+  <!-- Full-screen: Dine option -->
+  <div id="dineScreen" class="fullscreenOverlay hidden">
+    <div class="fullscreenOverlay__content">
+      <div class="fullscreenOverlay__title" data-i18n="dineQuestion">Wo möchtest du essen?</div>
+      <div class="fullscreenOverlay__choices">
+        <button class="fullscreenChoice" data-dine="hieressen">
+          <svg class="fullscreenChoice__icon" viewBox="0 0 80 80" width="80" height="80">
+            <ellipse cx="40" cy="62" rx="34" ry="6" fill="#b08860" opacity=".3"/>
+            <rect x="8" y="52" width="64" height="5" rx="2.5" fill="#a0825e"/>
+            <rect x="6" y="50" width="68" height="4" rx="2" fill="#c8a87a"/>
+            <ellipse cx="30" cy="46" rx="16" ry="5" fill="#f5f0e8" stroke="#d4c4a0" stroke-width=".8"/>
+            <ellipse cx="30" cy="44" rx="12" ry="3.5" fill="#fff"/>
+            <path d="M22 42c2-6 6-8 8-8s6 2 8 8" fill="#d4956a" stroke="#a06830" stroke-width=".6"/>
+            <path d="M24 42c1-3 3-5 6-5s5 2 6 5" fill="#e8b888"/>
+            <path d="M25 40h10" stroke="#5cb85c" stroke-width="1" stroke-linecap="round"/>
+            <path d="M26 38h8" stroke="#e74c3c" stroke-width=".8" stroke-linecap="round"/>
+            <rect x="54" y="28" width="14" height="22" rx="3" fill="#e74c3c" stroke="#b33a2e" stroke-width=".7"/>
+            <rect x="56" y="24" width="10" height="5" rx="1.5" fill="#f5f5f5" stroke="#ccc" stroke-width=".5"/>
+            <path d="M58 34h8" stroke="#ffcdd2" stroke-width=".6"/>
+            <path d="M58 38h8" stroke="#ffcdd2" stroke-width=".6"/>
+            <rect x="63" y="18" width="1.5" height="14" rx=".75" fill="#fdd835"/>
+          </svg>
+          <span class="fullscreenChoice__label" data-i18n="dineHere">Hier essen</span>
+        </button>
+        <button class="fullscreenChoice" data-dine="mitnehmen">
+          <svg class="fullscreenChoice__icon" viewBox="0 0 80 80" width="80" height="80">
+            <path d="M20 25h40l-4 35H24z" fill="#c8956a" stroke="#8b6b4a" stroke-width="2"/>
+            <path d="M20 25l4-10h32l4 10" fill="#d4a87a" stroke="#8b6b4a" stroke-width="1.5"/>
+            <path d="M30 18v-6a10 10 0 0120 0v6" fill="none" stroke="#8b6b4a" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M28 35h24M28 42h24M28 49h24" stroke="#fff" stroke-width="1" opacity=".4"/>
+          </svg>
+          <span class="fullscreenChoice__label" data-i18n="dineTakeaway">Mitnehmen</span>
+        </button>
       </div>
-      <button class="iconbtn" id="closeTableBtn" aria-label="Schließen">✕</button>
     </div>
-    <div class="modal__body">
-      <input id="tableNumberInput" class="input" placeholder="z.B. 7" />
-      <div class="muted small" style="margin-top:8px">
-        Deine Zugangsnummer bleibt aktiv, aber die Bestellung braucht zusätzlich eine Tischnummer.
+  </div>
+
+  <!-- Full-screen: Payment -->
+  <div id="paymentScreen" class="fullscreenOverlay hidden">
+    <div class="fullscreenOverlay__content">
+      <div class="fullscreenOverlay__title" data-i18n="paymentQuestion">Wie möchtest du bezahlen?</div>
+      <div class="fullscreenOverlay__choices">
+        <button class="fullscreenChoice" data-payment="bar">
+          <svg class="fullscreenChoice__icon" viewBox="0 0 80 80" width="80" height="80">
+            <rect x="10" y="22" width="60" height="36" rx="6" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+            <circle cx="40" cy="40" r="12" fill="none" stroke="#fff" stroke-width="2" opacity=".6"/>
+            <text x="40" y="46" text-anchor="middle" font-size="18" font-weight="900" fill="#fff">€</text>
+            <circle cx="18" cy="40" r="3" fill="#fff" opacity=".3"/>
+            <circle cx="62" cy="40" r="3" fill="#fff" opacity=".3"/>
+          </svg>
+          <span class="fullscreenChoice__label" data-i18n="payCash">Bar</span>
+        </button>
+        <button class="fullscreenChoice" data-payment="karte">
+          <svg class="fullscreenChoice__icon" viewBox="0 0 80 80" width="80" height="80">
+            <rect x="8" y="20" width="64" height="40" rx="6" fill="#1565c0" stroke="#0d47a1" stroke-width="2"/>
+            <rect x="8" y="30" width="64" height="10" fill="#0d47a1"/>
+            <rect x="14" y="46" width="20" height="4" rx="2" fill="#fff" opacity=".5"/>
+            <rect x="14" y="52" width="12" height="3" rx="1.5" fill="#fff" opacity=".3"/>
+            <circle cx="60" cy="50" r="6" fill="#ff9800" opacity=".7"/>
+            <circle cx="52" cy="50" r="6" fill="#f44336" opacity=".7"/>
+          </svg>
+          <span class="fullscreenChoice__label" data-i18n="payCard">Karte</span>
+        </button>
       </div>
     </div>
-    <div class="modal__footer">
-      <button id="sendOrderBtn" class="btn btn--primary btn--full">Bestellung senden</button>
+  </div>
+
+  <!-- Full-screen: Thank you / Order summary -->
+  <div id="thankYouScreen" class="fullscreenOverlay hidden">
+    <div class="fullscreenOverlay__content">
+      <div class="fullscreenOverlay__checkmark">
+        <svg viewBox="0 0 80 80" width="80" height="80">
+          <circle cx="40" cy="40" r="36" fill="#4caf50" opacity=".15"/>
+          <circle cx="40" cy="40" r="28" fill="#4caf50" opacity=".25"/>
+          <path d="M24 40l10 10 22-22" stroke="#4caf50" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="fullscreenOverlay__title" id="thankYouTitle" data-i18n="thankYou">Danke für deine Bestellung!</div>
+      <div class="fullscreenOverlay__name" id="thankYouName"></div>
+      <div id="thankYouItems" class="fullscreenOverlay__summary"></div>
+      <div class="fullscreenOverlay__total" id="thankYouTotal"></div>
+      <div class="fullscreenOverlay__hint" data-i18n="receiptPrinting">Dein Bon wird gedruckt...</div>
+    </div>
+  </div>
+
+  <!-- Confirm Dialog -->
+  <div id="confirmBackdrop" class="backdrop hidden"></div>
+  <div id="confirmDialog" class="modal confirmDialog hidden" role="dialog" aria-modal="true">
+    <div class="confirmDialog__body">
+      <div id="confirmMessage" class="confirmDialog__message"></div>
+    </div>
+    <div class="confirmDialog__actions">
+      <button id="confirmNo" class="btn btn--full" data-i18n="no">Nein</button>
+      <button id="confirmYes" class="btn btn--primary btn--full" data-i18n="yes">Ja</button>
     </div>
   </div>
 
   <div id="appNotice" class="appNotice hidden" role="status" aria-live="polite"></div>
 
-  <script src="/app.js?v=12"></script>
+  <script src="/app.js?v=18"></script>
 </body>
 </html>

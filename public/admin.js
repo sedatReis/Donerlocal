@@ -79,24 +79,38 @@ function getOrderTiming(order) {
 function composeItemDetailsHtml(item) {
   const rows = [];
 
-  if (item.meatType) {
+  if (item.allOptions) {
     rows.push(`
       <div class="orderDetailRow">
-        <span class="orderDetailLabel">Fleisch</span>
-        <span class="orderDetailValue">${escapeHtml(item.meatType)}</span>
+        <span class="orderDetailLabel">Zutaten</span>
+        <span class="orderDetailValue" style="font-weight:700">MIT ALLEM</span>
       </div>
     `);
+  } else {
+    const extras = Array.isArray(item.options) ? item.options.filter(Boolean) : [];
+    if (extras.length) {
+      const chips = extras
+        .map((extra) => `<span class="orderOptionChip">${escapeHtml(extra)}</span>`)
+        .join("");
+      rows.push(`
+        <div class="orderDetailRow">
+          <span class="orderDetailLabel">Zutaten</span>
+          <div class="orderOptionChips">${chips}</div>
+        </div>
+      `);
+    }
   }
 
-  const extras = Array.isArray(item.options) ? item.options.filter(Boolean) : [];
-  if (extras.length) {
-    const chips = extras
-      .map((extra) => `<span class="orderOptionChip">${escapeHtml(extra)}</span>`)
+  // Extras
+  const itemExtras = Array.isArray(item.extras) ? item.extras.filter(Boolean) : [];
+  if (itemExtras.length) {
+    const extraChips = itemExtras
+      .map((e) => `<span class="orderOptionChip" style="border-color:rgba(240,179,33,.35);background:rgba(240,179,33,.1)">+${escapeHtml(e.name)} (${euro(e.price)})</span>`)
       .join("");
     rows.push(`
       <div class="orderDetailRow">
         <span class="orderDetailLabel">Extras</span>
-        <div class="orderOptionChips">${chips}</div>
+        <div class="orderOptionChips">${extraChips}</div>
       </div>
     `);
   }
@@ -234,14 +248,16 @@ function orderCard(order, canComplete) {
   wrap.className = classes.join(" ");
 
   const statusLabel = canComplete ? "Offen" : "Erledigt";
-  const accessLabel = order.accessNumber ? `Zugang ${escapeHtml(order.accessNumber)}` : "Zugang -";
+  const customerLabel = order.customerName ? escapeHtml(order.customerName) : "Unbekannt";
+  const dineLabel = order.dineOption === "mitnehmen" ? "Mitnehmen" : "Hier essen";
+  const paymentLabel = order.paymentMethod === "karte" ? "Karte" : "Bar";
   const newBadge = canComplete && timing.isNew ? `<span class="orderChip orderChip--new">Neu</span>` : "";
   const urgencyClass = timing.isUrgent && canComplete ? "orderChip--warn" : "";
 
   wrap.innerHTML = `
     <div class="orderHeader">
       <div>
-        <div class="orderTitle">Tisch ${escapeHtml(order.tableNumber)}</div>
+        <div class="orderTitle">${customerLabel}</div>
         <div class="orderMeta">Erstellt: ${fmtDateTime(order.createdAt)}</div>
       </div>
       <div class="orderHeadRight">
@@ -251,7 +267,8 @@ function orderCard(order, canComplete) {
     </div>
 
     <div class="orderMetaRow">
-      <span class="orderChip">${accessLabel}</span>
+      <span class="orderChip">${dineLabel}</span>
+      <span class="orderChip">Zahlung: ${paymentLabel}</span>
       <span class="orderChip">Positionen ${positionCount}</span>
       <span class="orderChip ${urgencyClass}">Rest ${timing.remainingMin} min</span>
       ${newBadge}

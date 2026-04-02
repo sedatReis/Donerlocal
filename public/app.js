@@ -1,25 +1,304 @@
-const CHICKEN_VEAL_CATEGORY_ID = "chicken_veal";
-const CHICKEN_VEAL_CHOICES = ["Kalbfleisch", "Hühnerfleisch"];
-const GUEST_META_REFRESH_MS = 15_000;
 const NOTICE_TIMEOUT_MS = 3200;
 
+/* ── Translations ── */
+const TRANSLATIONS = {
+  de: {
+    changeName: "Name ändern",
+    order: "Bestellung",
+    yourSelection: "Deine Auswahl",
+    orderSummary: "Bestellübersicht",
+    total: "Summe",
+    submitOrder: "Bestellung absenden",
+    clearCart: "Warenkorb leeren",
+    cart: "Warenkorb",
+    orderNow: "Bestellen",
+    quantity: "Menge",
+    continue: "Weiter",
+    addExtras: "Extras hinzufügen?",
+    skip: "Überspringen",
+    addWithExtras: "Mit Extras hinzufügen",
+    dineQuestion: "Wo möchtest du essen?",
+    dineHere: "Hier essen",
+    dineTakeaway: "Mitnehmen",
+    paymentQuestion: "Wie möchtest du bezahlen?",
+    payCash: "Bar",
+    payCard: "Karte",
+    thankYou: "Danke für deine Bestellung!",
+    receiptPrinting: "Dein Bon wird gedruckt...",
+    totalLabel: "Gesamt:",
+    categories: "Kategorien",
+    products: "Produkte",
+    inCart: "Im Warenkorb",
+    subtotal: "Zwischensumme",
+    category: "Kategorie",
+    noProducts: "Keine Produkte verfügbar.",
+    emptyCart: "Warenkorb ist leer.",
+    emptyTitle: "Noch nichts ausgewählt",
+    emptyText: "Tippe auf ein Produkt, um deine Bestellung zu starten.",
+    remove: "Entfernen",
+    select: "Auswählen",
+    add: "Hinzufügen",
+    withAll: "Mit allem",
+    deselectAll: "Alles abwählen",
+    chooseIngredients: "Zutaten auswählen:",
+    added: "hinzugefügt!",
+    cartEmpty: "Warenkorb ist leer.",
+    loadError: "Speisekarte konnte nicht geladen werden.",
+    loadFallback: "Fehler beim Laden.",
+    orderError: "Bestellung konnte nicht gesendet werden.",
+    errorPrefix: "Fehler:",
+    unknownError: "Unbekannter Fehler",
+    connectionError: "Es gab ein Verbindungsproblem. Bitte erneut versuchen.",
+    errNameRequired: "Bitte gib deinen Namen ein.",
+    errNameShort: "Der Name muss mindestens 2 Zeichen lang sein.",
+    errItemsRequired: "Bitte mindestens ein Produkt auswählen.",
+    errOrderNotFound: "Bestellung wurde nicht gefunden.",
+    errCannotReadProducts: "Die Speisekarte konnte nicht geladen werden.",
+    greeting: "Hallo {name}! Tippe auf ein Produkt, um zu bestellen.",
+    cancelOrder: "Bestellung abbrechen",
+    cancelConfirm: "Möchtest du die Bestellung wirklich abbrechen?",
+    yes: "Ja",
+    no: "Nein",
+    tryAgain: "Erneut versuchen"
+  },
+  en: {
+    changeName: "Change name",
+    order: "Order",
+    yourSelection: "Your selection",
+    orderSummary: "Order summary",
+    total: "Total",
+    submitOrder: "Submit order",
+    clearCart: "Clear cart",
+    cart: "Cart",
+    orderNow: "Order now",
+    quantity: "Quantity",
+    continue: "Continue",
+    addExtras: "Add extras?",
+    skip: "Skip",
+    addWithExtras: "Add with extras",
+    dineQuestion: "Where would you like to eat?",
+    dineHere: "Dine in",
+    dineTakeaway: "Takeaway",
+    paymentQuestion: "How would you like to pay?",
+    payCash: "Cash",
+    payCard: "Card",
+    thankYou: "Thank you for your order!",
+    receiptPrinting: "Your receipt is being printed...",
+    totalLabel: "Total:",
+    categories: "Categories",
+    products: "Products",
+    inCart: "In cart",
+    subtotal: "Subtotal",
+    category: "Category",
+    noProducts: "No products available.",
+    emptyCart: "Cart is empty.",
+    emptyTitle: "Nothing selected yet",
+    emptyText: "Tap a product to start your order.",
+    remove: "Remove",
+    select: "Select",
+    add: "Add",
+    withAll: "With everything",
+    deselectAll: "Deselect all",
+    chooseIngredients: "Choose ingredients:",
+    added: "added!",
+    cartEmpty: "Cart is empty.",
+    loadError: "Could not load the menu.",
+    loadFallback: "Error loading.",
+    orderError: "Order could not be sent.",
+    errorPrefix: "Error:",
+    unknownError: "Unknown error",
+    connectionError: "Connection problem. Please try again.",
+    errNameRequired: "Please enter your name.",
+    errNameShort: "Name must be at least 2 characters.",
+    errItemsRequired: "Please select at least one product.",
+    errOrderNotFound: "Order not found.",
+    errCannotReadProducts: "Could not load the menu.",
+    greeting: "Hello {name}! Tap a product to order.",
+    cancelOrder: "Cancel order",
+    cancelConfirm: "Do you really want to cancel the order?",
+    yes: "Yes",
+    no: "No",
+    tryAgain: "Try again"
+  },
+  tr: {
+    changeName: "İsim değiştir",
+    order: "Sipariş",
+    yourSelection: "Seçiminiz",
+    orderSummary: "Sipariş özeti",
+    total: "Toplam",
+    submitOrder: "Sipariş gönder",
+    clearCart: "Sepeti temizle",
+    cart: "Sepet",
+    orderNow: "Sipariş ver",
+    quantity: "Miktar",
+    continue: "Devam",
+    addExtras: "Ekstra eklemek ister misiniz?",
+    skip: "Atla",
+    addWithExtras: "Ekstralarla ekle",
+    dineQuestion: "Nerede yemek istersiniz?",
+    dineHere: "Burada yemek",
+    dineTakeaway: "Paket",
+    paymentQuestion: "Nasıl ödeme yapmak istersiniz?",
+    payCash: "Nakit",
+    payCard: "Kart",
+    thankYou: "Siparişiniz için teşekkürler!",
+    receiptPrinting: "Fişiniz yazdırılıyor...",
+    totalLabel: "Toplam:",
+    categories: "Kategoriler",
+    products: "Ürünler",
+    inCart: "Sepette",
+    subtotal: "Ara toplam",
+    category: "Kategori",
+    noProducts: "Ürün bulunmamaktadır.",
+    emptyCart: "Sepet boş.",
+    emptyTitle: "Henüz seçim yapılmadı",
+    emptyText: "Sipariş vermek için bir ürüne dokunun.",
+    remove: "Kaldır",
+    select: "Seç",
+    add: "Ekle",
+    withAll: "Her şeyle",
+    deselectAll: "Tümünü kaldır",
+    chooseIngredients: "Malzeme seçin:",
+    added: "eklendi!",
+    cartEmpty: "Sepet boş.",
+    loadError: "Menü yüklenemedi.",
+    loadFallback: "Yükleme hatası.",
+    orderError: "Sipariş gönderilemedi.",
+    errorPrefix: "Hata:",
+    unknownError: "Bilinmeyen hata",
+    connectionError: "Bağlantı sorunu. Lütfen tekrar deneyin.",
+    errNameRequired: "Lütfen adınızı girin.",
+    errNameShort: "Ad en az 2 karakter olmalıdır.",
+    errItemsRequired: "Lütfen en az bir ürün seçin.",
+    errOrderNotFound: "Sipariş bulunamadı.",
+    errCannotReadProducts: "Menü yüklenemedi.",
+    greeting: "Merhaba {name}! Sipariş vermek için bir ürüne dokunun.",
+    cancelOrder: "Sipariş iptal",
+    cancelConfirm: "Siparişi gerçekten iptal etmek istiyor musunuz?",
+    yes: "Evet",
+    no: "Hayır",
+    tryAgain: "Tekrar dene"
+  }
+};
+
+const LANG_FLAGS = {
+  de: `<svg width="20" height="13" viewBox="0 0 24 16"><rect width="24" height="5.33" fill="#ed2939"/><rect y="5.33" width="24" height="5.34" fill="#fff"/><rect y="10.67" width="24" height="5.33" fill="#ed2939"/></svg>`,
+  en: `<svg width="20" height="13" viewBox="0 0 24 16"><rect width="24" height="16" fill="#012169"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="2.5"/><path d="M0 0l24 16M24 0L0 16" stroke="#C8102E" stroke-width="1.5"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="4"/><path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="2.5"/></svg>`,
+  tr: `<svg width="20" height="13" viewBox="0 0 24 16"><rect width="24" height="16" fill="#E30A17"/><circle cx="10" cy="8" r="4.5" fill="#fff"/><circle cx="11.2" cy="8" r="3.6" fill="#E30A17"/><polygon points="14,8 14.8,6.5 13.2,7.4 15,7.4 13.4,6.5" fill="#fff"/></svg>`
+};
+
+const LANG_LABELS = { de: "DE", en: "EN", tr: "TR" };
+
+function getLang() {
+  return localStorage.getItem("lang") || "de";
+}
+
+function t(key) {
+  const lang = getLang();
+  return TRANSLATIONS[lang]?.[key] || TRANSLATIONS.de[key] || key;
+}
+
+function applyLang() {
+  const lang = getLang();
+  document.documentElement.lang = lang === "tr" ? "tr" : lang === "en" ? "en" : "de";
+
+  for (const el of document.querySelectorAll("[data-i18n]")) {
+    el.textContent = t(el.dataset.i18n);
+  }
+  for (const el of document.querySelectorAll("[data-i18n-placeholder]")) {
+    el.placeholder = t(el.dataset.i18nPlaceholder);
+  }
+
+  // Update dropdown toggle display
+  const flagEl = document.getElementById("langCurrentFlagTopbar");
+  const labelEl = document.getElementById("langCurrentLabelTopbar");
+  if (flagEl) flagEl.innerHTML = LANG_FLAGS[lang] || LANG_FLAGS.de;
+  if (labelEl) labelEl.textContent = LANG_LABELS[lang] || "DE";
+}
+
+/* ── Product translation helpers ── */
+function itemName(item) {
+  const lang = getLang();
+  if (lang === "en" && item.name_en) return item.name_en;
+  if (lang === "tr" && item.name_tr) return item.name_tr;
+  return item.name;
+}
+
+function itemDesc(item) {
+  const lang = getLang();
+  if (lang === "en" && item.desc_en) return item.desc_en;
+  if (lang === "tr" && item.desc_tr) return item.desc_tr;
+  return item.desc || "";
+}
+
+function catTitle(cat) {
+  const lang = getLang();
+  if (lang === "en" && cat.title_en) return cat.title_en;
+  if (lang === "tr" && cat.title_tr) return cat.title_tr;
+  return cat.title;
+}
+
+function extraName(extra) {
+  const lang = getLang();
+  if (lang === "en" && extra.name_en) return extra.name_en;
+  if (lang === "tr" && extra.name_tr) return extra.name_tr;
+  return extra.name;
+}
+
+function getTranslatedOptions() {
+  if (!state.products) return state.options;
+  const lang = getLang();
+  if (lang === "en" && state.products.defaultOptions_en) return state.products.defaultOptions_en;
+  if (lang === "tr" && state.products.defaultOptions_tr) return state.products.defaultOptions_tr;
+  return state.options;
+}
+
+/* ── Ingredient & Extra Icons ── */
+const INGREDIENT_ICONS = {
+  "Sauce": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M14 2h-4a1 1 0 00-1 1v3l-2 1v1h10v-1l-2-1V3a1 1 0 00-1-1z" fill="#e8e0d0" stroke="#b0a090" stroke-width=".7"/><path d="M7 8l1 14h8l1-14z" fill="#f5f0e0" stroke="#b0a090" stroke-width=".7"/><path d="M8.5 12c1.5 2 5.5 2 7 0" stroke="#e8a030" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M9 16c1 1.2 5 1.2 6 0" stroke="#e8a030" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="12" cy="9.5" r="1" fill="#e8a030"/></svg>`,
+  "Zwiebel": `<svg viewBox="0 0 24 24" width="22" height="22"><ellipse cx="12" cy="14" rx="8" ry="7" fill="#d4a0d0" stroke="#9b5e97" stroke-width=".8"/><path d="M12 3c-2 2-5 5-5 8" stroke="#9b5e97" stroke-width=".8" fill="none"/><path d="M12 3c2 2 5 5 5 8" stroke="#9b5e97" stroke-width=".8" fill="none"/><path d="M10 7c1 1 3 1 4 0" stroke="#6d3f6a" stroke-width=".6" fill="none"/></svg>`,
+  "Salat": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 14c0-5 3-9 8-11 5 2 8 6 8 11 0 4-3 7-8 8-5-1-8-4-8-8z" fill="#5cb85c" stroke="#3a8a3a" stroke-width=".8"/><path d="M12 5v14M8 9c2 1 6 1 8 0M7 14c3 1 7 1 10 0" stroke="#3a8a3a" stroke-width=".7" fill="none"/></svg>`,
+  "Tomate": `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="13" r="8" fill="#e74c3c" stroke="#b33a2e" stroke-width=".8"/><path d="M8 5c2 1 6 1 8 0" stroke="#4a9e4a" stroke-width="1.2" fill="none"/><path d="M12 5V3" stroke="#4a9e4a" stroke-width="1" fill="none"/></svg>`,
+  "Blaukraut": `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="13" r="8" fill="#7b5ea7" stroke="#5c3d82" stroke-width=".8"/><path d="M7 12c2-2 4-2 5 0s3 2 5 0" stroke="#e0d0f0" stroke-width=".8" fill="none"/><path d="M8 16c2-1 3-1 4 0s3 1 4 0" stroke="#e0d0f0" stroke-width=".7" fill="none"/></svg>`,
+  "Gurke": `<svg viewBox="0 0 24 24" width="22" height="22"><ellipse cx="12" cy="12" rx="5" ry="9" fill="#6abf69" stroke="#3d8c3c" stroke-width=".8"/><circle cx="12" cy="8" r="1" fill="#4a9e4a"/><circle cx="10" cy="12" r=".8" fill="#4a9e4a"/><circle cx="14" cy="12" r=".8" fill="#4a9e4a"/><circle cx="12" cy="16" r="1" fill="#4a9e4a"/></svg>`,
+  "Mais": `<svg viewBox="0 0 24 24" width="22" height="22"><ellipse cx="12" cy="12" rx="5" ry="9" fill="#f0c040" stroke="#c89e20" stroke-width=".8"/><path d="M9 7v10M12 5v14M15 7v10" stroke="#d4a820" stroke-width=".8" fill="none"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#c89e20" stroke-width=".5" fill="none"/></svg>`,
+  "Jalapeño": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M10 4c-1 1-1 2 0 3l2 3c2 4 1 8-1 11 3-1 6-5 6-10 0-3-1-5-3-6l-2-1z" fill="#4caf50" stroke="#2e7d32" stroke-width=".8"/><path d="M10 4c1-1 3-1 4 0" stroke="#2e7d32" stroke-width=".8" fill="none"/></svg>`,
+  "Chili Sauce": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M9 3h6l1 2H8zM8 5h8l-1 17H9z" fill="#d32f2f" stroke="#b71c1c" stroke-width=".7"/><path d="M10 8h4M10 12h4M10 16h4" stroke="#ffcdd2" stroke-width=".6" fill="none"/></svg>`,
+  "Scharf": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2c-2 3-3 5-2 8 1 4 0 7-2 10h2c3-2 5-6 4-10-.5-3 0-5 2-8z" fill="#ff5722" stroke="#d84315" stroke-width=".8"/><path d="M14 4c1 2 1 4 0 7-1 3-1 6 1 9" stroke="#ff8a65" stroke-width=".7" fill="none"/></svg>`
+};
+
+const EXTRA_ICONS = {
+  "extra_59": `<svg viewBox="0 0 28 28" width="26" height="26"><circle cx="8" cy="18" r="4" fill="#e74c3c"/><circle cx="14" cy="12" r="3.5" fill="#f0b321"/><circle cx="20" cy="18" r="4" fill="#4caf50"/><path d="M8 14v-3M14 8v-3M20 14v-3" stroke="#6d8c3a" stroke-width="1.2" stroke-linecap="round"/></svg>`,
+  "extra_60": `<svg viewBox="0 0 28 28" width="26" height="26"><rect x="6" y="14" width="16" height="10" rx="2" fill="#d32f2f"/><rect x="9" y="5" width="2.8" height="13" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/><rect x="13" y="4" width="2.8" height="14" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/><rect x="17" y="6" width="2.8" height="12" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/></svg>`,
+  "extra_61": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M6 6h5l1 2H5z" fill="#c62828"/><path d="M5 8h7l-.8 14H5.8z" fill="#c62828"/><path d="M11 6h5l1 2h-6z" fill="#fef9e7" stroke="#d4c57a" stroke-width=".5"/><path d="M11 8h6l-.8 14h-5.4z" fill="#fef9e7" stroke="#d4c57a" stroke-width=".5"/><path d="M17 6h5l1 2h-6z" fill="#ff9800"/><path d="M17 8h6l-.8 14h-5.4z" fill="#ff9800" stroke="#e67c00" stroke-width=".5"/></svg>`,
+  "extra_62": `<svg viewBox="0 0 28 28" width="26" height="26"><ellipse cx="14" cy="14" rx="11" ry="9" fill="#d4a060" stroke="#a07840" stroke-width=".8"/><ellipse cx="14" cy="12" rx="8" ry="5" fill="#e8c890" stroke="#c8a060" stroke-width=".6"/><path d="M8 15c3 2 9 2 12 0" stroke="#a07840" stroke-width=".6" fill="none"/></svg>`,
+  "extra_63": `<svg viewBox="0 0 28 28" width="26" height="26"><ellipse cx="14" cy="14" rx="9" ry="7" fill="#d4a060" stroke="#a07840" stroke-width=".8"/><ellipse cx="14" cy="12.5" rx="6" ry="4" fill="#e8c890" stroke="#c8a060" stroke-width=".6"/><path d="M9.5 15c2.5 1.5 6.5 1.5 9 0" stroke="#a07840" stroke-width=".6" fill="none"/></svg>`,
+  "extra_64": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M5 8h18l-1 16H6z" fill="#fdd835" stroke="#c8a415" stroke-width=".8"/><path d="M7 12h14" stroke="#e8c020" stroke-width=".6"/><path d="M7 16h14" stroke="#e8c020" stroke-width=".6"/><path d="M7 20h14" stroke="#e8c020" stroke-width=".6"/><circle cx="18" cy="10" r="3" fill="#fff" stroke="#ddd" stroke-width=".5"/></svg>`,
+  "extra_65": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M16 3h-4a1 1 0 00-1 1v3l-2 1v1h10v-1l-2-1V4a1 1 0 00-1-1z" fill="#e8e0d0" stroke="#b0a090" stroke-width=".6"/><path d="M9 9l1 15h8l1-15z" fill="#f5f0e0" stroke="#b0a090" stroke-width=".6"/><path d="M10.5 13c1.5 2 5.5 2 7 0" stroke="#e8a030" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M11 17c1 1 5 1 6 0" stroke="#e8a030" stroke-width="1" fill="none" stroke-linecap="round"/></svg>`
+};
+
+/* ── State ── */
 const state = {
   products: null,
   options: [],
   selectedProduct: null,
   selectedCategory: null,
+  activeCategoryId: null,
   selectedQty: 1,
-  selectedMeatType: null,
   selectedOptions: new Set(),
+  allOptionsSelected: false,
+  extras: [],
+  selectedExtras: [],
   cart: loadCart(),
-  guest: null,
-  guestMetaTimer: null,
+  customerName: localStorage.getItem("customerName") || "",
+  checkoutDine: localStorage.getItem("dineOption") || null,
+  checkoutPayment: null,
   noticeTimer: null
 };
 
+/* ── Utilities ── */
 function sanitizeCart(value) {
   if (!Array.isArray(value)) return [];
-
   return value.filter((item) => {
     if (!item || typeof item !== "object") return false;
     if (typeof item.key !== "string" || !item.key) return false;
@@ -34,45 +313,68 @@ function euro(n) {
   return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(n);
 }
 
+function getCategoryAnchorId(categoryId) {
+  return `cat-${String(categoryId || "menu").replace(/[^a-zA-Z0-9_-]/g, "")}`;
+}
+
+function setActiveKioskCategory(categoryId) {
+  for (const button of document.querySelectorAll(".kioskCategoryBtn")) {
+    button.classList.toggle("is-active", button.dataset.categoryId === categoryId);
+  }
+}
+
+function showKioskCategory(categoryId) {
+  state.activeCategoryId = categoryId;
+  setActiveKioskCategory(categoryId);
+  for (const panel of document.querySelectorAll(".kioskSectionPanel")) {
+    const isActive = panel.dataset.categoryId === categoryId;
+    panel.classList.toggle("hidden", !isActive);
+    panel.classList.toggle("is-active", isActive);
+  }
+}
+
+function renderKioskQuickMeta() {
+  const root = document.getElementById("kioskQuickMeta");
+  if (!root) return;
+  const categories = Array.isArray(state.products?.categories) ? state.products.categories : [];
+  const itemsCount = categories.reduce((sum, c) => sum + (c.items?.length || 0), 0);
+  const cartCount = sanitizeCart(state.cart).reduce((sum, i) => sum + (i.qty || 0), 0);
+  const cartTotal = sanitizeCart(state.cart).reduce((sum, i) => sum + (i.price * i.qty), 0);
+  root.innerHTML = `
+    <div class="kioskMetaPill"><span class="kioskMetaPill__label">${t("categories")}</span><strong>${categories.length}</strong></div>
+    <div class="kioskMetaPill"><span class="kioskMetaPill__label">${t("products")}</span><strong>${itemsCount}</strong></div>
+    <div class="kioskMetaPill"><span class="kioskMetaPill__label">${t("inCart")}</span><strong>${cartCount}</strong></div>
+    <div class="kioskMetaPill"><span class="kioskMetaPill__label">${t("subtotal")}</span><strong>${euro(cartTotal)}</strong></div>
+  `;
+}
+
 function redirectToAccess() {
   window.location.replace("/access.html");
 }
 
-function toGermanError(message, fallback = "Ein Fehler ist aufgetreten.") {
+function translateError(message, fallback) {
   const text = String(message || "").trim();
-  if (!text) return fallback;
-
+  if (!text) return fallback || t("unknownError");
   const known = {
-    Unauthorized: "Deine Sitzung ist abgelaufen. Bitte gib die Nummer erneut ein.",
-    "username and password are required": "Bitte Benutzername und Passwort eingeben.",
-    "Invalid credentials": "Anmeldung fehlgeschlagen. Bitte Zugangsdaten prüfen.",
-    "number is required": "Bitte eine Nummer eingeben.",
-    "Invalid or expired number": "Die Nummer ist ungültig oder abgelaufen.",
-    "tableNumber is required": "Bitte eine Tischnummer eingeben.",
-    "items is required": "Bitte mindestens ein Produkt auswählen.",
-    "No free access numbers available": "Aktuell sind keine freien Nummern verfügbar.",
-    "Access number not found": "Nummer wurde nicht gefunden.",
-    "Order not found": "Bestellung wurde nicht gefunden.",
-    "Cannot read products.json": "Die Speisekarte konnte nicht geladen werden."
+    "customerName is required": t("errNameRequired"),
+    "customerName must be at least 2 characters": t("errNameShort"),
+    "items is required": t("errItemsRequired"),
+    "Order not found": t("errOrderNotFound"),
+    "Cannot read products.json": t("errCannotReadProducts")
   };
-
   if (known[text]) return known[text];
-  if (text.startsWith("HTTP ")) return "Es gab ein Verbindungsproblem. Bitte erneut versuchen.";
+  if (text.startsWith("HTTP ")) return t("connectionError");
   return text;
 }
 
 function showAppNotice(message, type = "info") {
   const notice = document.getElementById("appNotice");
   if (!notice) return;
-
   clearTimeout(state.noticeTimer);
   notice.textContent = message;
   notice.classList.remove("hidden", "appNotice--info", "appNotice--success", "appNotice--error");
   notice.classList.add(`appNotice--${type}`);
-
-  state.noticeTimer = setTimeout(() => {
-    notice.classList.add("hidden");
-  }, NOTICE_TIMEOUT_MS);
+  state.noticeTimer = setTimeout(() => { notice.classList.add("hidden"); }, NOTICE_TIMEOUT_MS);
 }
 
 function saveCart() {
@@ -81,11 +383,8 @@ function saveCart() {
 }
 
 function loadCart() {
-  try {
-    return sanitizeCart(JSON.parse(localStorage.getItem("cart_v1") || "[]"));
-  } catch {
-    return [];
-  }
+  try { return sanitizeCart(JSON.parse(localStorage.getItem("cart_v1") || "[]")); }
+  catch { return []; }
 }
 
 function clearCart() {
@@ -96,266 +395,308 @@ function clearCart() {
 
 function updateCartBadge() {
   state.cart = sanitizeCart(state.cart);
-  const count = state.cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+  const count = state.cart.reduce((sum, i) => sum + (i.qty || 1), 0);
   document.getElementById("cartCount").textContent = String(count);
+  const mc = document.getElementById("kioskMobileCount");
+  if (mc) mc.textContent = String(count);
   syncCartAttention(count > 0);
+  renderKioskQuickMeta();
 }
 
 function syncCartAttention(hasItems) {
-  const cartButton = document.getElementById("openCartBtn");
+  const btn = document.getElementById("openCartBtn");
   const badge = document.getElementById("cartCount");
-  if (!cartButton || !badge) return;
-
-  if (hasItems) {
-    cartButton.classList.add("is-cart-attention");
-    badge.classList.add("is-badge-attention");
-  } else {
-    cartButton.classList.remove("is-cart-attention");
-    badge.classList.remove("is-badge-attention");
-  }
+  if (!btn || !badge) return;
+  btn.classList.toggle("is-cart-attention", hasItems);
+  badge.classList.toggle("is-badge-attention", hasItems);
 }
 
-function renderGuestMeta() {
-  const target = document.getElementById("guestMeta");
-  if (!target || !state.guest) {
-    return;
-  }
-
-  const msLeft = (state.guest.expiresAt ?? 0) - Date.now();
-  if (msLeft <= 0) {
-    redirectToAccess();
-    return;
-  }
-  const minsLeft = Math.max(1, Math.ceil(msLeft / 60_000));
-  target.textContent = `Nummer ${state.guest.number} · gültig ${minsLeft} min`;
-  target.classList.remove("hidden");
+function renderCustomerName() {
+  const badge = document.getElementById("customerNameBadge");
+  if (badge) badge.textContent = state.customerName;
 }
 
-async function ensureGuestSession() {
-  const res = await fetch("/api/guest/me", { credentials: "same-origin" });
-  if (res.status === 401) {
-    redirectToAccess();
-    return false;
-  }
-  if (!res.ok) {
-    throw new Error("Gast-Session konnte nicht geladen werden.");
+/* ── Language dropdown in topbar ── */
+function setupLangDropdown() {
+  const dropdown = document.getElementById("langDropdownTopbar");
+  const toggle = document.getElementById("langToggleTopbar");
+  const list = document.getElementById("langListTopbar");
+  if (!toggle || !list) return;
+
+  toggle.addEventListener("click", () => {
+    const isOpen = !list.classList.contains("hidden");
+    list.classList.toggle("hidden", isOpen);
+    dropdown.classList.toggle("is-open", !isOpen);
+  });
+
+  for (const btn of list.querySelectorAll(".langDropdown__item")) {
+    btn.addEventListener("click", () => {
+      localStorage.setItem("lang", btn.dataset.lang);
+      list.classList.add("hidden");
+      dropdown.classList.remove("is-open");
+      applyLang();
+      if (state.products) {
+        renderMenu();
+        renderCart();
+      }
+    });
   }
 
-  const data = await res.json();
-  state.guest = data?.guest ?? null;
-  renderGuestMeta();
-  if (state.guestMetaTimer) {
-    clearInterval(state.guestMetaTimer);
-  }
-  state.guestMetaTimer = setInterval(renderGuestMeta, GUEST_META_REFRESH_MS);
-  return true;
+  document.addEventListener("click", (e) => {
+    if (dropdown && !dropdown.contains(e.target)) {
+      list.classList.add("hidden");
+      dropdown.classList.remove("is-open");
+    }
+  });
 }
 
+/* ── Init ── */
 async function init() {
+  if (!state.customerName) {
+    redirectToAccess();
+    return;
+  }
+
+  applyLang();
+  setupLangDropdown();
+  renderCustomerName();
+
   try {
-    const hasSession = await ensureGuestSession();
-    if (!hasSession) return;
-
-    const res = await fetch("/api/products", { credentials: "same-origin" });
-    if (res.status === 401) {
-      redirectToAccess();
-      return;
-    }
-    if (!res.ok) {
-      throw new Error("Speisekarte konnte nicht geladen werden.");
-    }
-
+    const res = await fetch("/api/products");
+    if (!res.ok) throw new Error(t("loadError"));
     state.products = await res.json();
     state.options = state.products.defaultOptions || [];
+    state.extras = Array.isArray(state.products.extras) ? state.products.extras : [];
     renderMenu();
     wireUI();
     updateCartBadge();
   } catch (error) {
-    showAppNotice(toGermanError(error.message, "Fehler beim Laden."), "error");
+    showAppNotice(translateError(error.message, t("loadFallback")), "error");
   }
 }
 
+/* ── Render Menu ── */
 function renderMenu() {
   const root = document.getElementById("menu");
   root.innerHTML = "";
+  renderKioskQuickMeta();
 
-  const grid = document.createElement("div");
-  grid.className = "menuGrid";
-
-  for (const category of state.products.categories) {
-    const card = document.createElement("section");
-    card.className = "menuCard";
-
-    const header = document.createElement("div");
-    header.className = "menuCard__header";
-    header.innerHTML = `<div class="menuCard__title">${category.title}</div>`;
-    card.appendChild(header);
-
-    const list = document.createElement("div");
-    list.className = "menuList";
-
-    for (const item of category.items) {
-      const row = document.createElement("div");
-      row.className = "menuItem";
-      row.innerHTML = `
-        <div class="thumb"><img alt="" src="/${item.image || ""}" onerror="this.remove();" /></div>
-        <div>
-          <div class="itemName">${item.name}</div>
-          <div class="itemMeta">${item.optionsEnabled ? "mit Auswahl" : "ohne Auswahl"}</div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:center">
-          <div class="price">${euro(item.price)}</div>
-          <button class="btn btn--primary">+</button>
-        </div>
-      `;
-      row.querySelector("button").addEventListener("click", () => openProduct(item, category));
-      row.addEventListener("click", (event) => {
-        if (event.target.tagName.toLowerCase() !== "button") {
-          openProduct(item, category);
-        }
-      });
-      list.appendChild(row);
-    }
-
-    card.appendChild(list);
-    grid.appendChild(card);
+  const categories = Array.isArray(state.products?.categories) ? state.products.categories : [];
+  if (!categories.length) {
+    root.innerHTML = `<div class="muted">${t("noProducts")}</div>`;
+    return;
   }
 
-  root.appendChild(grid);
+  const menuShell = document.createElement("div");
+  menuShell.className = "kioskMenuShell";
+
+  const sidebar = document.createElement("aside");
+  sidebar.className = "kioskCategorySidebar";
+  sidebar.setAttribute("aria-label", t("categories"));
+
+  const railWrap = document.createElement("div");
+  railWrap.className = "kioskCategoryRailWrap";
+  const rail = document.createElement("div");
+  rail.className = "kioskCategoryRail";
+  railWrap.appendChild(rail);
+  sidebar.appendChild(railWrap);
+
+  const stage = document.createElement("div");
+  stage.className = "kioskCategoryStage";
+
+  let firstCategoryId = null;
+
+  for (const category of categories) {
+    if (!firstCategoryId) firstCategoryId = category.id;
+
+    const categoryBtn = document.createElement("button");
+    categoryBtn.type = "button";
+    categoryBtn.className = "kioskCategoryBtn";
+    categoryBtn.dataset.categoryId = String(category.id);
+    const iconHtml = category.icon ? `<img class="kioskCategoryBtn__icon" src="/${category.icon}" alt="" />` : "";
+    const translatedCatTitle = catTitle(category);
+    categoryBtn.innerHTML = `${iconHtml}<span class="kioskCategoryBtn__title">${translatedCatTitle}</span><span class="kioskCategoryBtn__meta">${category.items.length} ${t("products")}</span>`;
+    categoryBtn.addEventListener("click", () => showKioskCategory(String(category.id)));
+    rail.appendChild(categoryBtn);
+
+    const section = document.createElement("section");
+    section.className = "kioskSection kioskSectionPanel";
+    section.id = getCategoryAnchorId(category.id);
+    section.dataset.categoryId = String(category.id);
+    const sectionIconHtml = category.icon ? `<img class="kioskSection__icon" src="/${category.icon}" alt="" />` : "";
+    section.innerHTML = `
+      <div class="kioskSection__header">
+        <div class="kioskSection__headerLeft">
+          ${sectionIconHtml}
+          <div>
+            <div class="kioskSection__eyebrow">${t("category")}</div>
+            <h2 class="kioskSection__title">${translatedCatTitle}</h2>
+          </div>
+        </div>
+        <div class="kioskSection__count">${category.items.length} ${t("products")}</div>
+      </div>
+    `;
+
+    const grid = document.createElement("div");
+    grid.className = "kioskProductGrid";
+
+    for (const item of category.items) {
+      const tile = document.createElement("article");
+      tile.className = "kioskTile";
+      tile.tabIndex = 0;
+      tile.setAttribute("role", "button");
+      tile.setAttribute("aria-label", `${item.name} ${t("select").toLowerCase()}`);
+
+      const hasNumber = typeof item.number === "number";
+      const tileImgSrc = item.image || category.icon || "";
+      const translatedName = itemName(item);
+      const translatedDesc = itemDesc(item);
+      tile.innerHTML = `
+        <div class="kioskTile__media">
+          ${tileImgSrc ? `<img alt="" src="/${tileImgSrc}" onerror="this.remove();" />` : ""}
+          ${hasNumber ? `<span class="kioskTile__number">#${item.number}</span>` : ""}
+        </div>
+        <div class="kioskTile__body">
+          <div class="kioskTile__name">${translatedName}</div>
+          ${translatedDesc ? `<div class="kioskTile__desc">${translatedDesc}</div>` : ""}
+        </div>
+        <div class="kioskTile__footer">
+          <div class="kioskTile__price">${euro(item.price)}</div>
+          <button type="button" class="btn btn--primary kioskTile__cta">${item.optionsEnabled ? t("select") : t("add")}</button>
+        </div>
+      `;
+
+      const openFn = () => openProduct(item, category);
+      tile.querySelector(".kioskTile__cta").addEventListener("click", (e) => { e.stopPropagation(); openFn(); });
+      tile.addEventListener("click", (e) => { if (e.target instanceof Element && e.target.closest("button")) return; openFn(); });
+      tile.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openFn(); } });
+      grid.appendChild(tile);
+    }
+
+    section.appendChild(grid);
+    stage.appendChild(section);
+  }
+
+  menuShell.appendChild(sidebar);
+  menuShell.appendChild(stage);
+  root.appendChild(menuShell);
+
+  const categoryIds = categories.map(c => String(c.id));
+  const initialId = categoryIds.includes(String(state.activeCategoryId)) ? String(state.activeCategoryId) : String(firstCategoryId);
+  if (initialId) showKioskCategory(initialId);
 }
 
+/* ── Wire UI ── */
 function wireUI() {
   bindClick("openCartBtn", openCart);
   bindClick("closeCartBtn", closeCart);
   bindClick("clearCartBtn", clearCart);
-  bindClick("switchNumberBtn", switchNumber);
-
+  bindClick("drawerClearCartBtn", clearCart);
+  bindClick("cancelOrderBtn", cancelOrder);
+  bindClick("changeNameBtn", changeName);
+  bindClick("kioskOpenCartBtn", openCart);
+  bindClick("kioskCheckoutBtn", startCheckout);
+  bindClick("kioskMobileCartBtn", openCart);
+  bindClick("kioskMobileCheckoutBtn", startCheckout);
   bindClick("closeOptionsBtn", closeOptions);
   bindClick("qtyMinus", () => setQty(state.selectedQty - 1));
   bindClick("qtyPlus", () => setQty(state.selectedQty + 1));
-  bindClick("addToCartBtn", addToCart);
-
-  bindClick("checkoutBtn", openTableModal);
-  bindClick("closeTableBtn", closeTableModal);
-  bindClick("sendOrderBtn", sendOrder);
-
-  bindClick("modalBackdrop", () => {
-    closeOptions();
-    closeTableModal();
-  });
-
+  bindClick("addToCartBtn", proceedToExtras);
+  bindClick("checkoutBtn", startCheckout);
+  bindClick("closeExtrasBtn", () => { closeExtrasModal(); closeOptions(); });
+  bindClick("skipExtrasBtn", () => { state.selectedExtras = []; finalizeAddToCart(); });
+  bindClick("addExtrasBtn", finalizeAddToCart);
+  bindClick("modalBackdrop", () => { closeOptions(); closeExtrasModal(); });
+  setupCheckoutListeners();
   renderCart();
 }
 
 function bindClick(id, handler) {
   const el = document.getElementById(id);
-  if (!el) {
-    console.warn(`Element fehlt: #${id}`);
-    return;
-  }
-  el.addEventListener("click", handler);
+  if (el) el.addEventListener("click", handler);
 }
 
-function openBackdrop() {
-  document.getElementById("modalBackdrop").classList.remove("hidden");
-}
-
-function closeBackdrop() {
-  document.getElementById("modalBackdrop").classList.add("hidden");
-}
-
-function needsChickenVealChoice(category) {
-  return category?.id === CHICKEN_VEAL_CATEGORY_ID;
-}
+function openBackdrop() { document.getElementById("modalBackdrop").classList.remove("hidden"); }
+function closeBackdrop() { document.getElementById("modalBackdrop").classList.add("hidden"); }
 
 function composeItemMeta(item) {
   const parts = [];
-  if (item.categoryTitle) parts.push(`Kategorie: ${item.categoryTitle}`);
-  if (item.meatType) parts.push(`Fleisch: ${item.meatType}`);
-  if (item.options?.length) parts.push(...item.options);
-  return parts.length ? parts.join(", ") : "—";
+  if (item.allOptions) {
+    parts.push(t("withAll"));
+  } else if (item.options?.length) {
+    parts.push(...item.options);
+  }
+  if (Array.isArray(item.extras) && item.extras.length) {
+    parts.push(...item.extras.map(e => `+${e.name} (${euro(e.price)})`));
+  }
+  return parts.length ? parts.join(", ") : "";
 }
 
+/* ── Product Modal ── */
 function openProduct(product, category) {
   state.selectedProduct = product;
   state.selectedCategory = category ?? null;
   state.selectedQty = 1;
-  state.selectedMeatType = null;
   state.selectedOptions = new Set();
+  state.allOptionsSelected = false;
+  state.selectedExtras = [];
 
-  document.getElementById("modalTitle").textContent = product.name;
+  document.getElementById("modalTitle").textContent = itemName(product);
   document.getElementById("modalPrice").textContent = euro(product.price);
   document.getElementById("qtyValue").textContent = "1";
 
   const area = document.getElementById("optionsArea");
   area.innerHTML = "";
-  const requiresMeatChoice = needsChickenVealChoice(state.selectedCategory);
-  let optionsContainer = null;
 
-  if (requiresMeatChoice) {
+  if (product.optionsEnabled) {
+    const mitAllemBtn = document.createElement("button");
+    mitAllemBtn.type = "button";
+    mitAllemBtn.className = "btn btn--primary btn--full";
+    mitAllemBtn.style.marginBottom = "12px";
+    mitAllemBtn.textContent = t("withAll");
+
+    const checkboxes = [];
+
+    mitAllemBtn.addEventListener("click", () => {
+      const allChecked = checkboxes.every(cb => cb.checked);
+      for (const cb of checkboxes) {
+        cb.checked = !allChecked;
+        if (cb.checked) state.selectedOptions.add(cb.dataset.option);
+        else state.selectedOptions.delete(cb.dataset.option);
+      }
+      state.allOptionsSelected = !allChecked;
+      mitAllemBtn.textContent = !allChecked ? t("deselectAll") : t("withAll");
+    });
+
+    area.appendChild(mitAllemBtn);
+
     const title = document.createElement("div");
     title.className = "muted small";
     title.style.marginBottom = "8px";
-    title.textContent = "Fleischwahl (Pflicht): Kalbfleisch oder Hühnerfleisch";
+    title.textContent = t("chooseIngredients");
     area.appendChild(title);
-
-    const meatGrid = document.createElement("div");
-    meatGrid.className = "checkboxGrid";
-    meatGrid.style.marginBottom = "12px";
-
-    for (const meatType of CHICKEN_VEAL_CHOICES) {
-      const label = document.createElement("label");
-      label.className = "chk";
-      label.innerHTML = `<input type="radio" name="meatTypeChoice" /> <span>${meatType}</span>`;
-      const radio = label.querySelector("input");
-      radio.addEventListener("change", () => {
-        if (!radio.checked) return;
-        state.selectedMeatType = meatType;
-
-        const waitingHint = document.getElementById("optionsWaitHint");
-        if (waitingHint) {
-          waitingHint.remove();
-        }
-        if (optionsContainer) {
-          optionsContainer.classList.remove("hidden");
-        }
-      });
-      meatGrid.appendChild(label);
-    }
-
-    area.appendChild(meatGrid);
-  }
-
-  if (product.optionsEnabled) {
-    optionsContainer = document.createElement("div");
-    if (requiresMeatChoice) {
-      optionsContainer.classList.add("hidden");
-
-      const waitingHint = document.createElement("div");
-      waitingHint.id = "optionsWaitHint";
-      waitingHint.className = "muted small";
-      waitingHint.style.marginBottom = "8px";
-      waitingHint.textContent = "Bitte zuerst Kalbfleisch oder Hühnerfleisch auswählen. Danach erscheinen die weiteren Optionen.";
-      area.appendChild(waitingHint);
-    }
 
     const grid = document.createElement("div");
     grid.className = "checkboxGrid";
-    for (const option of state.options) {
+    const translatedOpts = getTranslatedOptions();
+    for (let i = 0; i < state.options.length; i++) {
+      const option = state.options[i];
+      const optionLabel = translatedOpts[i] || option;
       const label = document.createElement("label");
       label.className = "chk";
-      label.innerHTML = `<input type="checkbox" /> <span>${option}</span>`;
+      const iconSvg = INGREDIENT_ICONS[option] || "";
+      label.innerHTML = `<input type="checkbox" data-option="${option}" /> ${iconSvg} <span>${optionLabel}</span>`;
       const checkbox = label.querySelector("input");
+      checkboxes.push(checkbox);
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) state.selectedOptions.add(option);
         else state.selectedOptions.delete(option);
+        state.allOptionsSelected = checkboxes.every(cb => cb.checked);
+        mitAllemBtn.textContent = state.allOptionsSelected ? t("deselectAll") : t("withAll");
       });
       grid.appendChild(label);
     }
-    optionsContainer.appendChild(grid);
-    area.appendChild(optionsContainer);
-  } else if (!requiresMeatChoice) {
-    area.innerHTML = `<div class="muted">Für dieses Produkt gibt es keine Auswahl.</div>`;
+    area.appendChild(grid);
   }
 
   openBackdrop();
@@ -364,9 +705,8 @@ function openProduct(product, category) {
 
 function closeOptions() {
   document.getElementById("optionsModal").classList.add("hidden");
-  if (document.getElementById("tableModal").classList.contains("hidden")) {
-    closeBackdrop();
-  }
+  const em = document.getElementById("extrasModal");
+  if (!em || em.classList.contains("hidden")) closeBackdrop();
 }
 
 function setQty(qty) {
@@ -374,46 +714,83 @@ function setQty(qty) {
   document.getElementById("qtyValue").textContent = String(state.selectedQty);
 }
 
-function addToCart() {
+/* ── Extras ── */
+function proceedToExtras() {
+  document.getElementById("optionsModal").classList.add("hidden");
+  if (state.extras.length === 0) { finalizeAddToCart(); return; }
+
+  state.selectedExtras = [];
+  const nameEl = document.getElementById("extrasProductName");
+  if (nameEl) nameEl.textContent = itemName(state.selectedProduct) || "";
+
+  const area = document.getElementById("extrasArea");
+  area.innerHTML = "";
+  const grid = document.createElement("div");
+  grid.className = "extrasGrid";
+
+  for (const extra of state.extras) {
+    const card = document.createElement("label");
+    card.className = "extraCard";
+    const iconSvg = EXTRA_ICONS[extra.id] || "";
+    const translatedExtraName = extraName(extra);
+    card.innerHTML = `
+      <input type="checkbox" data-extra-id="${extra.id}" />
+      <div class="extraCard__icon">${iconSvg}</div>
+      <div class="extraCard__info">
+        <div class="extraCard__name">${translatedExtraName}</div>
+        <div class="extraCard__price">+${euro(extra.price)}</div>
+      </div>
+    `;
+    const cb = card.querySelector("input");
+    cb.addEventListener("change", () => {
+      card.classList.toggle("extraCard--selected", cb.checked);
+      if (cb.checked) state.selectedExtras.push({ id: extra.id, name: translatedExtraName, price: extra.price });
+      else state.selectedExtras = state.selectedExtras.filter(e => e.id !== extra.id);
+    });
+    grid.appendChild(card);
+  }
+  area.appendChild(grid);
+  document.getElementById("extrasModal").classList.remove("hidden");
+}
+
+function closeExtrasModal() {
+  document.getElementById("extrasModal").classList.add("hidden");
+  closeBackdrop();
+}
+
+function finalizeAddToCart() {
   const product = state.selectedProduct;
   if (!product) return;
   state.cart = sanitizeCart(state.cart);
 
-  if (needsChickenVealChoice(state.selectedCategory) && !state.selectedMeatType) {
-    showAppNotice("Bitte zuerst Kalbfleisch oder Hühnerfleisch auswählen.", "info");
-    return;
-  }
-
   const options = [...state.selectedOptions].sort();
-  const key = [
-    product.id,
-    state.selectedCategory?.id || "",
-    state.selectedMeatType || "",
-    options.join("|")
-  ].join("::");
+  const allOptions = state.allOptionsSelected;
+  const extras = state.selectedExtras.map(e => ({ id: e.id, name: e.name, price: e.price }));
+  const extrasKey = extras.map(e => e.id).sort().join(",");
+  const key = [product.id, state.selectedCategory?.id || "", allOptions ? "MIT_ALLEM" : options.join("|"), extrasKey].join("::");
+  const extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
 
-  const existing = state.cart.find((item) => item.key === key);
+  const translatedProductName = itemName(product);
+  const existing = state.cart.find(i => i.key === key);
   if (existing) {
     existing.qty += state.selectedQty;
   } else {
     state.cart.push({
-      key,
-      productId: product.id,
-      name: product.name,
-      price: product.price,
+      key, productId: product.id, name: product.name, displayName: translatedProductName,
+      price: product.price + extrasTotal, basePrice: product.price,
       categoryId: state.selectedCategory?.id ?? null,
       categoryTitle: state.selectedCategory?.title ?? null,
-      meatType: state.selectedMeatType || null,
-      options,
-      qty: state.selectedQty
+      allOptions, options, extras, qty: state.selectedQty
     });
   }
 
   saveCart();
   renderCart();
-  closeOptions();
+  closeExtrasModal();
+  showAppNotice(`${translatedProductName} ${t("added")}`, "success");
 }
 
+/* ── Cart ── */
 function openCart() {
   document.getElementById("cartDrawer").classList.remove("hidden");
   document.getElementById("cartDrawer").setAttribute("aria-hidden", "false");
@@ -428,26 +805,50 @@ function renderCart() {
   state.cart = sanitizeCart(state.cart);
   const root = document.getElementById("cartItems");
   root.innerHTML = "";
+  const sidebarRoot = document.getElementById("kioskSidebarItems");
+  const sidebarTotal = document.getElementById("kioskSidebarTotal");
+  const mobileTotal = document.getElementById("kioskMobileTotal");
+  const mobileDock = document.querySelector(".kioskMobileDock");
+  const checkoutBtns = [document.getElementById("checkoutBtn"), document.getElementById("kioskCheckoutBtn"), document.getElementById("kioskMobileCheckoutBtn")].filter(Boolean);
+  const clearBtns = [document.getElementById("clearCartBtn"), document.getElementById("drawerClearCartBtn")].filter(Boolean);
+
+  if (sidebarRoot) sidebarRoot.innerHTML = "";
 
   if (state.cart.length === 0) {
-    root.innerHTML = `<div class="muted">Warenkorb ist leer.</div>`;
+    root.innerHTML = `<div class="muted">${t("emptyCart")}</div>`;
     document.getElementById("cartTotal").textContent = euro(0);
+    if (sidebarRoot) {
+      sidebarRoot.innerHTML = `
+        <div class="kioskSummaryEmpty">
+          <div class="kioskSummaryEmpty__icon">+</div>
+          <div class="kioskSummaryEmpty__title">${t("emptyTitle")}</div>
+          <div class="kioskSummaryEmpty__text">${t("emptyText")}</div>
+        </div>
+      `;
+    }
+    if (sidebarTotal) sidebarTotal.textContent = euro(0);
+    if (mobileTotal) mobileTotal.textContent = euro(0);
+    for (const b of checkoutBtns) b.disabled = true;
+    for (const b of clearBtns) b.disabled = true;
+    if (mobileDock) mobileDock.classList.add("is-empty");
+    renderKioskQuickMeta();
     return;
   }
 
   let total = 0;
   for (const item of state.cart) {
     total += item.price * item.qty;
-
     const card = document.createElement("div");
     card.className = "cartItem";
-    const optionsText = composeItemMeta(item);
-
+    const meta = composeItemMeta(item);
+    const hasExtras = Array.isArray(item.extras) && item.extras.length > 0;
+    const extrasSubtotal = hasExtras ? item.extras.reduce((s, e) => s + e.price, 0) : 0;
     card.innerHTML = `
       <div class="cartItem__top">
         <div>
           <div class="cartItem__name">${item.name}</div>
-          <div class="cartItem__opts">${optionsText}</div>
+          ${meta ? `<div class="cartItem__opts">${meta}</div>` : ""}
+          ${hasExtras ? `<div class="cartItem__priceBreakdown">${euro(item.basePrice || item.price)} + ${euro(extrasSubtotal)} Extras</div>` : ""}
         </div>
         <div><strong>${euro(item.price * item.qty)}</strong></div>
       </div>
@@ -455,113 +856,183 @@ function renderCart() {
         <button class="btn" data-act="minus">−</button>
         <div class="cartItem__qty">${item.qty}</div>
         <button class="btn" data-act="plus">+</button>
-        <button class="btn" data-act="remove" style="margin-left:auto;border-color:rgba(255,90,95,.35)">Entfernen</button>
+        <button class="btn" data-act="remove" style="margin-left:auto;border-color:rgba(255,90,95,.35)">${t("remove")}</button>
       </div>
     `;
-
-    card.querySelector('[data-act="minus"]').addEventListener("click", () => {
-      item.qty = Math.max(1, item.qty - 1);
-      saveCart();
-      renderCart();
-    });
-    card.querySelector('[data-act="plus"]').addEventListener("click", () => {
-      item.qty = Math.min(50, item.qty + 1);
-      saveCart();
-      renderCart();
-    });
-    card.querySelector('[data-act="remove"]').addEventListener("click", () => {
-      state.cart = state.cart.filter((entry) => entry.key !== item.key);
-      saveCart();
-      renderCart();
-    });
-
+    card.querySelector('[data-act="minus"]').addEventListener("click", () => { item.qty = Math.max(1, item.qty - 1); saveCart(); renderCart(); });
+    card.querySelector('[data-act="plus"]').addEventListener("click", () => { item.qty = Math.min(50, item.qty + 1); saveCart(); renderCart(); });
+    card.querySelector('[data-act="remove"]').addEventListener("click", () => { state.cart = state.cart.filter(e => e.key !== item.key); saveCart(); renderCart(); });
     root.appendChild(card);
+
+    if (sidebarRoot) {
+      const row = document.createElement("div");
+      row.className = "kioskSummaryItem";
+      row.innerHTML = `
+        <div class="kioskSummaryItem__head">
+          <div class="kioskSummaryItem__qty">${item.qty}x</div>
+          <div class="kioskSummaryItem__name">${item.name}</div>
+          <div class="kioskSummaryItem__price">${euro(item.price * item.qty)}</div>
+        </div>
+        ${meta ? `<div class="kioskSummaryItem__meta">${meta}</div>` : ""}
+      `;
+      sidebarRoot.appendChild(row);
+    }
   }
 
   document.getElementById("cartTotal").textContent = euro(total);
+  if (sidebarTotal) sidebarTotal.textContent = euro(total);
+  if (mobileTotal) mobileTotal.textContent = euro(total);
+  for (const b of checkoutBtns) b.disabled = false;
+  for (const b of clearBtns) b.disabled = false;
+  if (mobileDock) mobileDock.classList.remove("is-empty");
+  renderKioskQuickMeta();
 }
 
-async function switchNumber() {
-  await fetch("/api/guest/logout", {
-    method: "POST",
-    credentials: "same-origin"
-  }).catch(() => {});
+function showConfirmDialog(message) {
+  return new Promise((resolve) => {
+    const backdrop = document.getElementById("confirmBackdrop");
+    const dialog = document.getElementById("confirmDialog");
+    const msgEl = document.getElementById("confirmMessage");
+    const yesBtn = document.getElementById("confirmYes");
+    const noBtn = document.getElementById("confirmNo");
+    msgEl.textContent = message;
+    backdrop.classList.remove("hidden");
+    dialog.classList.remove("hidden");
+
+    function cleanup(result) {
+      backdrop.classList.add("hidden");
+      dialog.classList.add("hidden");
+      yesBtn.removeEventListener("click", onYes);
+      noBtn.removeEventListener("click", onNo);
+      backdrop.removeEventListener("click", onNo);
+      resolve(result);
+    }
+    function onYes() { cleanup(true); }
+    function onNo() { cleanup(false); }
+    yesBtn.addEventListener("click", onYes);
+    noBtn.addEventListener("click", onNo);
+    backdrop.addEventListener("click", onNo);
+  });
+}
+
+async function cancelOrder() {
+  const confirmed = await showConfirmDialog(t("cancelConfirm"));
+  if (!confirmed) return;
+  localStorage.removeItem("customerName");
+  localStorage.removeItem("dineOption");
   clearCart();
   redirectToAccess();
 }
 
-function openTableModal() {
-  if (state.cart.length === 0) {
-    showAppNotice("Warenkorb ist leer.", "info");
-    return;
-  }
-  // Close drawer first so the table-number dialog is clearly in front.
-  closeCart();
-  document.getElementById("tableNumberInput").value = "";
-  openBackdrop();
-  document.getElementById("tableModal").classList.remove("hidden");
-  document.getElementById("tableNumberInput").focus();
+function changeName() {
+  localStorage.removeItem("customerName");
+  localStorage.removeItem("dineOption");
+  clearCart();
+  redirectToAccess();
 }
 
-function closeTableModal() {
-  document.getElementById("tableModal").classList.add("hidden");
-  if (document.getElementById("optionsModal").classList.contains("hidden")) {
-    closeBackdrop();
+/* ── Checkout Flow ── */
+function startCheckout() {
+  if (state.cart.length === 0) { showAppNotice(t("cartEmpty"), "info"); return; }
+  closeCart();
+  closeBackdrop();
+  if (state.checkoutDine) {
+    document.getElementById("paymentScreen").classList.remove("hidden");
+  } else {
+    document.getElementById("dineScreen").classList.remove("hidden");
+  }
+}
+
+function setupCheckoutListeners() {
+  for (const btn of document.querySelectorAll("[data-dine]")) {
+    btn.addEventListener("click", () => {
+      state.checkoutDine = btn.dataset.dine;
+      document.getElementById("dineScreen").classList.add("hidden");
+      document.getElementById("paymentScreen").classList.remove("hidden");
+    });
+  }
+  for (const btn of document.querySelectorAll("[data-payment]")) {
+    btn.addEventListener("click", async () => {
+      state.checkoutPayment = btn.dataset.payment;
+      document.getElementById("paymentScreen").classList.add("hidden");
+      await sendOrder();
+    });
   }
 }
 
 async function sendOrder() {
-  const tableNumber = document.getElementById("tableNumberInput").value.trim();
-  if (!tableNumber) {
-    showAppNotice("Bitte Tischnummer eingeben.", "error");
-    document.getElementById("tableNumberInput").focus();
-    return;
-  }
-
   const payload = {
-    tableNumber,
-    items: state.cart.map((item) => ({
-      productId: item.productId,
-      name: item.name,
-      price: item.price,
-      qty: item.qty,
-      categoryId: item.categoryId ?? null,
-      categoryTitle: item.categoryTitle ?? null,
-      meatType: item.meatType ?? null,
-      options: item.options
+    customerName: state.customerName,
+    paymentMethod: state.checkoutPayment || "bar",
+    dineOption: state.checkoutDine || "hieressen",
+    items: state.cart.map(item => ({
+      productId: item.productId, name: item.name, price: item.price, qty: item.qty,
+      categoryId: item.categoryId ?? null, categoryTitle: item.categoryTitle ?? null,
+      allOptions: item.allOptions || false, options: item.options, extras: item.extras || []
     }))
   };
 
-  const button = document.getElementById("sendOrderBtn");
-  button.disabled = true;
-  button.textContent = "Wird gesendet...";
-
   try {
-    const res = await fetch("/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "same-origin",
-      body: JSON.stringify(payload)
-    });
-
-    if (res.status === 401) {
-      redirectToAccess();
-      return;
-    }
-
+    const res = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(toGermanError(data?.error, "Bestellung konnte nicht gesendet werden."));
-
-    showAppNotice("Bestellung wurde erfolgreich gesendet.", "success");
-    clearCart();
-    closeTableModal();
-    closeCart();
+    if (!res.ok) throw new Error(translateError(data?.error, t("orderError")));
+    showThankYouScreen();
   } catch (error) {
-    showAppNotice(`Bestellung konnte nicht gesendet werden: ${toGermanError(error.message, "Unbekannter Fehler")}`, "error");
-  } finally {
-    button.disabled = false;
-    button.textContent = "Bestellung senden";
+    // Show error as fullscreen overlay so it's always visible
+    showErrorOverlay(`${t("errorPrefix")} ${translateError(error.message, t("unknownError"))}`);
   }
+}
+
+function showErrorOverlay(message) {
+  // Hide any open overlays
+  for (const el of document.querySelectorAll(".fullscreenOverlay")) el.classList.add("hidden");
+  // Show error in a temporary fullscreen overlay
+  const overlay = document.createElement("div");
+  overlay.className = "fullscreenOverlay";
+  overlay.innerHTML = `
+    <div class="fullscreenOverlay__content">
+      <div style="font-size:60px;margin-bottom:16px">⚠</div>
+      <div class="fullscreenOverlay__title" style="color:#b4232b">${message}</div>
+      <button class="btn btn--primary" style="margin-top:24px;padding:16px 40px;font-size:18px;font-weight:800;border-radius:16px" data-i18n="tryAgain">${t("tryAgain")}</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  overlay.querySelector("button").addEventListener("click", () => {
+    overlay.remove();
+  });
+}
+
+function showThankYouScreen() {
+  document.getElementById("thankYouName").textContent = state.customerName;
+  const itemsEl = document.getElementById("thankYouItems");
+  itemsEl.innerHTML = "";
+  let total = 0;
+
+  for (const item of state.cart) {
+    total += item.price * item.qty;
+    const div = document.createElement("div");
+    div.className = "fullscreenOverlay__summaryItem";
+    const meta = composeItemMeta(item);
+    div.innerHTML = `
+      <div>
+        <strong>${item.qty}x ${item.name}</strong>
+        ${meta ? `<div style="font-size:12px;color:#8b7a65;margin-top:2px">${meta}</div>` : ""}
+      </div>
+      <span>${euro(item.price * item.qty)}</span>
+    `;
+    itemsEl.appendChild(div);
+  }
+
+  document.getElementById("thankYouTotal").textContent = `${t("totalLabel")} ${euro(total)}`;
+  document.getElementById("thankYouScreen").classList.remove("hidden");
+  clearCart();
+
+  setTimeout(() => {
+    localStorage.removeItem("customerName");
+    localStorage.removeItem("cart_v1");
+    localStorage.removeItem("dineOption");
+    redirectToAccess();
+  }, 5000);
 }
 
 init();
