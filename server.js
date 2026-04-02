@@ -506,6 +506,7 @@ function buildOrderReceiptPayload(order) {
 
   const chunks = [
     Buffer.from([ESC, 0x40]), // reset
+    Buffer.from([ESC, 0x74, 0x13]), // select Code Page 858 (West Europe, ä ö ü ß €)
     Buffer.from([ESC, 0x61, 0x01]), // center align
   ];
 
@@ -513,42 +514,42 @@ function buildOrderReceiptPayload(order) {
   chunks.push(
     Buffer.from([ESC, 0x45, 0x01]), // bold on
     escPosTextSize(2, 2),
-    Buffer.from("SARK KEBAB\n", "utf-8"),
+    Buffer.from("SARK KEBAB\n", "latin1"),
     Buffer.from([ESC, 0x45, 0x00]), // bold off
     escPosTextSize(1, 1),
-    Buffer.from("\n", "utf-8")
+    Buffer.from("\n", "latin1")
   );
 
   // Customer name (large)
   chunks.push(
     Buffer.from([ESC, 0x45, 0x01]), // bold on
     escPosTextSize(2, 2),
-    Buffer.from(`${order.customerName}\n`, "utf-8"),
+    Buffer.from(`${order.customerName.toUpperCase()}\n`, "latin1"),
     Buffer.from([ESC, 0x45, 0x00]), // bold off
     escPosTextSize(1, 1),
-    Buffer.from("\n", "utf-8")
+    Buffer.from("\n", "latin1")
   );
 
   // Dine option (extra large, very prominent)
   const dineLabel = order.dineOption === "mitnehmen" ? "*** MITNEHMEN ***" : "HIER ESSEN";
   chunks.push(
-    Buffer.from("================================\n", "utf-8"),
+    Buffer.from("================================\n", "latin1"),
     Buffer.from([ESC, 0x45, 0x01]), // bold on
     escPosTextSize(3, 3),
-    Buffer.from(`${dineLabel}\n`, "utf-8"),
+    Buffer.from(`${dineLabel}\n`, "latin1"),
     escPosTextSize(2, 2),
-    Buffer.from(`Zahlung: ${order.paymentMethod === "karte" ? "KARTE" : "BAR"}\n`, "utf-8"),
+    Buffer.from(`Zahlung: ${order.paymentMethod === "karte" ? "KARTE" : "BAR"}\n`, "latin1"),
     Buffer.from([ESC, 0x45, 0x00]), // bold off
     escPosTextSize(1, 1),
-    Buffer.from("================================\n", "utf-8"),
-    Buffer.from("\n", "utf-8")
+    Buffer.from("================================\n", "latin1"),
+    Buffer.from("\n", "latin1")
   );
 
   // Order ID and date
   chunks.push(
-    Buffer.from(`Bestellung #${order.id}\n`, "utf-8"),
-    Buffer.from(`${formatDateTime(order.createdAt)}\n`, "utf-8"),
-    Buffer.from("--------------------------------\n", "utf-8")
+    Buffer.from(`Bestellung #${order.id}\n`, "latin1"),
+    Buffer.from(`${formatDateTime(order.createdAt)}\n`, "latin1"),
+    Buffer.from("--------------------------------\n", "latin1")
   );
 
   // Switch to left alignment for items
@@ -565,27 +566,27 @@ function buildOrderReceiptPayload(order) {
     chunks.push(
       Buffer.from([ESC, 0x45, 0x01]), // bold on
       escPosTextSize(1, 2), // slightly taller for readability
-      Buffer.from(`${qty}x ${item.name}\n`, "utf-8"),
+      Buffer.from(`${qty}x ${item.name.toUpperCase()}\n`, "latin1"),
       Buffer.from([ESC, 0x45, 0x00]), // bold off
       escPosTextSize(1, 1)
     );
 
     // Price on right
     chunks.push(
-      Buffer.from(`   ${formatPrice(lineTotal)}\n`, "utf-8")
+      Buffer.from(`   ${formatPrice(lineTotal)}\n`, "latin1")
     );
 
     // Options/ingredients
     if (item.allOptions) {
       chunks.push(
         Buffer.from([ESC, 0x45, 0x01]), // bold on
-        Buffer.from(`   >> MIT ALLEM\n`, "utf-8"),
+        Buffer.from(`   >> MIT ALLEM\n`, "latin1"),
         Buffer.from([ESC, 0x45, 0x00]) // bold off
       );
     } else if (Array.isArray(item.options) && item.options.length > 0) {
       for (const opt of item.options) {
         chunks.push(
-          Buffer.from(`   - ${opt}\n`, "utf-8")
+          Buffer.from(`   - ${opt.toUpperCase()}\n`, "latin1")
         );
       }
     }
@@ -594,22 +595,22 @@ function buildOrderReceiptPayload(order) {
     if (Array.isArray(item.extras) && item.extras.length > 0) {
       for (const extra of item.extras) {
         chunks.push(
-          Buffer.from(`   + ${extra.name} (${formatPrice(extra.price)})\n`, "utf-8")
+          Buffer.from(`   + ${extra.name.toUpperCase()} (${formatPrice(extra.price)})\n`, "latin1")
         );
       }
     }
 
-    chunks.push(Buffer.from("\n", "utf-8"));
+    chunks.push(Buffer.from("\n", "latin1"));
   }
 
   // Divider and total
   chunks.push(
     Buffer.from([ESC, 0x61, 0x00]), // left align
-    Buffer.from("--------------------------------\n", "utf-8"),
+    Buffer.from("--------------------------------\n", "latin1"),
     Buffer.from([ESC, 0x45, 0x01]), // bold on
     escPosTextSize(2, 2),
     Buffer.from([ESC, 0x61, 0x02]), // right align
-    Buffer.from(`GESAMT: ${formatPrice(total)}\n`, "utf-8"),
+    Buffer.from(`GESAMT: ${formatPrice(total)}\n`, "latin1"),
     Buffer.from([ESC, 0x45, 0x00]), // bold off
     escPosTextSize(1, 1)
   );
@@ -617,17 +618,17 @@ function buildOrderReceiptPayload(order) {
   // Footer
   chunks.push(
     Buffer.from([ESC, 0x61, 0x01]), // center align
-    Buffer.from("\n", "utf-8"),
-    Buffer.from("Guten Appetit!\n", "utf-8")
+    Buffer.from("\n", "latin1"),
+    Buffer.from("GUTEN APPETIT!\n", "latin1")
   );
 
   for (const line of TICKET_FOOTER_LINES) {
-    chunks.push(Buffer.from(`${line}\n`, "utf-8"));
+    chunks.push(Buffer.from(`${line}\n`, "latin1"));
   }
 
   // Feed and cut
   chunks.push(
-    Buffer.from("\n\n\n", "utf-8"),
+    Buffer.from("\n\n\n", "latin1"),
     Buffer.from([GS, 0x56, 0x00]) // full cut
   );
 
