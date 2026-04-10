@@ -1,7 +1,7 @@
 const TRANSLATIONS = {
   de: {
     nameQuestion: "Wie ist dein Name?",
-    namePlaceholder: "z.B. Mehmet",
+    namePlaceholder: "z.B. Sark",
     nameHint: "Dein Name wird auf dem Bestellbon gedruckt.",
     nameSubmit: "Weiter zur Speisekarte",
     nameEmpty: "Bitte gib deinen Namen ein.",
@@ -12,7 +12,7 @@ const TRANSLATIONS = {
   },
   en: {
     nameQuestion: "What is your name?",
-    namePlaceholder: "e.g. Mehmet",
+    namePlaceholder: "e.g. Sark",
     nameHint: "Your name will be printed on the receipt.",
     nameSubmit: "Continue to menu",
     nameEmpty: "Please enter your name.",
@@ -23,7 +23,7 @@ const TRANSLATIONS = {
   },
   tr: {
     nameQuestion: "Adınız nedir?",
-    namePlaceholder: "örn. Mehmet",
+    namePlaceholder: "örn. Sark",
     nameHint: "Adınız sipariş fişine yazdırılacaktır.",
     nameSubmit: "Menüye devam et",
     nameEmpty: "Lütfen adınızı girin.",

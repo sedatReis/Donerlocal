@@ -19,7 +19,7 @@
       "title_tr": "DÖNER (Hindi eti)",
       "icon": "img/doner-sark.png",
       "items": [
-        { "id": "doner_03", "number": 3, "name": "Kleiner Döner", "name_en": "Small Döner", "name_tr": "Küçük Döner", "desc": "Dönerfleisch mit Salat & Sauce im Brot", "desc_en": "Döner meat with salad & sauce in bread", "desc_tr": "Döner et, salata ve sos ile ekmekte", "price": 7.90, "image": "img/doner-sark.png", "optionsEnabled": true },
+        { "id": "doner_03", "number": 3, "name": "Kleiner Döner", "name_en": "Small Döner", "name_tr": "Küçük Döner", "desc": "Dönerfleisch mit Salat & Sauce im Brot", "desc_en": "Döner meat with salad & sauce in bread", "desc_tr": "Döner et, salata ve sos ile ekmekte", "price": 7.90, "image": "imagesforsark/kleinerDoner.png", "optionsEnabled": true },
         { "id": "doner_04", "number": 4, "name": "Döner", "name_en": "Döner", "name_tr": "Döner", "desc": "Dönerfleisch mit Salat, Sauce im Brot", "desc_en": "Döner meat with salad, sauce in bread", "desc_tr": "Döner et, salata, sos ile ekmekte", "price": 9.50, "image": "img/doner-sark.png", "optionsEnabled": true },
         { "id": "doner_05", "number": 5, "name": "Döner Spezial", "name_en": "Döner Special", "name_tr": "Döner Spesiyel", "desc": "Dönerfleisch mit Salat, Sauce & Käse im Brot", "desc_en": "Döner meat with salad, sauce & cheese in bread", "desc_tr": "Döner et, salata, sos ve peynir ile ekmekte", "price": 10.50, "image": "img/doner-sark.png", "optionsEnabled": true },
         { "id": "doner_06", "number": 6, "name": "Döner mit viel Fleisch", "name_en": "Döner with Extra Meat", "name_tr": "Bol Etli Döner", "desc": "Extra viel Dönerfleisch mit Salat & Sauce im Brot", "desc_en": "Extra döner meat with salad & sauce in bread", "desc_tr": "Ekstra döner et, salata ve sos ile ekmekte", "price": 11.50, "image": "img/doner-sark.png", "optionsEnabled": true },
@@ -46,7 +46,7 @@
       "title": "LAHMACUN",
       "title_en": "LAHMACUN",
       "title_tr": "LAHMACUN",
-      "icon": "img/lahmacun-salat.png",
+      "icon": "img/lahmacun-ohne.png",
       "items": [
         { "id": "lahmacun_14", "number": 14, "name": "Lahmacun ohne Salat & Sauce", "name_en": "Lahmacun without Salad & Sauce", "name_tr": "Lahmacun Salatasız ve Sossuz", "desc": "Dünner Teigfladen, belegt mit gewürztem Hackfleisch, Gemüse & Gewürzen", "desc_en": "Thin flatbread with seasoned minced meat, vegetables & spices", "desc_tr": "İnce hamur, baharatlı kıyma, sebze ve baharatlarla", "price": 5.50, "image": "img/lahmacun-ohne.png", "optionsEnabled": false },
         { "id": "lahmacun_15", "number": 15, "name": "Lahmacun mit Salat & Sauce", "name_en": "Lahmacun with Salad & Sauce", "name_tr": "Lahmacun Salata ve Sos ile", "desc": "Dünner Teigfladen, belegt mit gewürztem Hackfleisch, Gemüse & Gewürzen", "desc_en": "Thin flatbread with seasoned minced meat, vegetables & spices", "desc_tr": "İnce hamur, baharatlı kıyma, sebze ve baharatlarla", "price": 7.90, "image": "img/lahmacun-salat.png", "optionsEnabled": true },
@@ -62,12 +62,10 @@
       "title_tr": "DÖNER KUTU",
       "icon": "img/donerbox-sark.png",
       "items": [
-        { "id": "donerbox_19", "number": 19, "name": "Döner Box klein", "name_en": "Döner Box Small", "name_tr": "Döner Kutu Küçük", "desc": "Dönerfleisch mit Sauce (mit Pommes oder Reis?)", "desc_en": "Döner meat with sauce (with fries or rice?)", "desc_tr": "Döner et, sos ile (patates veya pilav?)", "price": 9.50, "image": "img/donerbox-sark.png", "optionsEnabled": true },
+        { "id": "donerbox_19", "number": 19, "name": "Döner Box klein", "name_en": "Döner Box Small", "name_tr": "Döner Kutu Küçük", "desc": "Dönerfleisch mit Sauce (mit Pommes oder Reis?)", "desc_en": "Döner meat with sauce (with fries or rice?)", "desc_tr": "Döner et, sos ile (patates veya pilav?)", "price": 9.50, "image": "imagesforsark/Doenerboxklein.png", "optionsEnabled": true },
         { "id": "donerbox_20", "number": 20, "name": "Döner Box gross", "name_en": "Döner Box Large", "name_tr": "Döner Kutu Büyük", "desc": "Dönerfleisch mit Sauce & Pommes (mit Pommes oder Reis?)", "desc_en": "Döner meat with sauce & fries (with fries or rice?)", "desc_tr": "Döner et, sos ve patates (patates veya pilav?)", "price": 10.90, "image": "img/donerbox-sark.png", "optionsEnabled": true },
-        { "id": "donerbox_21", "number": 21, "name": "Salat Box klein", "name_en": "Salad Box Small", "name_tr": "Salata Kutu Küçük", "desc": "Dönerfleisch mit Sauce & Salat", "desc_en": "Döner meat with sauce & salad", "desc_tr": "Döner et, sos ve salata ile", "price": 9.50, "image": "img/salatbox-sark.png", "optionsEnabled": true },
-        { "id": "donerbox_22", "number": 22, "name": "Salat Box gross", "name_en": "Salad Box Large", "name_tr": "Salata Kutu Büyük", "desc": "Dönerfleisch mit Sauce & Salat", "desc_en": "Döner meat with sauce & salad", "desc_tr": "Döner et, sos ve salata ile", "price": 10.90, "image": "img/salatbox-sark.png", "optionsEnabled": true },
-        { "id": "donerbox_23", "number": 23, "name": "Extra Salat", "name_en": "Extra Salad", "name_tr": "Ekstra Salata", "desc": "", "desc_en": "", "desc_tr": "", "price": 1.50, "image": "img/salat-sark.png", "optionsEnabled": false },
-        { "id": "donerbox_24", "number": 24, "name": "Grillgemüse dazu", "name_en": "Add Grilled Vegetables", "name_tr": "Izgara Sebze Ekleme", "desc": "Erweitern Sie Ihre Bestellung mit köstlichem Grillgemüse", "desc_en": "Expand your order with delicious grilled vegetables", "desc_tr": "Siparişinizi lezzetli ızgara sebzelerle genişletin", "price": 2.50, "image": "", "optionsEnabled": false }
+        { "id": "donerbox_21", "number": 21, "name": "Salat Box klein", "name_en": "Salad Box Small", "name_tr": "Salata Kutu Küçük", "desc": "Dönerfleisch mit Sauce & Salat", "desc_en": "Döner meat with sauce & salad", "desc_tr": "Döner et, sos ve salata ile", "price": 9.50, "image": "imagesforsark/Salatboxklein.png", "optionsEnabled": true },
+        { "id": "donerbox_22", "number": 22, "name": "Salat Box gross", "name_en": "Salad Box Large", "name_tr": "Salata Kutu Büyük", "desc": "Dönerfleisch mit Sauce & Salat", "desc_en": "Döner meat with sauce & salad", "desc_tr": "Döner et, sos ve salata ile", "price": 10.90, "image": "img/salatbox-sark.png", "optionsEnabled": true }
       ]
     },
     {
@@ -129,7 +127,7 @@
       "title_tr": "SALATA",
       "icon": "img/salat-sark.png",
       "items": [
-        { "id": "salat_41", "number": 41, "name": "Kleiner Salat", "name_en": "Small Salad", "name_tr": "Küçük Salata", "desc": "Gemischter Salatteller, Sauce & Olivenöldressing", "desc_en": "Mixed salad plate, sauce & olive oil dressing", "desc_tr": "Karışık salata tabağı, sos ve zeytinyağı sosu", "price": 4.90, "image": "img/salat-sark.png", "optionsEnabled": false },
+        { "id": "salat_41", "number": 41, "name": "Kleiner Salat", "name_en": "Small Salad", "name_tr": "Küçük Salata", "desc": "Gemischter Salatteller, Sauce & Olivenöldressing", "desc_en": "Mixed salad plate, sauce & olive oil dressing", "desc_tr": "Karışık salata tabağı, sos ve zeytinyağı sosu", "price": 4.90, "image": "imagesforsark/Salatklein.png", "optionsEnabled": false },
         { "id": "salat_42", "number": 42, "name": "Grosser Salat", "name_en": "Large Salad", "name_tr": "Büyük Salata", "desc": "Gemischter Salatteller, Sauce & Olivenöldressing", "desc_en": "Mixed salad plate, sauce & olive oil dressing", "desc_tr": "Karışık salata tabağı, sos ve zeytinyağı sosu", "price": 6.50, "image": "img/salat-sark.png", "optionsEnabled": false }
       ]
     },
@@ -179,7 +177,7 @@
       "title_tr": "TAVUK NUGGETS & PATATES",
       "icon": "img/pommes-sark.png",
       "items": [
-        { "id": "nuggets_55", "number": 55, "name": "Pommes Frites Klein", "name_en": "French Fries Small", "name_tr": "Patates Kızartması Küçük", "desc": "", "desc_en": "", "desc_tr": "", "price": 4.90, "image": "img/pommes-sark.png", "optionsEnabled": false },
+        { "id": "nuggets_55", "number": 55, "name": "Pommes Frites Klein", "name_en": "French Fries Small", "name_tr": "Patates Kızartması Küçük", "desc": "", "desc_en": "", "desc_tr": "", "price": 4.90, "image": "imagesforsark/KleinerPommes.png", "optionsEnabled": false },
         { "id": "nuggets_56", "number": 56, "name": "Pommes Frites Gross", "name_en": "French Fries Large", "name_tr": "Patates Kızartması Büyük", "desc": "", "desc_en": "", "desc_tr": "", "price": 6.50, "image": "img/pommes-sark.png", "optionsEnabled": false },
         { "id": "nuggets_57", "number": 57, "name": "Chicken Nuggets 1 Stk.", "name_en": "Chicken Nuggets 1 Pc.", "name_tr": "Tavuk Nugget 1 Adet", "desc": "", "desc_en": "", "desc_tr": "", "price": 1.00, "image": "img/chicken-nugget-1stk.png", "optionsEnabled": false },
         { "id": "nuggets_58", "number": 58, "name": "Chicken Nuggets mit Pommes", "name_en": "Chicken Nuggets with Fries", "name_tr": "Tavuk Nugget Patates ile", "desc": "", "desc_en": "", "desc_tr": "", "price": 10.90, "image": "img/chicken-nuggets-pommes.png", "optionsEnabled": false }
@@ -216,13 +214,13 @@
     }
   ],
   "extras": [
-    { "id": "extra_59", "number": 59, "name": "Extra Grillgemüse", "name_en": "Extra grilled vegetables", "name_tr": "Ekstra ızgara sebze", "price": 2.50 },
-    { "id": "extra_60", "number": 60, "name": "Extra Pomm", "name_en": "Extra fries", "name_tr": "Ekstra patates", "price": 1.00 },
+    { "id": "extra_59", "number": 59, "name": "mit Grillgemüse", "name_en": "with grilled vegetables", "name_tr": "Izgara sebze ile", "price": 2.50 },
+    { "id": "extra_60", "number": 60, "name": "mit Pommes", "name_en": "with fries", "name_tr": "Patates ile", "price": 1.00 },
     { "id": "extra_61", "number": 61, "name": "Ketchup / Mayonnaise / Currysauce", "name_en": "Ketchup / Mayonnaise / Curry sauce", "name_tr": "Ketçap / Mayonez / Köri sosu", "price": 0.40 },
     { "id": "extra_62", "number": 62, "name": "Dönerbrot Gross", "name_en": "Döner bread large", "name_tr": "Döner ekmeği büyük", "price": 1.00 },
     { "id": "extra_63", "number": 63, "name": "Dönerbrot Klein", "name_en": "Döner bread small", "name_tr": "Döner ekmeği küçük", "price": 0.80 },
-    { "id": "extra_64", "number": 64, "name": "Extra Käse", "name_en": "Extra cheese", "name_tr": "Ekstra peynir", "price": 1.00 },
-    { "id": "extra_65", "number": 65, "name": "Extra Dönersauce (ohne Knoblauch)", "name_en": "Extra döner sauce (no garlic)", "name_tr": "Ekstra döner sosu (sarımsaklı)", "price": 1.50 }
+    { "id": "extra_64", "number": 64, "name": "mit Käse", "name_en": "with cheese", "name_tr": "Peynir ile", "price": 1.00 },
+    { "id": "extra_65", "number": 65, "name": "mit Dönersauce (ohne Knoblauch)", "name_en": "with döner sauce (no garlic)", "name_tr": "Döner sosu ile (sarımsaklı)", "price": 1.50 }
   ],
   "defaultOptions": [
     "Sauce",

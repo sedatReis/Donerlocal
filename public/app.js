@@ -41,6 +41,12 @@ const TRANSLATIONS = {
     withAll: "Mit allem",
     deselectAll: "Alles abwählen",
     chooseIngredients: "Zutaten auswählen:",
+    optionalIngredients: "Optional dazu:",
+    riceOrFries: "Mit Reis oder Pommes?",
+    rice: "Reis",
+    fries: "Pommes",
+    freeIngredient: "1 Zutat gratis wählen:",
+    extraIngredientFee: "Weitere Zutaten: +1,50 €",
     added: "hinzugefügt!",
     cartEmpty: "Warenkorb ist leer.",
     loadError: "Speisekarte konnte nicht geladen werden.",
@@ -100,6 +106,12 @@ const TRANSLATIONS = {
     withAll: "With everything",
     deselectAll: "Deselect all",
     chooseIngredients: "Choose ingredients:",
+    optionalIngredients: "Optional extras:",
+    riceOrFries: "With rice or fries?",
+    rice: "Rice",
+    fries: "Fries",
+    freeIngredient: "Choose 1 free ingredient:",
+    extraIngredientFee: "Extra ingredients: +1.50 €",
     added: "added!",
     cartEmpty: "Cart is empty.",
     loadError: "Could not load the menu.",
@@ -159,6 +171,12 @@ const TRANSLATIONS = {
     withAll: "Her şeyle",
     deselectAll: "Tümünü kaldır",
     chooseIngredients: "Malzeme seçin:",
+    optionalIngredients: "İsteğe bağlı:",
+    riceOrFries: "Pilav mı patates mi?",
+    rice: "Pilav",
+    fries: "Patates",
+    freeIngredient: "1 ücretsiz malzeme seçin:",
+    extraIngredientFee: "Ekstra malzemeler: +1,50 €",
     added: "eklendi!",
     cartEmpty: "Sepet boş.",
     loadError: "Menü yüklenemedi.",
@@ -277,6 +295,17 @@ const EXTRA_ICONS = {
   "extra_65": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M16 3h-4a1 1 0 00-1 1v3l-2 1v1h10v-1l-2-1V4a1 1 0 00-1-1z" fill="#e8e0d0" stroke="#b0a090" stroke-width=".6"/><path d="M9 9l1 15h8l1-15z" fill="#f5f0e0" stroke="#b0a090" stroke-width=".6"/><path d="M10.5 13c1.5 2 5.5 2 7 0" stroke="#e8a030" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M11 17c1 1 5 1 6 0" stroke="#e8a030" stroke-width="1" fill="none" stroke-linecap="round"/></svg>`
 };
 
+/* ── Kids portion IDs ── */
+const KIDS_PORTION_IDS = new Set([
+  "doner_03",      // Kleiner Döner
+  "donerbox_19",   // Döner Box klein
+  "donerbox_21",   // Salat Box klein
+  "chicken_34",    // Chicken Box Klein mit Pommes
+  "chicken_36",    // Chicken Box Klein mit Reis
+  "salat_41",      // Kleiner Salat
+  "nuggets_55"     // Pommes Frites Klein
+]);
+
 /* ── State ── */
 const state = {
   products: null,
@@ -289,6 +318,8 @@ const state = {
   allOptionsSelected: false,
   extras: [],
   selectedExtras: [],
+  donerboxBase: null, // "reis" or "pommes" for Dönerbox
+  donerboxExtraFee: 0, // 1.50€ if more than 1 ingredient selected
   cart: loadCart(),
   customerName: localStorage.getItem("customerName") || "",
   checkoutDine: localStorage.getItem("dineOption") || null,
@@ -626,6 +657,9 @@ function composeItemMeta(item) {
   } else if (item.options?.length) {
     parts.push(...item.options);
   }
+  if (item.donerboxExtraFee > 0) {
+    parts.push(`+${euro(item.donerboxExtraFee)} Zutaten`);
+  }
   if (Array.isArray(item.extras) && item.extras.length) {
     parts.push(...item.extras.map(e => `+${e.name} (${euro(e.price)})`));
   }
@@ -640,6 +674,8 @@ function openProduct(product, category) {
   state.selectedOptions = new Set();
   state.allOptionsSelected = false;
   state.selectedExtras = [];
+  state.donerboxBase = null;
+  state.donerboxExtraFee = 0;
 
   document.getElementById("modalTitle").textContent = itemName(product);
   document.getElementById("modalPrice").textContent = euro(product.price);
@@ -648,28 +684,115 @@ function openProduct(product, category) {
   const area = document.getElementById("optionsArea");
   area.innerHTML = "";
 
-  if (product.optionsEnabled) {
+  // Check if this is a Dönerbox product (not Extra Salat or Grillgemüse)
+  const isDonerbox = category?.id === "donerbox" && (product.id === "donerbox_19" || product.id === "donerbox_20");
+
+  if (isDonerbox) {
+    // Step 1: Reis oder Pommes selection
+    const riceOrFriesTitle = document.createElement("div");
+    riceOrFriesTitle.className = "muted small";
+    riceOrFriesTitle.style.marginBottom = "12px";
+    riceOrFriesTitle.style.fontSize = "16px";
+    riceOrFriesTitle.style.fontWeight = "700";
+    riceOrFriesTitle.style.color = "#2b170b";
+    riceOrFriesTitle.textContent = t("riceOrFries");
+    area.appendChild(riceOrFriesTitle);
+
+    const baseGrid = document.createElement("div");
+    baseGrid.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;";
+
+    const riceIcon = `<svg viewBox="0 0 48 48" width="44" height="44"><ellipse cx="24" cy="30" rx="18" ry="12" fill="#f5f0e0" stroke="#c8a060" stroke-width="1.2"/><ellipse cx="24" cy="28" rx="14" ry="8" fill="#fff" stroke="#e0d4b8" stroke-width=".8"/><ellipse cx="20" cy="27" rx="2" ry="1.2" fill="#f0e8d0"/><ellipse cx="26" cy="26" rx="2.2" ry="1.3" fill="#f0e8d0"/><ellipse cx="23" cy="30" rx="2" ry="1" fill="#f0e8d0"/></svg>`;
+    const friesIcon = `<svg viewBox="0 0 48 48" width="44" height="44"><rect x="10" y="28" width="28" height="14" rx="3" fill="#d32f2f"/><rect x="15" y="10" width="4" height="22" rx="1.5" fill="#fdd835" stroke="#c8a415" stroke-width=".5"/><rect x="22" y="8" width="4" height="24" rx="1.5" fill="#fdd835" stroke="#c8a415" stroke-width=".5"/><rect x="29" y="11" width="4" height="21" rx="1.5" fill="#fdd835" stroke="#c8a415" stroke-width=".5"/></svg>`;
+
+    for (const base of [{ key: "pommes", label: t("fries"), icon: friesIcon }, { key: "reis", label: t("rice"), icon: riceIcon }]) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "donerboxBaseBtn";
+      btn.dataset.base = base.key;
+      btn.innerHTML = `<div>${base.icon}</div><div style="font-weight:700;font-size:15px;margin-top:4px">${base.label}</div>`;
+      btn.style.cssText = "display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;border-radius:16px;border:2px solid rgba(112,77,45,.15);background:rgba(255,255,255,.7);cursor:pointer;transition:all .2s;";
+      btn.addEventListener("click", () => {
+        state.donerboxBase = base.key;
+        for (const b of baseGrid.querySelectorAll(".donerboxBaseBtn")) {
+          b.style.borderColor = b.dataset.base === base.key ? "#d6281f" : "rgba(112,77,45,.15)";
+          b.style.background = b.dataset.base === base.key ? "rgba(214,40,31,.08)" : "rgba(255,255,255,.7)";
+        }
+      });
+      baseGrid.appendChild(btn);
+    }
+    area.appendChild(baseGrid);
+
+    // Step 2: Ingredient selection (1 free, +1.50€ for more)
+    const ingTitle = document.createElement("div");
+    ingTitle.className = "muted small";
+    ingTitle.style.marginBottom = "4px";
+    ingTitle.textContent = t("freeIngredient");
+    area.appendChild(ingTitle);
+
+    const feeHint = document.createElement("div");
+    feeHint.className = "muted small";
+    feeHint.style.marginBottom = "10px";
+    feeHint.style.fontSize = "12px";
+    feeHint.style.color = "#b4232b";
+    feeHint.textContent = t("extraIngredientFee");
+    area.appendChild(feeHint);
+
+    const grid = document.createElement("div");
+    grid.className = "checkboxGrid";
+    const translatedOpts = getTranslatedOptions();
+    const donerboxCheckboxes = [];
+
+    for (let i = 0; i < state.options.length; i++) {
+      const option = state.options[i];
+      const optionLabel = translatedOpts[i] || option;
+      const label = document.createElement("label");
+      label.className = "chk";
+      const iconSvg = INGREDIENT_ICONS[option] || "";
+      label.innerHTML = `<input type="checkbox" data-option="${option}" /> ${iconSvg} <span>${optionLabel}</span>`;
+      const checkbox = label.querySelector("input");
+      donerboxCheckboxes.push(checkbox);
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) state.selectedOptions.add(option);
+        else state.selectedOptions.delete(option);
+        // Calculate fee: 1 free, then 1.50€ flat for any additional
+        const count = state.selectedOptions.size;
+        state.donerboxExtraFee = count > 1 ? 1.50 : 0;
+        feeHint.textContent = count > 1
+          ? `${t("extraIngredientFee")} (${euro(1.50)})`
+          : t("extraIngredientFee");
+        feeHint.style.color = count > 1 ? "#b4232b" : "#8b7a65";
+        updateModalSubtotal();
+      });
+      grid.appendChild(label);
+    }
+    area.appendChild(grid);
+
+  } else if (product.optionsEnabled) {
+    const STANDARD_COUNT = 6; // first 6 are standard (Sauce to Gurke)
+    const standardCheckboxes = [];
+    const optionalCheckboxes = [];
+    const allCheckboxes = [];
+
     const mitAllemBtn = document.createElement("button");
     mitAllemBtn.type = "button";
     mitAllemBtn.className = "btn btn--primary btn--full";
     mitAllemBtn.style.marginBottom = "12px";
     mitAllemBtn.textContent = t("withAll");
 
-    const checkboxes = [];
-
     mitAllemBtn.addEventListener("click", () => {
-      const allChecked = checkboxes.every(cb => cb.checked);
-      for (const cb of checkboxes) {
-        cb.checked = !allChecked;
+      const allStandardChecked = standardCheckboxes.every(cb => cb.checked);
+      for (const cb of standardCheckboxes) {
+        cb.checked = !allStandardChecked;
         if (cb.checked) state.selectedOptions.add(cb.dataset.option);
         else state.selectedOptions.delete(cb.dataset.option);
       }
-      state.allOptionsSelected = !allChecked;
-      mitAllemBtn.textContent = !allChecked ? t("deselectAll") : t("withAll");
+      state.allOptionsSelected = !allStandardChecked;
+      mitAllemBtn.textContent = !allStandardChecked ? t("deselectAll") : t("withAll");
     });
 
     area.appendChild(mitAllemBtn);
 
+    // Standard ingredients (Kategorie 1)
     const title = document.createElement("div");
     title.className = "muted small";
     title.style.marginBottom = "8px";
@@ -679,7 +802,8 @@ function openProduct(product, category) {
     const grid = document.createElement("div");
     grid.className = "checkboxGrid";
     const translatedOpts = getTranslatedOptions();
-    for (let i = 0; i < state.options.length; i++) {
+
+    for (let i = 0; i < Math.min(STANDARD_COUNT, state.options.length); i++) {
       const option = state.options[i];
       const optionLabel = translatedOpts[i] || option;
       const label = document.createElement("label");
@@ -687,20 +811,52 @@ function openProduct(product, category) {
       const iconSvg = INGREDIENT_ICONS[option] || "";
       label.innerHTML = `<input type="checkbox" data-option="${option}" /> ${iconSvg} <span>${optionLabel}</span>`;
       const checkbox = label.querySelector("input");
-      checkboxes.push(checkbox);
+      standardCheckboxes.push(checkbox);
+      allCheckboxes.push(checkbox);
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) state.selectedOptions.add(option);
         else state.selectedOptions.delete(option);
-        state.allOptionsSelected = checkboxes.every(cb => cb.checked);
+        state.allOptionsSelected = standardCheckboxes.every(cb => cb.checked);
         mitAllemBtn.textContent = state.allOptionsSelected ? t("deselectAll") : t("withAll");
       });
       grid.appendChild(label);
     }
     area.appendChild(grid);
+
+    // Optional ingredients (Kategorie 2: Mais, Jalapeño, Chili Sauce, Scharf)
+    if (state.options.length > STANDARD_COUNT) {
+      const optTitle = document.createElement("div");
+      optTitle.className = "muted small";
+      optTitle.style.marginBottom = "8px";
+      optTitle.style.marginTop = "16px";
+      optTitle.textContent = t("optionalIngredients");
+      area.appendChild(optTitle);
+
+      const optGrid = document.createElement("div");
+      optGrid.className = "checkboxGrid";
+      for (let i = STANDARD_COUNT; i < state.options.length; i++) {
+        const option = state.options[i];
+        const optionLabel = translatedOpts[i] || option;
+        const label = document.createElement("label");
+        label.className = "chk";
+        const iconSvg = INGREDIENT_ICONS[option] || "";
+        label.innerHTML = `<input type="checkbox" data-option="${option}" /> ${iconSvg} <span>${optionLabel}</span>`;
+        const checkbox = label.querySelector("input");
+        optionalCheckboxes.push(checkbox);
+        allCheckboxes.push(checkbox);
+        checkbox.addEventListener("change", () => {
+          if (checkbox.checked) state.selectedOptions.add(option);
+          else state.selectedOptions.delete(option);
+        });
+        optGrid.appendChild(label);
+      }
+      area.appendChild(optGrid);
+    }
   }
 
   openBackdrop();
   document.getElementById("optionsModal").classList.remove("hidden");
+  updateModalSubtotal();
 }
 
 function closeOptions() {
@@ -712,10 +868,25 @@ function closeOptions() {
 function setQty(qty) {
   state.selectedQty = Math.max(1, Math.min(20, qty));
   document.getElementById("qtyValue").textContent = String(state.selectedQty);
+  updateModalSubtotal();
+}
+
+function updateModalSubtotal() {
+  const el = document.getElementById("modalSubtotal");
+  if (!el || !state.selectedProduct) return;
+  const subtotal = (state.selectedProduct.price + state.donerboxExtraFee) * state.selectedQty;
+  el.textContent = `${t("subtotal")}: ${euro(subtotal)}`;
 }
 
 /* ── Extras ── */
 function proceedToExtras() {
+  // Validate Dönerbox base selection
+  const isDonerbox = state.selectedCategory?.id === "donerbox" && (state.selectedProduct?.id === "donerbox_19" || state.selectedProduct?.id === "donerbox_20");
+  if (isDonerbox && !state.donerboxBase) {
+    showAppNotice(t("riceOrFries"), "error");
+    return;
+  }
+
   document.getElementById("optionsModal").classList.add("hidden");
   if (state.extras.length === 0) { finalizeAddToCart(); return; }
 
@@ -767,20 +938,29 @@ function finalizeAddToCart() {
   const allOptions = state.allOptionsSelected;
   const extras = state.selectedExtras.map(e => ({ id: e.id, name: e.name, price: e.price }));
   const extrasKey = extras.map(e => e.id).sort().join(",");
-  const key = [product.id, state.selectedCategory?.id || "", allOptions ? "MIT_ALLEM" : options.join("|"), extrasKey].join("::");
+  const donerboxBaseKey = state.donerboxBase || "";
+  const key = [product.id, state.selectedCategory?.id || "", allOptions ? "MIT_ALLEM" : options.join("|"), extrasKey, donerboxBaseKey].join("::");
   const extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
+  const donerboxFee = state.donerboxExtraFee || 0;
 
   const translatedProductName = itemName(product);
   const existing = state.cart.find(i => i.key === key);
   if (existing) {
     existing.qty += state.selectedQty;
   } else {
+    // Build options list - add Dönerbox base (Reis/Pommes) as first option
+    const finalOptions = state.donerboxBase
+      ? [state.donerboxBase === "reis" ? t("rice") : t("fries"), ...options]
+      : options;
+
     state.cart.push({
       key, productId: product.id, name: product.name, displayName: translatedProductName,
-      price: product.price + extrasTotal, basePrice: product.price,
+      price: product.price + extrasTotal + donerboxFee, basePrice: product.price,
       categoryId: state.selectedCategory?.id ?? null,
       categoryTitle: state.selectedCategory?.title ?? null,
-      allOptions, options, extras, qty: state.selectedQty
+      allOptions, options: finalOptions, extras, qty: state.selectedQty,
+      donerboxBase: state.donerboxBase || null,
+      donerboxExtraFee: donerboxFee
     });
   }
 

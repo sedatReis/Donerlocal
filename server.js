@@ -565,13 +565,13 @@ function buildOrderReceiptPayload(order) {
     // Item line: "2x Döner          9,00 EUR"
     chunks.push(
       Buffer.from([ESC, 0x45, 0x01]), // bold on
-      escPosTextSize(1, 2), // slightly taller for readability
+      escPosTextSize(2, 2), // large font for product name
       Buffer.from(`${qty}x ${item.name.toUpperCase()}\n`, "latin1"),
       Buffer.from([ESC, 0x45, 0x00]), // bold off
-      escPosTextSize(1, 1)
+      escPosTextSize(2, 2) // keep large font for all product details
     );
 
-    // Price on right
+    // Price
     chunks.push(
       Buffer.from(`   ${formatPrice(lineTotal)}\n`, "latin1")
     );
@@ -600,7 +600,10 @@ function buildOrderReceiptPayload(order) {
       }
     }
 
-    chunks.push(Buffer.from("\n", "latin1"));
+    chunks.push(
+      escPosTextSize(1, 1), // reset size after item block
+      Buffer.from("\n", "latin1")
+    );
   }
 
   // Divider and total
