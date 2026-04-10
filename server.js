@@ -214,6 +214,114 @@ function clampNumber(rawValue, defaultValue, min, max) {
 
 // --- ESC/POS Helpers ---
 
+// Convert a Unicode string to a Code Page 858 Buffer (CP850 + €)
+function cp858Buffer(str) {
+  const CP858_MAP = {
+    0x00C7: 0x80, // Ç
+    0x00FC: 0x81, // ü
+    0x00E9: 0x82, // é
+    0x00E2: 0x83, // â
+    0x00E4: 0x84, // ä
+    0x00E0: 0x85, // à
+    0x00E5: 0x86, // å
+    0x00E7: 0x87, // ç
+    0x00EA: 0x88, // ê
+    0x00EB: 0x89, // ë
+    0x00E8: 0x8A, // è
+    0x00EF: 0x8B, // ï
+    0x00EE: 0x8C, // î
+    0x00EC: 0x8D, // ì
+    0x00C4: 0x8E, // Ä
+    0x00C5: 0x8F, // Å
+    0x00C9: 0x90, // É
+    0x00E6: 0x91, // æ
+    0x00C6: 0x92, // Æ
+    0x00F4: 0x93, // ô
+    0x00F6: 0x94, // ö
+    0x00F2: 0x95, // ò
+    0x00FB: 0x96, // û
+    0x00F9: 0x97, // ù
+    0x00FF: 0x98, // ÿ
+    0x00D6: 0x99, // Ö
+    0x00DC: 0x9A, // Ü
+    0x00F8: 0x9B, // ø
+    0x00A3: 0x9C, // £
+    0x00D8: 0x9D, // Ø
+    0x00D7: 0x9E, // ×
+    0x00C1: 0xA0, // Á
+    0x00ED: 0xA1, // í
+    0x00F3: 0xA2, // ó
+    0x00FA: 0xA3, // ú
+    0x00F1: 0xA4, // ñ
+    0x00D1: 0xA5, // Ñ
+    0x00AA: 0xA6, // ª
+    0x00BA: 0xA7, // º
+    0x00BF: 0xA8, // ¿
+    0x00AE: 0xA9, // ®
+    0x00AC: 0xAA, // ¬
+    0x00BD: 0xAB, // ½
+    0x00BC: 0xAC, // ¼
+    0x00A1: 0xAD, // ¡
+    0x00AB: 0xAE, // «
+    0x00BB: 0xAF, // »
+    0x00C3: 0xC6, // Ã
+    0x00E3: 0xC7, // ã
+    0x00A4: 0xCF, // ¤
+    0x00F0: 0xD1, // ð
+    0x00D0: 0xD2, // Ð
+    0x00CA: 0xD4, // Ê
+    0x20AC: 0xD5, // €
+    0x00CB: 0xD3, // Ë
+    0x00C8: 0xD6, // È
+    0x00CD: 0xD7, // Í
+    0x00CE: 0xD8, // Î
+    0x00CF: 0xD9, // Ï
+    0x00CC: 0xDE, // Ì
+    0x00D3: 0xE0, // Ó
+    0x00DF: 0xE1, // ß
+    0x00D4: 0xE2, // Ô
+    0x00D2: 0xE3, // Ò
+    0x00F5: 0xE4, // õ
+    0x00D5: 0xE5, // Õ
+    0x00B5: 0xE6, // µ
+    0x00FE: 0xE7, // þ
+    0x00DE: 0xE8, // Þ
+    0x00DA: 0xE9, // Ú
+    0x00DB: 0xEA, // Û
+    0x00D9: 0xEB, // Ù
+    0x00FD: 0xEC, // ý
+    0x00DD: 0xED, // Ý
+    0x00B4: 0xEF, // ´
+    0x00AD: 0xF0, // soft hyphen
+    0x00B1: 0xF1, // ±
+    0x00BE: 0xF3, // ¾
+    0x00B6: 0xF4, // ¶
+    0x00A7: 0xF5, // §
+    0x00F7: 0xF6, // ÷
+    0x00B8: 0xF7, // ¸
+    0x00B0: 0xF8, // °
+    0x00A8: 0xF9, // ¨
+    0x00B7: 0xFA, // ·
+    0x00B9: 0xFB, // ¹
+    0x00B3: 0xFC, // ³
+    0x00B2: 0xFD, // ²
+    0x00A0: 0xFF, // non-breaking space
+  };
+  const buf = Buffer.alloc(str.length);
+  let pos = 0;
+  for (let i = 0; i < str.length; i++) {
+    const code = str.charCodeAt(i);
+    if (code < 0x80) {
+      buf[pos++] = code; // ASCII unchanged
+    } else if (CP858_MAP[code] !== undefined) {
+      buf[pos++] = CP858_MAP[code];
+    } else {
+      buf[pos++] = 0x3F; // '?' for unmappable characters
+    }
+  }
+  return buf.subarray(0, pos);
+}
+
 function escPosTextSize(width = 1, height = 1) {
   const w = Math.max(1, Math.min(8, Number(width) || 1));
   const h = Math.max(1, Math.min(8, Number(height) || 1));
@@ -514,42 +622,42 @@ function buildOrderReceiptPayload(order) {
   chunks.push(
     Buffer.from([ESC, 0x45, 0x01]), // bold on
     escPosTextSize(2, 2),
-    Buffer.from("SARK KEBAB\n", "latin1"),
+    cp858Buffer("SARK KEBAB\n"),
     Buffer.from([ESC, 0x45, 0x00]), // bold off
     escPosTextSize(1, 1),
-    Buffer.from("\n", "latin1")
+    cp858Buffer("\n")
   );
 
   // Customer name (large)
   chunks.push(
     Buffer.from([ESC, 0x45, 0x01]), // bold on
     escPosTextSize(2, 2),
-    Buffer.from(`${order.customerName.toUpperCase()}\n`, "latin1"),
+    cp858Buffer(`${order.customerName.toUpperCase()}\n`),
     Buffer.from([ESC, 0x45, 0x00]), // bold off
     escPosTextSize(1, 1),
-    Buffer.from("\n", "latin1")
+    cp858Buffer("\n")
   );
 
   // Dine option (extra large, very prominent)
   const dineLabel = order.dineOption === "mitnehmen" ? "*** MITNEHMEN ***" : "HIER ESSEN";
   chunks.push(
-    Buffer.from("================================\n", "latin1"),
+    cp858Buffer("================================\n"),
     Buffer.from([ESC, 0x45, 0x01]), // bold on
     escPosTextSize(3, 3),
-    Buffer.from(`${dineLabel}\n`, "latin1"),
+    cp858Buffer(`${dineLabel}\n`),
     escPosTextSize(2, 2),
-    Buffer.from(`Zahlung: ${order.paymentMethod === "karte" ? "KARTE" : "BAR"}\n`, "latin1"),
+    cp858Buffer(`Zahlung: ${order.paymentMethod === "karte" ? "KARTE" : "BAR"}\n`),
     Buffer.from([ESC, 0x45, 0x00]), // bold off
     escPosTextSize(1, 1),
-    Buffer.from("================================\n", "latin1"),
-    Buffer.from("\n", "latin1")
+    cp858Buffer("================================\n"),
+    cp858Buffer("\n")
   );
 
   // Order ID and date
   chunks.push(
-    Buffer.from(`Bestellung #${order.id}\n`, "latin1"),
-    Buffer.from(`${formatDateTime(order.createdAt)}\n`, "latin1"),
-    Buffer.from("--------------------------------\n", "latin1")
+    cp858Buffer(`Bestellung #${order.id}\n`),
+    cp858Buffer(`${formatDateTime(order.createdAt)}\n`),
+    cp858Buffer("--------------------------------\n")
   );
 
   // Switch to left alignment for items
@@ -566,27 +674,27 @@ function buildOrderReceiptPayload(order) {
     chunks.push(
       Buffer.from([ESC, 0x45, 0x01]), // bold on
       escPosTextSize(2, 2), // large font for product name
-      Buffer.from(`${qty}x ${item.name.toUpperCase()}\n`, "latin1"),
+      cp858Buffer(`${qty}x ${item.name.toUpperCase()}\n`),
       Buffer.from([ESC, 0x45, 0x00]), // bold off
       escPosTextSize(2, 2) // keep large font for all product details
     );
 
     // Price
     chunks.push(
-      Buffer.from(`   ${formatPrice(lineTotal)}\n`, "latin1")
+      cp858Buffer(`   ${formatPrice(lineTotal)}\n`)
     );
 
     // Options/ingredients
     if (item.allOptions) {
       chunks.push(
         Buffer.from([ESC, 0x45, 0x01]), // bold on
-        Buffer.from(`   >> MIT ALLEM\n`, "latin1"),
+        cp858Buffer(`   >> MIT ALLEM\n`),
         Buffer.from([ESC, 0x45, 0x00]) // bold off
       );
     } else if (Array.isArray(item.options) && item.options.length > 0) {
       for (const opt of item.options) {
         chunks.push(
-          Buffer.from(`   - ${opt.toUpperCase()}\n`, "latin1")
+          cp858Buffer(`   - ${opt.toUpperCase()}\n`)
         );
       }
     }
@@ -595,25 +703,25 @@ function buildOrderReceiptPayload(order) {
     if (Array.isArray(item.extras) && item.extras.length > 0) {
       for (const extra of item.extras) {
         chunks.push(
-          Buffer.from(`   + ${extra.name.toUpperCase()} (${formatPrice(extra.price)})\n`, "latin1")
+          cp858Buffer(`   + ${extra.name.toUpperCase()} (${formatPrice(extra.price)})\n`)
         );
       }
     }
 
     chunks.push(
       escPosTextSize(1, 1), // reset size after item block
-      Buffer.from("\n", "latin1")
+      cp858Buffer("\n")
     );
   }
 
   // Divider and total
   chunks.push(
     Buffer.from([ESC, 0x61, 0x00]), // left align
-    Buffer.from("--------------------------------\n", "latin1"),
+    cp858Buffer("--------------------------------\n"),
     Buffer.from([ESC, 0x45, 0x01]), // bold on
     escPosTextSize(2, 2),
     Buffer.from([ESC, 0x61, 0x02]), // right align
-    Buffer.from(`GESAMT: ${formatPrice(total)}\n`, "latin1"),
+    cp858Buffer(`GESAMT: ${formatPrice(total)}\n`),
     Buffer.from([ESC, 0x45, 0x00]), // bold off
     escPosTextSize(1, 1)
   );
@@ -621,17 +729,17 @@ function buildOrderReceiptPayload(order) {
   // Footer
   chunks.push(
     Buffer.from([ESC, 0x61, 0x01]), // center align
-    Buffer.from("\n", "latin1"),
-    Buffer.from("GUTEN APPETIT!\n", "latin1")
+    cp858Buffer("\n"),
+    cp858Buffer("GUTEN APPETIT!\n")
   );
 
   for (const line of TICKET_FOOTER_LINES) {
-    chunks.push(Buffer.from(`${line}\n`, "latin1"));
+    chunks.push(cp858Buffer(`${line}\n`));
   }
 
   // Feed and cut
   chunks.push(
-    Buffer.from("\n\n\n", "latin1"),
+    cp858Buffer("\n\n\n"),
     Buffer.from([GS, 0x56, 0x00]) // full cut
   );
 
