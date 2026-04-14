@@ -175,7 +175,7 @@
       "title": "CHICKEN NUGGETS & POMMES",
       "title_en": "CHICKEN NUGGETS & FRIES",
       "title_tr": "TAVUK NUGGETS & PATATES",
-      "icon": "img/pommes-sark.png",
+      "icon": "imagesforsark/nuggetspommescategory.png",
       "items": [
         { "id": "nuggets_55", "number": 55, "name": "Pommes Frites Klein", "name_en": "French Fries Small", "name_tr": "Patates Kızartması Küçük", "desc": "", "desc_en": "", "desc_tr": "", "price": 4.90, "image": "imagesforsark/KleinerPommes.png", "optionsEnabled": false },
         { "id": "nuggets_56", "number": 56, "name": "Pommes Frites Gross", "name_en": "French Fries Large", "name_tr": "Patates Kızartması Büyük", "desc": "", "desc_en": "", "desc_tr": "", "price": 6.50, "image": "img/pommes-sark.png", "optionsEnabled": false },
@@ -218,7 +218,7 @@
   ],
   "extras": [
     { "id": "extra_59", "number": 59, "name": "mit Grillgemüse", "name_en": "with grilled vegetables", "name_tr": "Izgara sebze ile", "price": 2.50 },
-    { "id": "extra_60", "number": 60, "name": "mit Pommes", "name_en": "with fries", "name_tr": "Patates ile", "price": 1.00 },
+    { "id": "extra_60", "number": 60, "name": "mit Pom", "name_en": "with fries", "name_tr": "Patates ile", "price": 1.00 },
     { "id": "extra_61_ketchup", "number": 61, "name": "Ketchup", "name_en": "Ketchup", "name_tr": "Ketçap", "price": 0.40, "sauceGroup": true },
     { "id": "extra_61_mayo", "number": 61, "name": "Mayonnaise", "name_en": "Mayonnaise", "name_tr": "Mayonez", "price": 0.40, "sauceGroup": true },
     { "id": "extra_61_curry", "number": 61, "name": "Currysauce", "name_en": "Curry sauce", "name_tr": "Köri sosu", "price": 0.40, "sauceGroup": true },
