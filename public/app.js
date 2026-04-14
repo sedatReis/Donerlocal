@@ -350,14 +350,15 @@ function getTranslatedOptions() {
 const INGREDIENT_ICONS = {
   "Sauce": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M14 2h-4a1 1 0 00-1 1v3l-2 1v1h10v-1l-2-1V3a1 1 0 00-1-1z" fill="#e8e0d0" stroke="#b0a090" stroke-width=".7"/><path d="M7 8l1 14h8l1-14z" fill="#f5f0e0" stroke="#b0a090" stroke-width=".7"/><path d="M8.5 12c1.5 2 5.5 2 7 0" stroke="#e8a030" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M9 16c1 1.2 5 1.2 6 0" stroke="#e8a030" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="12" cy="9.5" r="1" fill="#e8a030"/></svg>`,
   "Zwiebel": `<svg viewBox="0 0 24 24" width="22" height="22"><ellipse cx="12" cy="14" rx="8" ry="7" fill="#d4a0d0" stroke="#9b5e97" stroke-width=".8"/><path d="M12 3c-2 2-5 5-5 8" stroke="#9b5e97" stroke-width=".8" fill="none"/><path d="M12 3c2 2 5 5 5 8" stroke="#9b5e97" stroke-width=".8" fill="none"/><path d="M10 7c1 1 3 1 4 0" stroke="#6d3f6a" stroke-width=".6" fill="none"/></svg>`,
-  "Salat": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 14c0-5 3-9 8-11 5 2 8 6 8 11 0 4-3 7-8 8-5-1-8-4-8-8z" fill="#5cb85c" stroke="#3a8a3a" stroke-width=".8"/><path d="M12 5v14M8 9c2 1 6 1 8 0M7 14c3 1 7 1 10 0" stroke="#3a8a3a" stroke-width=".7" fill="none"/></svg>`,
+  "Grüner Salat": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 14c0-5 3-9 8-11 5 2 8 6 8 11 0 4-3 7-8 8-5-1-8-4-8-8z" fill="#5cb85c" stroke="#3a8a3a" stroke-width=".8"/><path d="M12 5v14M8 9c2 1 6 1 8 0M7 14c3 1 7 1 10 0" stroke="#3a8a3a" stroke-width=".7" fill="none"/></svg>`,
   "Tomate": `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="13" r="8" fill="#e74c3c" stroke="#b33a2e" stroke-width=".8"/><path d="M8 5c2 1 6 1 8 0" stroke="#4a9e4a" stroke-width="1.2" fill="none"/><path d="M12 5V3" stroke="#4a9e4a" stroke-width="1" fill="none"/></svg>`,
   "Blaukraut": `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="13" r="8" fill="#7b5ea7" stroke="#5c3d82" stroke-width=".8"/><path d="M7 12c2-2 4-2 5 0s3 2 5 0" stroke="#e0d0f0" stroke-width=".8" fill="none"/><path d="M8 16c2-1 3-1 4 0s3 1 4 0" stroke="#e0d0f0" stroke-width=".7" fill="none"/></svg>`,
   "Gurke": `<svg viewBox="0 0 24 24" width="22" height="22"><ellipse cx="12" cy="12" rx="5" ry="9" fill="#6abf69" stroke="#3d8c3c" stroke-width=".8"/><circle cx="12" cy="8" r="1" fill="#4a9e4a"/><circle cx="10" cy="12" r=".8" fill="#4a9e4a"/><circle cx="14" cy="12" r=".8" fill="#4a9e4a"/><circle cx="12" cy="16" r="1" fill="#4a9e4a"/></svg>`,
   "Mais": `<svg viewBox="0 0 24 24" width="22" height="22"><ellipse cx="12" cy="12" rx="5" ry="9" fill="#f0c040" stroke="#c89e20" stroke-width=".8"/><path d="M9 7v10M12 5v14M15 7v10" stroke="#d4a820" stroke-width=".8" fill="none"/><path d="M7 9h10M7 12h10M7 15h10" stroke="#c89e20" stroke-width=".5" fill="none"/></svg>`,
   "Jalapeño": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M10 4c-1 1-1 2 0 3l2 3c2 4 1 8-1 11 3-1 6-5 6-10 0-3-1-5-3-6l-2-1z" fill="#4caf50" stroke="#2e7d32" stroke-width=".8"/><path d="M10 4c1-1 3-1 4 0" stroke="#2e7d32" stroke-width=".8" fill="none"/></svg>`,
   "Chili Sauce": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M9 3h6l1 2H8zM8 5h8l-1 17H9z" fill="#d32f2f" stroke="#b71c1c" stroke-width=".7"/><path d="M10 8h4M10 12h4M10 16h4" stroke="#ffcdd2" stroke-width=".6" fill="none"/></svg>`,
-  "Scharf": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2c-2 3-3 5-2 8 1 4 0 7-2 10h2c3-2 5-6 4-10-.5-3 0-5 2-8z" fill="#ff5722" stroke="#d84315" stroke-width=".8"/><path d="M14 4c1 2 1 4 0 7-1 3-1 6 1 9" stroke="#ff8a65" stroke-width=".7" fill="none"/></svg>`
+  "Scharf": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2c-2 3-3 5-2 8 1 4 0 7-2 10h2c3-2 5-6 4-10-.5-3 0-5 2-8z" fill="#ff5722" stroke="#d84315" stroke-width=".8"/><path d="M14 4c1 2 1 4 0 7-1 3-1 6 1 9" stroke="#ff8a65" stroke-width=".7" fill="none"/></svg>`,
+  "Nur Fleisch": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 12c0-3 2-6 5-7 2 0 4 1 5 3 2 0 4 2 4 5s-2 5-5 5H9c-3 0-5-3-5-6z" fill="#c8846c" stroke="#8b5e3c" stroke-width=".8"/><path d="M8 10c1-1 3-1 4 0M14 13c0 1-2 2-4 1" stroke="#8b5e3c" stroke-width=".6" fill="none"/></svg>`
 };
 
 const EXTRA_ICONS = {
@@ -1130,8 +1131,10 @@ function openProduct(product, category, editIndex) {
 
       const optGrid = document.createElement("div");
       optGrid.className = "checkboxGrid";
+      const hideNurFleisch = product.id === "lahmacun_15";
       for (let i = STANDARD_COUNT; i < state.options.length; i++) {
         const option = state.options[i];
+        if (option === "Nur Fleisch" && hideNurFleisch) continue;
         const optionLabel = translatedOpts[i] || option;
         const label = document.createElement("label");
         label.className = "chk";
