@@ -45,8 +45,8 @@ const TRANSLATIONS = {
     riceOrFries: "Mit Reis oder Pommes?",
     rice: "Reis",
     fries: "Pommes",
-    freeIngredient: "1 Zutat gratis wählen:",
-    extraIngredientFee: "Weitere Zutaten: +1,50 €",
+    freeIngredient: "2 Zutaten gratis wählen:",
+    extraIngredientFee: "Ab 3. Zutat: +1,50 €",
     added: "hinzugefügt!",
     cartEmpty: "Warenkorb ist leer.",
     loadError: "Speisekarte konnte nicht geladen werden.",
@@ -82,7 +82,9 @@ const TRANSLATIONS = {
     carBrandPlaceholder: "z.B. BMW",
     carColorPlaceholder: "z.B. Schwarz",
     carFieldsRequired: "Bitte Automarke und Farbe eingeben.",
-    sauces: "Saucen"
+    sauces: "Saucen",
+    without: "Ohne",
+    back: "Zurück"
   },
   en: {
     changeName: "Change name",
@@ -127,8 +129,8 @@ const TRANSLATIONS = {
     riceOrFries: "With rice or fries?",
     rice: "Rice",
     fries: "Fries",
-    freeIngredient: "Choose 1 free ingredient:",
-    extraIngredientFee: "Extra ingredients: +1.50 €",
+    freeIngredient: "Choose 2 free ingredients:",
+    extraIngredientFee: "From 3rd ingredient: +1.50 €",
     added: "added!",
     cartEmpty: "Cart is empty.",
     loadError: "Could not load the menu.",
@@ -164,7 +166,9 @@ const TRANSLATIONS = {
     carBrandPlaceholder: "e.g. BMW",
     carColorPlaceholder: "e.g. Black",
     carFieldsRequired: "Please enter car brand and color.",
-    sauces: "Sauces"
+    sauces: "Sauces",
+    without: "Without",
+    back: "Back"
   },
   tr: {
     changeName: "İsim değiştir",
@@ -209,8 +213,8 @@ const TRANSLATIONS = {
     riceOrFries: "Pilav mı patates mi?",
     rice: "Pilav",
     fries: "Patates",
-    freeIngredient: "1 ücretsiz malzeme seçin:",
-    extraIngredientFee: "Ekstra malzemeler: +1,50 €",
+    freeIngredient: "2 ücretsiz malzeme seçin:",
+    extraIngredientFee: "3. malzemeden itibaren: +1,50 €",
     added: "eklendi!",
     cartEmpty: "Sepet boş.",
     loadError: "Menü yüklenemedi.",
@@ -246,7 +250,9 @@ const TRANSLATIONS = {
     carBrandPlaceholder: "örn. BMW",
     carColorPlaceholder: "örn. Siyah",
     carFieldsRequired: "Lütfen araba markası ve renk girin.",
-    sauces: "Soslar"
+    sauces: "Soslar",
+    without: "Olmadan",
+    back: "Geri"
   }
 };
 
@@ -794,6 +800,27 @@ function openProduct(product, category, editIndex) {
     if (editItem.extras) state.selectedExtras = editItem.extras.map(e => ({ ...e }));
   }
 
+  // Drinks: skip all modals, add directly to cart
+  if (product.isDrink && state.editingCartIndex < 0) {
+    const translatedProductName = itemName(product);
+    const key = [product.id, category?.id || "", "", "", "", "", ""].join("::");
+    const newItem = {
+      key, productId: product.id, name: product.name, displayName: translatedProductName,
+      price: product.price, basePrice: product.price,
+      categoryId: category?.id ?? null, categoryTitle: category?.title ?? null,
+      allOptions: false, allOptionsExcept: null,
+      options: [], extras: [], qty: 1,
+      donerboxBase: null, donerboxExtraFee: 0,
+      breadWanted: null, note: null, isDrink: true
+    };
+    const existing = state.cart.find(i => i.key === key);
+    if (existing) { existing.qty += 1; } else { state.cart.push(newItem); }
+    saveCart();
+    renderCart();
+    showAppNotice(`${translatedProductName} ${t("added")}`, "success");
+    return;
+  }
+
   document.getElementById("modalTitle").textContent = itemName(product);
   document.getElementById("modalPrice").textContent = euro(product.price);
   document.getElementById("qtyValue").textContent = String(state.selectedQty);
@@ -845,12 +872,13 @@ function openProduct(product, category, editIndex) {
     area.appendChild(riceOrFriesTitle);
 
     const baseGrid = document.createElement("div");
-    baseGrid.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;";
+    baseGrid.style.cssText = "display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;";
 
     const riceIcon = `<svg viewBox="0 0 48 48" width="44" height="44"><ellipse cx="24" cy="30" rx="18" ry="12" fill="#f5f0e0" stroke="#c8a060" stroke-width="1.2"/><ellipse cx="24" cy="28" rx="14" ry="8" fill="#fff" stroke="#e0d4b8" stroke-width=".8"/><ellipse cx="20" cy="27" rx="2" ry="1.2" fill="#f0e8d0"/><ellipse cx="26" cy="26" rx="2.2" ry="1.3" fill="#f0e8d0"/><ellipse cx="23" cy="30" rx="2" ry="1" fill="#f0e8d0"/></svg>`;
     const friesIcon = `<svg viewBox="0 0 48 48" width="44" height="44"><rect x="10" y="28" width="28" height="14" rx="3" fill="#d32f2f"/><rect x="15" y="10" width="4" height="22" rx="1.5" fill="#fdd835" stroke="#c8a415" stroke-width=".5"/><rect x="22" y="8" width="4" height="24" rx="1.5" fill="#fdd835" stroke="#c8a415" stroke-width=".5"/><rect x="29" y="11" width="4" height="21" rx="1.5" fill="#fdd835" stroke="#c8a415" stroke-width=".5"/></svg>`;
+    const noneIcon = `<svg viewBox="0 0 48 48" width="44" height="44"><circle cx="24" cy="24" r="18" fill="none" stroke="#b0a090" stroke-width="2"/><line x1="12" y1="12" x2="36" y2="36" stroke="#b4232b" stroke-width="2.5" stroke-linecap="round"/></svg>`;
 
-    for (const base of [{ key: "pommes", label: t("fries"), icon: friesIcon }, { key: "reis", label: t("rice"), icon: riceIcon }]) {
+    for (const base of [{ key: "pommes", label: t("fries"), icon: friesIcon }, { key: "reis", label: t("rice"), icon: riceIcon }, { key: "ohne", label: t("without"), icon: noneIcon }]) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "donerboxBaseBtn";
@@ -901,11 +929,11 @@ function openProduct(product, category, editIndex) {
         if (checkbox.checked) state.selectedOptions.add(option);
         else state.selectedOptions.delete(option);
         const count = state.selectedOptions.size;
-        state.donerboxExtraFee = count > 1 ? 1.50 : 0;
-        feeHint.textContent = count > 1
+        state.donerboxExtraFee = count > 2 ? 1.50 : 0;
+        feeHint.textContent = count > 2
           ? `${t("extraIngredientFee")} (${euro(1.50)})`
           : t("extraIngredientFee");
-        feeHint.style.color = count > 1 ? "#b4232b" : "#8b7a65";
+        feeHint.style.color = count > 2 ? "#b4232b" : "#8b7a65";
         updateModalSubtotal();
       });
       grid.appendChild(label);
@@ -1196,10 +1224,15 @@ function finalizeAddToCart() {
 
   const translatedProductName = itemName(product);
 
-  // Build options list - add Dönerbox base (Reis/Pommes) as first option
-  const finalOptions = state.donerboxBase
-    ? [state.donerboxBase === "reis" ? t("rice") : t("fries"), ...options]
-    : options;
+  // Build options list - add Dönerbox base (Reis/Pommes/Ohne) as first option
+  let finalOptions = options;
+  if (state.donerboxBase === "reis") {
+    finalOptions = [t("rice"), ...options];
+  } else if (state.donerboxBase === "pommes") {
+    finalOptions = [t("fries"), ...options];
+  } else if (state.donerboxBase === "ohne") {
+    finalOptions = [`${t("without")} Reis & Pommes`, ...options];
+  }
 
   const newItem = {
     key, productId: product.id, name: product.name, displayName: translatedProductName,
@@ -1211,7 +1244,8 @@ function finalizeAddToCart() {
     donerboxBase: state.donerboxBase || null,
     donerboxExtraFee: donerboxFee,
     breadWanted: state.breadWanted,
-    note: note || null
+    note: note || null,
+    isDrink: product.isDrink || false
   };
 
   if (state.editingCartIndex >= 0) {
@@ -1443,6 +1477,13 @@ function setupCheckoutListeners() {
       await sendOrder();
     });
   }
+  // Payment screen "Zurück" button
+  const paymentBackBtn = document.getElementById("paymentBackBtn");
+  if (paymentBackBtn) {
+    paymentBackBtn.addEventListener("click", () => {
+      document.getElementById("paymentScreen").classList.add("hidden");
+    });
+  }
 }
 
 async function sendOrder() {
@@ -1458,7 +1499,8 @@ async function sendOrder() {
       allOptions: item.allOptions || false, allOptionsExcept: item.allOptionsExcept || null,
       options: item.options, extras: item.extras || [],
       breadWanted: item.breadWanted ?? null,
-      note: item.note || null
+      note: item.note || null,
+      isDrink: item.isDrink || false
     }))
   };
 

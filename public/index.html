@@ -219,9 +219,9 @@
 
   <!-- Full-screen: Payment -->
   <div id="paymentScreen" class="fullscreenOverlay hidden">
-    <div class="fullscreenOverlay__content">
+    <div class="fullscreenOverlay__content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
       <div class="fullscreenOverlay__title" data-i18n="paymentQuestion">Wie möchtest du bezahlen?</div>
-      <div class="fullscreenOverlay__choices">
+      <div class="fullscreenOverlay__choices" style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:24px;">
         <button class="fullscreenChoice" data-payment="bar">
           <svg class="fullscreenChoice__icon" viewBox="0 0 80 80" width="80" height="80">
             <rect x="10" y="22" width="60" height="36" rx="6" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
@@ -244,6 +244,7 @@
           <span class="fullscreenChoice__label" data-i18n="payCard">Karte</span>
         </button>
       </div>
+      <button id="paymentBackBtn" class="btn btn--ghost" style="margin-top:32px;padding:14px 36px;font-size:16px;font-weight:700;border-radius:14px;border:2px solid rgba(112,77,45,.2);" data-i18n="back">Zurück</button>
     </div>
   </div>
 
@@ -279,6 +280,6 @@
 
   <div id="appNotice" class="appNotice hidden" role="status" aria-live="polite"></div>
 
-  <script src="/app.js?v=18"></script>
+  <script src="/app.js?v=19"></script>
 </body>
 </html>

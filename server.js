@@ -628,12 +628,9 @@ function buildOrderReceiptPayload(order) {
     cp858Buffer("\n")
   );
 
-  // Customer name (large) - with random number for mitnehmen/imauto
-  const showRandomNum = order.dineOption === "mitnehmen" || order.dineOption === "imauto";
-  const randomNum = showRandomNum ? Math.floor(Math.random() * 50) + 1 : 0;
-  const customerDisplay = showRandomNum
-    ? `${order.customerName.toUpperCase()} #${randomNum}`
-    : order.customerName.toUpperCase();
+  // Customer name (large) - with random number for all dine options
+  const randomNum = Math.floor(Math.random() * 50) + 1;
+  const customerDisplay = `${order.customerName.toUpperCase()} #${randomNum}`;
 
   chunks.push(
     Buffer.from([ESC, 0x45, 0x01]), // bold on
@@ -697,23 +694,43 @@ function buildOrderReceiptPayload(order) {
 
   let total = 0;
 
-  for (const item of order.items) {
+  // Word-wrap helper: wraps text at maxChars, keeping whole words together
+  function wordWrap(text, maxChars) {
+    const words = text.split(" ");
+    const lines = [];
+    let line = "";
+    for (const word of words) {
+      if (line.length === 0) { line = word; }
+      else if (line.length + 1 + word.length <= maxChars) { line += " " + word; }
+      else { lines.push(line); line = word; }
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  // Render a single item on the receipt
+  function renderItemOnReceipt(item) {
     const qty = item.qty || 1;
     const lineTotal = qty * item.price;
     total += lineTotal;
 
-    // Item line: "2x Döner          9,00 EUR"
+    // Item name (bold, large) with word wrap (approx 16 chars per line at size 2,2)
+    const nameText = `${qty}x ${item.name.toUpperCase()}`;
+    const nameLines = wordWrap(nameText, 16);
     chunks.push(
       Buffer.from([ESC, 0x45, 0x01]), // bold on
-      escPosTextSize(2, 2), // large font for product name
-      cp858Buffer(`${qty}x ${item.name.toUpperCase()}\n`),
-      Buffer.from([ESC, 0x45, 0x00]), // bold off
-      escPosTextSize(2, 2) // keep large font for all product details
+      escPosTextSize(2, 2)
     );
+    for (const line of nameLines) {
+      chunks.push(cp858Buffer(`${line}\n`));
+    }
+    chunks.push(Buffer.from([ESC, 0x45, 0x00])); // bold off
 
-    // Price
+    // Price in smaller font
     chunks.push(
-      cp858Buffer(`   ${formatPrice(lineTotal)}\n`)
+      escPosTextSize(1, 1),
+      cp858Buffer(`   ${formatPrice(lineTotal)}\n`),
+      escPosTextSize(2, 2)
     );
 
     // Bread option for Tellergerichte
@@ -733,11 +750,11 @@ function buildOrderReceiptPayload(order) {
 
     // Options/ingredients - "mit allem ohne" logic
     if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
-      chunks.push(
-        Buffer.from([ESC, 0x45, 0x01]),
-        cp858Buffer(`   >> MIT ALLEM OHNE ${item.allOptionsExcept.map(o => o.toUpperCase()).join(", ")}\n`),
-        Buffer.from([ESC, 0x45, 0x00])
-      );
+      const ohneText = `   >> MIT ALLEM OHNE ${item.allOptionsExcept.map(o => o.toUpperCase()).join(", ")}`;
+      const ohneLines = wordWrap(ohneText, 16);
+      chunks.push(Buffer.from([ESC, 0x45, 0x01]));
+      for (const line of ohneLines) chunks.push(cp858Buffer(`${line}\n`));
+      chunks.push(Buffer.from([ESC, 0x45, 0x00]));
     } else if (item.allOptions) {
       chunks.push(
         Buffer.from([ESC, 0x45, 0x01]),
@@ -746,9 +763,8 @@ function buildOrderReceiptPayload(order) {
       );
     } else if (Array.isArray(item.options) && item.options.length > 0) {
       for (const opt of item.options) {
-        chunks.push(
-          cp858Buffer(`   - ${opt.toUpperCase()}\n`)
-        );
+        const optLines = wordWrap(`   - ${opt.toUpperCase()}`, 16);
+        for (const line of optLines) chunks.push(cp858Buffer(`${line}\n`));
       }
     }
 
@@ -775,9 +791,40 @@ function buildOrderReceiptPayload(order) {
     }
 
     chunks.push(
-      escPosTextSize(1, 1), // reset size after item block
+      escPosTextSize(1, 1),
       cp858Buffer("\n")
     );
+  }
+
+  // Separate items into food and drinks
+  const foodItems = order.items.filter(i => !i.isDrink);
+  const drinkItems = order.items.filter(i => i.isDrink);
+
+  // Render food items first
+  if (foodItems.length > 0) {
+    chunks.push(
+      Buffer.from([ESC, 0x45, 0x01]),
+      escPosTextSize(1, 1),
+      cp858Buffer("--- ESSEN ---\n"),
+      Buffer.from([ESC, 0x45, 0x00])
+    );
+    for (const item of foodItems) renderItemOnReceipt(item);
+  }
+
+  // Render drinks with separator
+  if (drinkItems.length > 0) {
+    chunks.push(
+      Buffer.from([ESC, 0x45, 0x01]),
+      escPosTextSize(1, 1),
+      cp858Buffer("--- GETRANKE ---\n"),
+      Buffer.from([ESC, 0x45, 0x00])
+    );
+    for (const item of drinkItems) renderItemOnReceipt(item);
+  }
+
+  // If no categorization possible (shouldn't happen), render all
+  if (foodItems.length === 0 && drinkItems.length === 0) {
+    for (const item of order.items) renderItemOnReceipt(item);
   }
 
   // Divider and total
