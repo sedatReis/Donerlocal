@@ -1933,10 +1933,11 @@ body.page--kiosk .kioskCategoryRailWrap{
 }
 body.page--kiosk .kioskCategoryRail{
   scroll-behavior:smooth;
+  padding-bottom:120px;
 }
 body.page--kiosk .kioskCategoryStage{
   scroll-behavior:smooth;
-  padding-bottom:40px;
+  padding-bottom:120px;
 }
 body.page--kiosk .kioskProductGrid{
   padding-bottom:24px;

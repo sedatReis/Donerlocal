@@ -608,52 +608,65 @@ function formatDateTime(timestamp) {
   return `${day}.${month}.${year} ${hours}:${minutes}`;
 }
 
-function buildOrderReceiptPayload(order) {
+// Word-wrap helper: wraps text at maxChars, keeping whole words together
+function wordWrap(text, maxChars) {
+  const words = text.split(" ");
+  const lines = [];
+  let line = "";
+  for (const word of words) {
+    if (line.length === 0) { line = word; }
+    else if (line.length + 1 + word.length <= maxChars) { line += " " + word; }
+    else { lines.push(line); line = word; }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+// Shared: render header (name, dine option, car, payment, batch)
+function buildReceiptHeader(order, randomNum) {
   const ESC = 0x1b;
-  const GS = 0x1d;
+  const chunks = [];
 
-  const chunks = [
-    Buffer.from([ESC, 0x40]), // reset
-    Buffer.from([ESC, 0x74, 0x13]), // select Code Page 858 (West Europe, ä ö ü ß €)
-    Buffer.from([ESC, 0x61, 0x01]), // center align
-  ];
-
-  // Header: Restaurant name
   chunks.push(
-    Buffer.from([ESC, 0x45, 0x01]), // bold on
+    Buffer.from([ESC, 0x40]), // reset
+    Buffer.from([ESC, 0x74, 0x13]), // Code Page 858
+    Buffer.from([ESC, 0x61, 0x01]) // center
+  );
+
+  // Restaurant name
+  chunks.push(
+    Buffer.from([ESC, 0x45, 0x01]),
     escPosTextSize(2, 2),
     cp858Buffer("SARK KEBAB\n"),
-    Buffer.from([ESC, 0x45, 0x00]), // bold off
+    Buffer.from([ESC, 0x45, 0x00]),
     escPosTextSize(1, 1),
     cp858Buffer("\n")
   );
 
-  // Customer name (large) - with random number for all dine options
-  const randomNum = Math.floor(Math.random() * 50) + 1;
+  // Customer name with random number
   const customerDisplay = `${order.customerName.toUpperCase()} #${randomNum}`;
-
   chunks.push(
-    Buffer.from([ESC, 0x45, 0x01]), // bold on
+    Buffer.from([ESC, 0x45, 0x01]),
     escPosTextSize(2, 2),
     cp858Buffer(`${customerDisplay}\n`),
-    Buffer.from([ESC, 0x45, 0x00]), // bold off
+    Buffer.from([ESC, 0x45, 0x00]),
     escPosTextSize(1, 1),
     cp858Buffer("\n")
   );
 
-  // Dine option (extra large, very prominent)
+  // Dine option
   let dineLabel = "HIER ESSEN";
   if (order.dineOption === "mitnehmen") dineLabel = "*** MITNEHMEN ***";
   else if (order.dineOption === "imauto") dineLabel = "*** IM AUTO ***";
 
   chunks.push(
     cp858Buffer("================================\n"),
-    Buffer.from([ESC, 0x45, 0x01]), // bold on
+    Buffer.from([ESC, 0x45, 0x01]),
     escPosTextSize(3, 3),
     cp858Buffer(`${dineLabel}\n`)
   );
 
-  // Car details for "im auto"
+  // Car details
   if (order.dineOption === "imauto" && (order.carBrand || order.carColor)) {
     chunks.push(
       escPosTextSize(2, 2),
@@ -664,7 +677,7 @@ function buildOrderReceiptPayload(order) {
   chunks.push(
     escPosTextSize(2, 2),
     cp858Buffer(`Zahlung: ${order.paymentMethod === "karte" ? "KARTE" : "BAR"}\n`),
-    Buffer.from([ESC, 0x45, 0x00]), // bold off
+    Buffer.from([ESC, 0x45, 0x00]),
     escPosTextSize(1, 1),
     cp858Buffer("================================\n")
   );
@@ -689,172 +702,227 @@ function buildOrderReceiptPayload(order) {
     cp858Buffer("--------------------------------\n")
   );
 
-  // Switch to left alignment for items
-  chunks.push(Buffer.from([ESC, 0x61, 0x00])); // left align
+  return chunks;
+}
+
+// Render a single item on receipt (full version with prices)
+function renderItemFull(chunks, item) {
+  const ESC = 0x1b;
+  const qty = item.qty || 1;
+  const lineTotal = qty * item.price;
+
+  // Item name (bold, large) with word wrap
+  const nameText = `${qty}x ${item.name.toUpperCase()}`;
+  const nameLines = wordWrap(nameText, 16);
+  chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(2, 2));
+  for (const line of nameLines) chunks.push(cp858Buffer(`${line}\n`));
+  chunks.push(Buffer.from([ESC, 0x45, 0x00]));
+
+  // Price in smaller font
+  chunks.push(escPosTextSize(1, 1), cp858Buffer(`   ${formatPrice(lineTotal)}\n`), escPosTextSize(2, 2));
+
+  // Sauce option
+  if (item.sauceWanted === true) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT SAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
+  } else if (item.sauceWanted === false) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> OHNE SAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
+  }
+
+  // Bread option
+  if (item.breadWanted === true) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT BROT\n`), Buffer.from([ESC, 0x45, 0x00]));
+  } else if (item.breadWanted === false) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> OHNE BROT\n`), Buffer.from([ESC, 0x45, 0x00]));
+  }
+
+  // Options/ingredients
+  if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
+    const ohneText = `   >> MIT ALLEM OHNE ${item.allOptionsExcept.map(o => o.toUpperCase()).join(", ")}`;
+    const ohneLines = wordWrap(ohneText, 16);
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]));
+    for (const line of ohneLines) chunks.push(cp858Buffer(`${line}\n`));
+    chunks.push(Buffer.from([ESC, 0x45, 0x00]));
+  } else if (item.allOptions) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT ALLEM\n`), Buffer.from([ESC, 0x45, 0x00]));
+  } else if (Array.isArray(item.options) && item.options.length > 0) {
+    for (const opt of item.options) {
+      const optLines = wordWrap(`   - ${opt.toUpperCase()}`, 16);
+      for (const line of optLines) chunks.push(cp858Buffer(`${line}\n`));
+    }
+  }
+
+  // Optional ingredients (Scharf, Jalapeño, etc.)
+  if (Array.isArray(item.optionalIngredients) && item.optionalIngredients.length > 0) {
+    for (const opt of item.optionalIngredients) {
+      chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   + ${opt.toUpperCase()}\n`), Buffer.from([ESC, 0x45, 0x00]));
+    }
+  }
+
+  // Extras
+  if (Array.isArray(item.extras) && item.extras.length > 0) {
+    for (const extra of item.extras) {
+      chunks.push(
+        cp858Buffer(`   + ${extra.name.toUpperCase()} `),
+        escPosTextSize(1, 1), cp858Buffer(`(${formatPrice(extra.price)})`),
+        escPosTextSize(2, 2), cp858Buffer(`\n`)
+      );
+    }
+  }
+
+  // Note
+  if (item.note) {
+    chunks.push(Buffer.from([0x1b, 0x45, 0x01]), escPosTextSize(1, 2), cp858Buffer(`   * ${item.note}\n`), Buffer.from([0x1b, 0x45, 0x00]), escPosTextSize(2, 2));
+  }
+
+  chunks.push(escPosTextSize(1, 1), cp858Buffer("\n"));
+  return lineTotal;
+}
+
+// Render a single item on receipt (kitchen version - no prices)
+function renderItemKitchen(chunks, item) {
+  const ESC = 0x1b;
+  const qty = item.qty || 1;
+
+  const nameText = `${qty}x ${item.name.toUpperCase()}`;
+  const nameLines = wordWrap(nameText, 16);
+  chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(2, 2));
+  for (const line of nameLines) chunks.push(cp858Buffer(`${line}\n`));
+  chunks.push(Buffer.from([ESC, 0x45, 0x00]));
+
+  // Sauce option
+  if (item.sauceWanted === true) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT SAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
+  } else if (item.sauceWanted === false) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> OHNE SAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
+  }
+
+  // Bread option
+  if (item.breadWanted === true) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT BROT\n`), Buffer.from([ESC, 0x45, 0x00]));
+  } else if (item.breadWanted === false) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> OHNE BROT\n`), Buffer.from([ESC, 0x45, 0x00]));
+  }
+
+  // Options/ingredients
+  if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
+    const ohneText = `   >> MIT ALLEM OHNE ${item.allOptionsExcept.map(o => o.toUpperCase()).join(", ")}`;
+    const ohneLines = wordWrap(ohneText, 16);
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]));
+    for (const line of ohneLines) chunks.push(cp858Buffer(`${line}\n`));
+    chunks.push(Buffer.from([ESC, 0x45, 0x00]));
+  } else if (item.allOptions) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT ALLEM\n`), Buffer.from([ESC, 0x45, 0x00]));
+  } else if (Array.isArray(item.options) && item.options.length > 0) {
+    for (const opt of item.options) {
+      const optLines = wordWrap(`   - ${opt.toUpperCase()}`, 16);
+      for (const line of optLines) chunks.push(cp858Buffer(`${line}\n`));
+    }
+  }
+
+  // Optional ingredients
+  if (Array.isArray(item.optionalIngredients) && item.optionalIngredients.length > 0) {
+    for (const opt of item.optionalIngredients) {
+      chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   + ${opt.toUpperCase()}\n`), Buffer.from([ESC, 0x45, 0x00]));
+    }
+  }
+
+  // Extras (no prices)
+  if (Array.isArray(item.extras) && item.extras.length > 0) {
+    for (const extra of item.extras) {
+      chunks.push(escPosTextSize(2, 2), cp858Buffer(`   + ${extra.name.toUpperCase()}\n`));
+    }
+  }
+
+  // Note
+  if (item.note) {
+    chunks.push(Buffer.from([0x1b, 0x45, 0x01]), escPosTextSize(1, 2), cp858Buffer(`   * ${item.note}\n`), Buffer.from([0x1b, 0x45, 0x00]), escPosTextSize(2, 2));
+  }
+
+  chunks.push(escPosTextSize(1, 1), cp858Buffer("\n"));
+}
+
+// BON 1: Full customer receipt (everything + "Bitte Bon nicht wegschmeißen")
+function buildCustomerReceipt(order, randomNum) {
+  const ESC = 0x1b;
+  const GS = 0x1d;
+  const chunks = buildReceiptHeader(order, randomNum);
+
+  // "Bitte Bon nicht wegschmeißen" notice
+  chunks.push(
+    Buffer.from([ESC, 0x61, 0x01]), // center
+    Buffer.from([ESC, 0x45, 0x01]),
+    escPosTextSize(1, 1),
+    cp858Buffer("** BITTE BON NICHT WEGSCHMEISSEN **\n"),
+    Buffer.from([ESC, 0x45, 0x00]),
+    cp858Buffer("\n")
+  );
+
+  // Left align for items
+  chunks.push(Buffer.from([ESC, 0x61, 0x00]));
 
   let total = 0;
-
-  // Word-wrap helper: wraps text at maxChars, keeping whole words together
-  function wordWrap(text, maxChars) {
-    const words = text.split(" ");
-    const lines = [];
-    let line = "";
-    for (const word of words) {
-      if (line.length === 0) { line = word; }
-      else if (line.length + 1 + word.length <= maxChars) { line += " " + word; }
-      else { lines.push(line); line = word; }
-    }
-    if (line) lines.push(line);
-    return lines;
-  }
-
-  // Render a single item on the receipt
-  function renderItemOnReceipt(item) {
-    const qty = item.qty || 1;
-    const lineTotal = qty * item.price;
-    total += lineTotal;
-
-    // Item name (bold, large) with word wrap (approx 16 chars per line at size 2,2)
-    const nameText = `${qty}x ${item.name.toUpperCase()}`;
-    const nameLines = wordWrap(nameText, 16);
-    chunks.push(
-      Buffer.from([ESC, 0x45, 0x01]), // bold on
-      escPosTextSize(2, 2)
-    );
-    for (const line of nameLines) {
-      chunks.push(cp858Buffer(`${line}\n`));
-    }
-    chunks.push(Buffer.from([ESC, 0x45, 0x00])); // bold off
-
-    // Price in smaller font
-    chunks.push(
-      escPosTextSize(1, 1),
-      cp858Buffer(`   ${formatPrice(lineTotal)}\n`),
-      escPosTextSize(2, 2)
-    );
-
-    // Bread option for Tellergerichte
-    if (item.breadWanted === true) {
-      chunks.push(
-        Buffer.from([ESC, 0x45, 0x01]),
-        cp858Buffer(`   >> MIT BROT\n`),
-        Buffer.from([ESC, 0x45, 0x00])
-      );
-    } else if (item.breadWanted === false) {
-      chunks.push(
-        Buffer.from([ESC, 0x45, 0x01]),
-        cp858Buffer(`   >> OHNE BROT\n`),
-        Buffer.from([ESC, 0x45, 0x00])
-      );
-    }
-
-    // Options/ingredients - "mit allem ohne" logic
-    if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
-      const ohneText = `   >> MIT ALLEM OHNE ${item.allOptionsExcept.map(o => o.toUpperCase()).join(", ")}`;
-      const ohneLines = wordWrap(ohneText, 16);
-      chunks.push(Buffer.from([ESC, 0x45, 0x01]));
-      for (const line of ohneLines) chunks.push(cp858Buffer(`${line}\n`));
-      chunks.push(Buffer.from([ESC, 0x45, 0x00]));
-    } else if (item.allOptions) {
-      chunks.push(
-        Buffer.from([ESC, 0x45, 0x01]),
-        cp858Buffer(`   >> MIT ALLEM\n`),
-        Buffer.from([ESC, 0x45, 0x00])
-      );
-    } else if (Array.isArray(item.options) && item.options.length > 0) {
-      for (const opt of item.options) {
-        const optLines = wordWrap(`   - ${opt.toUpperCase()}`, 16);
-        for (const line of optLines) chunks.push(cp858Buffer(`${line}\n`));
-      }
-    }
-
-    // Extras - price in smaller font
-    if (Array.isArray(item.extras) && item.extras.length > 0) {
-      for (const extra of item.extras) {
-        chunks.push(
-          cp858Buffer(`   + ${extra.name.toUpperCase()} `),
-          escPosTextSize(1, 1),
-          cp858Buffer(`(${formatPrice(extra.price)})`),
-          escPosTextSize(2, 2),
-          cp858Buffer(`\n`)
-        );
-      }
-    }
-
-    // Note in smaller font
-    if (item.note) {
-      chunks.push(
-        escPosTextSize(1, 1),
-        cp858Buffer(`   * ${item.note}\n`),
-        escPosTextSize(2, 2)
-      );
-    }
-
-    chunks.push(
-      escPosTextSize(1, 1),
-      cp858Buffer("\n")
-    );
-  }
-
-  // Separate items into food and drinks
   const foodItems = order.items.filter(i => !i.isDrink);
   const drinkItems = order.items.filter(i => i.isDrink);
 
-  // Render food items first
   if (foodItems.length > 0) {
-    chunks.push(
-      Buffer.from([ESC, 0x45, 0x01]),
-      escPosTextSize(1, 1),
-      cp858Buffer("--- ESSEN ---\n"),
-      Buffer.from([ESC, 0x45, 0x00])
-    );
-    for (const item of foodItems) renderItemOnReceipt(item);
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(1, 1), cp858Buffer("--- ESSEN ---\n"), Buffer.from([ESC, 0x45, 0x00]));
+    for (const item of foodItems) total += renderItemFull(chunks, item);
   }
 
-  // Render drinks with separator
   if (drinkItems.length > 0) {
-    chunks.push(
-      Buffer.from([ESC, 0x45, 0x01]),
-      escPosTextSize(1, 1),
-      cp858Buffer("--- GETRANKE ---\n"),
-      Buffer.from([ESC, 0x45, 0x00])
-    );
-    for (const item of drinkItems) renderItemOnReceipt(item);
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(1, 1), cp858Buffer("--- GETRANKE ---\n"), Buffer.from([ESC, 0x45, 0x00]));
+    for (const item of drinkItems) total += renderItemFull(chunks, item);
   }
 
-  // If no categorization possible (shouldn't happen), render all
   if (foodItems.length === 0 && drinkItems.length === 0) {
-    for (const item of order.items) renderItemOnReceipt(item);
+    for (const item of order.items) total += renderItemFull(chunks, item);
   }
 
-  // Divider and total
+  // Total
   chunks.push(
-    Buffer.from([ESC, 0x61, 0x00]), // left align
-    cp858Buffer("--------------------------------\n"),
-    Buffer.from([ESC, 0x45, 0x01]), // bold on
-    escPosTextSize(2, 2),
-    Buffer.from([ESC, 0x61, 0x02]), // right align
+    Buffer.from([ESC, 0x61, 0x00]), cp858Buffer("--------------------------------\n"),
+    Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(2, 2),
+    Buffer.from([ESC, 0x61, 0x02]),
     cp858Buffer(`GESAMT: ${formatPrice(total)}\n`),
-    Buffer.from([ESC, 0x45, 0x00]), // bold off
-    escPosTextSize(1, 1)
+    Buffer.from([ESC, 0x45, 0x00]), escPosTextSize(1, 1)
   );
 
   // Footer
-  chunks.push(
-    Buffer.from([ESC, 0x61, 0x01]), // center align
-    cp858Buffer("\n"),
-    cp858Buffer("GUTEN APPETIT!\n")
-  );
-
-  for (const line of TICKET_FOOTER_LINES) {
-    chunks.push(cp858Buffer(`${line}\n`));
-  }
+  chunks.push(Buffer.from([ESC, 0x61, 0x01]), cp858Buffer("\n"), cp858Buffer("GUTEN APPETIT!\n"));
+  for (const line of TICKET_FOOTER_LINES) chunks.push(cp858Buffer(`${line}\n`));
 
   // Feed and cut
+  chunks.push(cp858Buffer("\n\n\n"), Buffer.from([GS, 0x56, 0x00]));
+
+  return Buffer.concat(chunks);
+}
+
+// BON 2: Kitchen receipt (name + info + only food, NO prices, NO drinks)
+function buildKitchenReceipt(order, randomNum) {
+  const ESC = 0x1b;
+  const GS = 0x1d;
+  const chunks = buildReceiptHeader(order, randomNum);
+
+  // Left align for items
+  chunks.push(Buffer.from([ESC, 0x61, 0x00]));
+
+  const foodItems = order.items.filter(i => !i.isDrink);
+
+  if (foodItems.length > 0) {
+    for (const item of foodItems) renderItemKitchen(chunks, item);
+  }
+
+  // No total, no drinks
+
+  // Footer
   chunks.push(
-    cp858Buffer("\n\n\n"),
-    Buffer.from([GS, 0x56, 0x00]) // full cut
+    Buffer.from([ESC, 0x61, 0x01]),
+    cp858Buffer("\n"),
+    cp858Buffer("--- KUECHENBON ---\n")
   );
+
+  // Feed and cut
+  chunks.push(cp858Buffer("\n\n\n"), Buffer.from([GS, 0x56, 0x00]));
 
   return Buffer.concat(chunks);
 }
@@ -868,14 +936,18 @@ async function printOrderReceipt(order) {
     };
   }
 
-  const ticketPayload = buildOrderReceiptPayload(order);
+  // Generate same random number for both receipts
+  const randomNum = Math.floor(Math.random() * 50) + 1;
+  const customerPayload = buildCustomerReceipt(order, randomNum);
+  const kitchenPayload = buildKitchenReceipt(order, randomNum);
+
+  // Both receipts from the same printer (combined into one print job)
+  const combinedPayload = Buffer.concat([customerPayload, kitchenPayload]);
+
   const results = [];
-  const printers = [];
+  const printerName = PRINTER_CUSTOMER || PRINTER_STAFF;
 
-  if (PRINTER_CUSTOMER) printers.push({ name: PRINTER_CUSTOMER, label: "Kunden-Drucker" });
-  if (PRINTER_STAFF) printers.push({ name: PRINTER_STAFF, label: "Mitarbeiter-Drucker" });
-
-  if (printers.length === 0) {
+  if (!printerName) {
     console.warn("Keine Drucker konfiguriert. Setze DONER_PRINTER_CUSTOMER und/oder DONER_PRINTER_STAFF.");
     return {
       ok: false,
@@ -883,23 +955,22 @@ async function printOrderReceipt(order) {
     };
   }
 
-  for (const printer of printers) {
-    const result = await runPrintJob(ticketPayload, printer.name, `Bestellung ${order.customerName}`, { raw: true });
+  {
+    const result = await runPrintJob(combinedPayload, printerName, `Bestellung ${order.customerName}`, { raw: true });
     results.push({
-      printer: printer.name,
-      label: printer.label,
+      printer: printerName,
+      label: "Drucker",
       ok: result.ok,
       error: result.error || null,
       output: result.output || null
     });
     if (!result.ok) {
-      console.error(`Druckfehler (${printer.label}/${printer.name}): ${result.error}`);
+      console.error(`Druckfehler (${printerName}): ${result.error}`);
     }
   }
 
-  const allOk = results.every(r => r.ok);
   return {
-    ok: allOk,
+    ok: results.every(r => r.ok),
     results
   };
 }

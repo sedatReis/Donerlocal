@@ -84,7 +84,10 @@ const TRANSLATIONS = {
     carFieldsRequired: "Bitte Automarke und Farbe eingeben.",
     sauces: "Saucen",
     without: "Ohne",
-    back: "Zurück"
+    back: "Zurück",
+    sauceQuestion: "Sauce erwünscht?",
+    withSauce: "Mit Sauce",
+    withoutSauce: "Ohne Sauce"
   },
   en: {
     changeName: "Change name",
@@ -168,7 +171,10 @@ const TRANSLATIONS = {
     carFieldsRequired: "Please enter car brand and color.",
     sauces: "Sauces",
     without: "Without",
-    back: "Back"
+    back: "Back",
+    sauceQuestion: "Sauce wanted?",
+    withSauce: "With sauce",
+    withoutSauce: "Without sauce"
   },
   tr: {
     changeName: "İsim değiştir",
@@ -252,7 +258,10 @@ const TRANSLATIONS = {
     carFieldsRequired: "Lütfen araba markası ve renk girin.",
     sauces: "Soslar",
     without: "Olmadan",
-    back: "Geri"
+    back: "Geri",
+    sauceQuestion: "Sos ister misiniz?",
+    withSauce: "Soslu",
+    withoutSauce: "Sossuz"
   }
 };
 
@@ -739,11 +748,16 @@ function composeItemMeta(item) {
   } else if (item.options?.length) {
     parts.push(...item.options);
   }
+  if (item.optionalIngredients && item.optionalIngredients.length > 0) {
+    parts.push(...item.optionalIngredients);
+  }
   if (item.donerboxExtraFee > 0) {
     parts.push(`+${euro(item.donerboxExtraFee)} Zutaten`);
   }
   if (item.breadWanted === true) parts.push(t("withBread"));
   else if (item.breadWanted === false) parts.push(t("withoutBread"));
+  if (item.sauceWanted === true) parts.push(t("withSauce"));
+  else if (item.sauceWanted === false) parts.push(t("withoutSauce"));
   if (Array.isArray(item.extras) && item.extras.length) {
     parts.push(...item.extras.map(e => `+${e.name} (${euro(e.price)})`));
   }
@@ -762,6 +776,7 @@ function openProduct(product, category, editIndex) {
   state.donerboxBase = null;
   state.donerboxExtraFee = 0;
   state.breadWanted = null;
+  state.sauceWanted = null;
   state.productNote = "";
   state.editingCartIndex = typeof editIndex === "number" ? editIndex : -1;
 
@@ -796,6 +811,7 @@ function openProduct(product, category, editIndex) {
     if (editItem.donerboxBase) state.donerboxBase = editItem.donerboxBase;
     state.donerboxExtraFee = editItem.donerboxExtraFee || 0;
     if (editItem.breadWanted != null) state.breadWanted = editItem.breadWanted;
+    if (editItem.sauceWanted != null) state.sauceWanted = editItem.sauceWanted;
     state.productNote = editItem.note || "";
     if (editItem.extras) state.selectedExtras = editItem.extras.map(e => ({ ...e }));
   }
@@ -897,7 +913,30 @@ function openProduct(product, category, editIndex) {
     }
     area.appendChild(baseGrid);
 
-    // Step 2: Ingredient selection (1 free, +1.50€ for more)
+    // Step 2: Sauce question (Ja/Nein)
+    const sauceSection = document.createElement("div");
+    sauceSection.style.cssText = "margin-bottom:18px;padding:12px 16px;border-radius:14px;background:rgba(214,40,31,.05);border:2px solid rgba(214,40,31,.15);";
+    sauceSection.innerHTML = `
+      <div style="font-weight:700;font-size:16px;color:#2b170b;margin-bottom:10px">${t("sauceQuestion")}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <button type="button" class="sauceBtn" data-sauce="yes" style="padding:12px;border-radius:12px;border:2px solid ${state.sauceWanted === true ? '#5cb85c' : 'rgba(112,77,45,.15)'};background:${state.sauceWanted === true ? 'rgba(92,184,92,.15)' : 'rgba(255,255,255,.7)'};cursor:pointer;font-weight:700;font-size:15px">✓ ${t("withSauce")}</button>
+        <button type="button" class="sauceBtn" data-sauce="no" style="padding:12px;border-radius:12px;border:2px solid ${state.sauceWanted === false ? '#d6281f' : 'rgba(112,77,45,.15)'};background:${state.sauceWanted === false ? 'rgba(214,40,31,.08)' : 'rgba(255,255,255,.7)'};cursor:pointer;font-weight:700;font-size:15px">✗ ${t("withoutSauce")}</button>
+      </div>
+    `;
+    for (const btn of sauceSection.querySelectorAll(".sauceBtn")) {
+      btn.addEventListener("click", () => {
+        state.sauceWanted = btn.dataset.sauce === "yes";
+        for (const b of sauceSection.querySelectorAll(".sauceBtn")) {
+          const isYes = b.dataset.sauce === "yes";
+          const isActive = (isYes && state.sauceWanted) || (!isYes && !state.sauceWanted);
+          b.style.borderColor = isActive ? (isYes ? "#5cb85c" : "#d6281f") : "rgba(112,77,45,.15)";
+          b.style.background = isActive ? (isYes ? "rgba(92,184,92,.15)" : "rgba(214,40,31,.08)") : "rgba(255,255,255,.7)";
+        }
+      });
+    }
+    area.appendChild(sauceSection);
+
+    // Step 3: Ingredient selection (2 free, from 3rd +1.50€) — exclude "Sauce" (index 0)
     const ingTitle = document.createElement("div");
     ingTitle.className = "muted small";
     ingTitle.style.marginBottom = "4px";
@@ -908,7 +947,7 @@ function openProduct(product, category, editIndex) {
     feeHint.className = "muted small";
     feeHint.style.marginBottom = "10px";
     feeHint.style.fontSize = "12px";
-    feeHint.style.color = "#b4232b";
+    feeHint.style.color = "#8b7a65";
     feeHint.textContent = t("extraIngredientFee");
     area.appendChild(feeHint);
 
@@ -918,6 +957,8 @@ function openProduct(product, category, editIndex) {
 
     for (let i = 0; i < state.options.length; i++) {
       const option = state.options[i];
+      // Skip "Sauce" — handled by sauce question above
+      if (option === "Sauce") continue;
       const optionLabel = translatedOpts[i] || option;
       const label = document.createElement("label");
       label.className = "chk";
@@ -1043,8 +1084,8 @@ function openProduct(product, category, editIndex) {
   const noteSection = document.createElement("div");
   noteSection.style.cssText = "margin-top:16px;";
   noteSection.innerHTML = `
-    <div class="muted small" style="margin-bottom:6px;font-weight:600">${t("note")}</div>
-    <input type="text" id="productNoteInput" class="accessFullscreen__input" style="font-size:14px;padding:10px 14px;text-align:left;border-radius:12px" placeholder="${t("notePlaceholder")}" value="${state.productNote}" maxlength="100" />
+    <div style="margin-bottom:6px;font-weight:700;font-size:15px;color:#2b170b">${t("note")}</div>
+    <input type="text" id="productNoteInput" class="accessFullscreen__input" style="font-size:17px;font-weight:600;padding:12px 16px;text-align:left;border-radius:12px" placeholder="${t("notePlaceholder")}" value="${state.productNote}" maxlength="100" />
     <div id="noteError" style="color:#b4232b;font-size:12px;margin-top:4px;min-height:16px"></div>
   `;
   area.appendChild(noteSection);
@@ -1196,7 +1237,12 @@ function finalizeAddToCart() {
   state.cart = sanitizeCart(state.cart);
 
   const STANDARD_COUNT = 6;
-  const options = [...state.selectedOptions].sort();
+  const options = [...state.selectedOptions].sort((a, b) => {
+    // "Sauce" always first
+    if (a === "Sauce") return -1;
+    if (b === "Sauce") return 1;
+    return a.localeCompare(b);
+  });
   const extras = state.selectedExtras.map(e => ({ id: e.id, name: e.name, price: e.price }));
   const extrasKey = extras.map(e => e.id).sort().join(",");
   const donerboxBaseKey = state.donerboxBase || "";
@@ -1209,6 +1255,9 @@ function finalizeAddToCart() {
   const selectedStandard = standardOptions.filter(o => state.selectedOptions.has(o));
   const unselectedStandard = standardOptions.filter(o => !state.selectedOptions.has(o));
 
+  // Separate optional ingredients (index >= STANDARD_COUNT) that were selected
+  const optionalSelected = state.options.slice(STANDARD_COUNT).filter(o => state.selectedOptions.has(o));
+
   if (product.optionsEnabled && selectedStandard.length >= 4 && unselectedStandard.length > 0 && unselectedStandard.length <= 2) {
     allOptions = false;
     allOptionsExcept = unselectedStandard;
@@ -1218,7 +1267,8 @@ function finalizeAddToCart() {
 
   const keyParts = allOptionsExcept ? `OHNE_${allOptionsExcept.join("|")}` : (allOptions ? "MIT_ALLEM" : options.join("|"));
   const breadKey = state.breadWanted != null ? (state.breadWanted ? "BROT" : "KEIN_BROT") : "";
-  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, note].join("::");
+  const sauceKey = state.sauceWanted != null ? (state.sauceWanted ? "SAUCE" : "KEINE_SAUCE") : "";
+  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, sauceKey, note].join("::");
   const extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
   const donerboxFee = state.donerboxExtraFee || 0;
 
@@ -1240,10 +1290,12 @@ function finalizeAddToCart() {
     categoryId: state.selectedCategory?.id ?? null,
     categoryTitle: state.selectedCategory?.title ?? null,
     allOptions, allOptionsExcept: allOptionsExcept || null,
+    optionalIngredients: optionalSelected.length > 0 ? optionalSelected : null,
     options: finalOptions, extras, qty: state.selectedQty,
     donerboxBase: state.donerboxBase || null,
     donerboxExtraFee: donerboxFee,
     breadWanted: state.breadWanted,
+    sauceWanted: state.sauceWanted,
     note: note || null,
     isDrink: product.isDrink || false
   };
@@ -1470,6 +1522,14 @@ function setupCheckoutListeners() {
       document.getElementById("paymentScreen").classList.remove("hidden");
     });
   }
+  // Car screen "Zurück" button → back to dine options
+  const carBackBtn = document.getElementById("carBackBtn");
+  if (carBackBtn) {
+    carBackBtn.addEventListener("click", () => {
+      document.getElementById("carScreen").classList.add("hidden");
+      document.getElementById("dineScreen").classList.remove("hidden");
+    });
+  }
   for (const btn of document.querySelectorAll("[data-payment]")) {
     btn.addEventListener("click", async () => {
       state.checkoutPayment = btn.dataset.payment;
@@ -1496,9 +1556,10 @@ async function sendOrder() {
     items: state.cart.map(item => ({
       productId: item.productId, name: item.name, price: item.price, qty: item.qty,
       categoryId: item.categoryId ?? null, categoryTitle: item.categoryTitle ?? null,
-      allOptions: item.allOptions || false, allOptionsExcept: item.allOptionsExcept || null,
+      allOptions: item.allOptions || false, allOptionsExcept: item.allOptionsExcept || null, optionalIngredients: item.optionalIngredients || null,
       options: item.options, extras: item.extras || [],
       breadWanted: item.breadWanted ?? null,
+      sauceWanted: item.sauceWanted ?? null,
       note: item.note || null,
       isDrink: item.isDrink || false
     }))
