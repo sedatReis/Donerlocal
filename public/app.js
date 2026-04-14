@@ -87,7 +87,10 @@ const TRANSLATIONS = {
     back: "Zurück",
     sauceQuestion: "Sauce erwünscht?",
     withSauce: "Mit Sauce",
-    withoutSauce: "Ohne Sauce"
+    withoutSauce: "Ohne Sauce",
+    currySauceQuestion: "Currysauce erwünscht?",
+    withCurrySauce: "Mit Currysauce",
+    withoutCurrySauce: "Ohne Currysauce"
   },
   en: {
     changeName: "Change name",
@@ -174,7 +177,10 @@ const TRANSLATIONS = {
     back: "Back",
     sauceQuestion: "Sauce wanted?",
     withSauce: "With sauce",
-    withoutSauce: "Without sauce"
+    withoutSauce: "Without sauce",
+    currySauceQuestion: "Curry sauce wanted?",
+    withCurrySauce: "With curry sauce",
+    withoutCurrySauce: "Without curry sauce"
   },
   tr: {
     changeName: "İsim değiştir",
@@ -261,7 +267,10 @@ const TRANSLATIONS = {
     back: "Geri",
     sauceQuestion: "Sos ister misiniz?",
     withSauce: "Soslu",
-    withoutSauce: "Sossuz"
+    withoutSauce: "Sossuz",
+    currySauceQuestion: "Köri sosu ister misiniz?",
+    withCurrySauce: "Köri soslu",
+    withoutCurrySauce: "Köri sossuz"
   }
 };
 
@@ -369,6 +378,10 @@ const TELLER_IDS = new Set([
   "doner_08", "doner_09", "kofte_27", "kofte_28", "curry_32",
   "chicken_38", "chicken_39", "iskender_44", "grill_45",
   "veg_52", "veg_54"
+]);
+
+const CURRY_IDS = new Set([
+  "curry_29", "curry_30", "curry_31", "curry_32"
 ]);
 
 /* ── Category SVG Icons ── */
@@ -758,6 +771,8 @@ function composeItemMeta(item) {
   else if (item.breadWanted === false) parts.push(t("withoutBread"));
   if (item.sauceWanted === true) parts.push(t("withSauce"));
   else if (item.sauceWanted === false) parts.push(t("withoutSauce"));
+  if (item.currySauceWanted === true) parts.push(t("withCurrySauce"));
+  else if (item.currySauceWanted === false) parts.push(t("withoutCurrySauce"));
   if (Array.isArray(item.extras) && item.extras.length) {
     parts.push(...item.extras.map(e => `+${e.name} (${euro(e.price)})`));
   }
@@ -777,6 +792,7 @@ function openProduct(product, category, editIndex) {
   state.donerboxExtraFee = 0;
   state.breadWanted = null;
   state.sauceWanted = null;
+  state.currySauceWanted = null;
   state.productNote = "";
   state.editingCartIndex = typeof editIndex === "number" ? editIndex : -1;
 
@@ -812,6 +828,7 @@ function openProduct(product, category, editIndex) {
     state.donerboxExtraFee = editItem.donerboxExtraFee || 0;
     if (editItem.breadWanted != null) state.breadWanted = editItem.breadWanted;
     if (editItem.sauceWanted != null) state.sauceWanted = editItem.sauceWanted;
+    if (editItem.currySauceWanted != null) state.currySauceWanted = editItem.currySauceWanted;
     state.productNote = editItem.note || "";
     if (editItem.extras) state.selectedExtras = editItem.extras.map(e => ({ ...e }));
   }
@@ -849,6 +866,7 @@ function openProduct(product, category, editIndex) {
   area.innerHTML = "";
 
   const isTeller = TELLER_IDS.has(product.id);
+  const isCurry = CURRY_IDS.has(product.id);
   const isDonerbox = category?.id === "donerbox" && (product.id === "donerbox_19" || product.id === "donerbox_20");
 
   // Bread question for Tellergerichte
@@ -981,6 +999,35 @@ function openProduct(product, category, editIndex) {
     }
     area.appendChild(grid);
 
+  } else if (isCurry) {
+    // Currysauce question
+    const currySection = document.createElement("div");
+    currySection.style.cssText = "margin-bottom:18px;padding:12px 16px;border-radius:14px;background:rgba(255,160,0,.08);border:2px solid rgba(255,160,0,.2);";
+    currySection.innerHTML = `
+      <div style="font-weight:700;font-size:16px;color:#2b170b;margin-bottom:10px">${t("currySauceQuestion")}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <button type="button" class="currySauceBtn" data-curry="yes" style="padding:12px;border-radius:12px;border:2px solid ${state.currySauceWanted === true ? '#5cb85c' : 'rgba(112,77,45,.15)'};background:${state.currySauceWanted === true ? 'rgba(92,184,92,.15)' : 'rgba(255,255,255,.7)'};cursor:pointer;font-weight:700;font-size:15px">✓ ${t("withCurrySauce")}</button>
+        <button type="button" class="currySauceBtn" data-curry="no" style="padding:12px;border-radius:12px;border:2px solid ${state.currySauceWanted === false ? '#d6281f' : 'rgba(112,77,45,.15)'};background:${state.currySauceWanted === false ? 'rgba(214,40,31,.08)' : 'rgba(255,255,255,.7)'};cursor:pointer;font-weight:700;font-size:15px">✗ ${t("withoutCurrySauce")}</button>
+      </div>
+    `;
+    for (const btn of currySection.querySelectorAll(".currySauceBtn")) {
+      btn.addEventListener("click", () => {
+        state.currySauceWanted = btn.dataset.curry === "yes";
+        for (const b of currySection.querySelectorAll(".currySauceBtn")) {
+          const isYes = b.dataset.curry === "yes";
+          const isActive = (isYes && state.currySauceWanted) || (!isYes && !state.currySauceWanted);
+          b.style.borderColor = isActive ? (isYes ? "#5cb85c" : "#d6281f") : "rgba(112,77,45,.15)";
+          b.style.background = isActive ? (isYes ? "rgba(92,184,92,.15)" : "rgba(214,40,31,.08)") : "rgba(255,255,255,.7)";
+        }
+      });
+    }
+    area.appendChild(currySection);
+
+    // Extras inline for curry products
+    if (state.extras.length > 0) {
+      renderExtrasInModal(area);
+    }
+
   } else if (product.optionsEnabled) {
     const STANDARD_COUNT = 6;
     const standardCheckboxes = [];
@@ -1022,6 +1069,34 @@ function openProduct(product, category, editIndex) {
     const grid = document.createElement("div");
     grid.className = "checkboxGrid";
     const translatedOpts = getTranslatedOptions();
+
+    let nurFleischCheckbox = null;
+
+    // Helper: when "Nur Fleisch" is checked, disable all other checkboxes
+    function updateNurFleischState() {
+      const isNurFleisch = nurFleischCheckbox && nurFleischCheckbox.checked;
+      for (const cb of allCheckboxes) {
+        if (cb === nurFleischCheckbox) continue;
+        if (isNurFleisch) {
+          cb.checked = false;
+          cb.disabled = true;
+          state.selectedOptions.delete(cb.dataset.option);
+          cb.closest("label").style.opacity = "0.4";
+        } else {
+          cb.disabled = false;
+          cb.closest("label").style.opacity = "1";
+        }
+      }
+      if (isNurFleisch) {
+        state.allOptionsSelected = false;
+        mitAllemBtn.textContent = t("withAll");
+        mitAllemBtn.disabled = true;
+        mitAllemBtn.style.opacity = "0.4";
+      } else {
+        mitAllemBtn.disabled = false;
+        mitAllemBtn.style.opacity = "1";
+      }
+    }
 
     for (let i = 0; i < Math.min(STANDARD_COUNT, state.options.length); i++) {
       const option = state.options[i];
@@ -1065,13 +1140,18 @@ function openProduct(product, category, editIndex) {
         label.innerHTML = `<input type="checkbox" data-option="${option}" ${isChecked ? 'checked' : ''} /> ${iconSvg} <span>${optionLabel}</span>`;
         const checkbox = label.querySelector("input");
         allCheckboxes.push(checkbox);
+        if (option === "Nur Fleisch") nurFleischCheckbox = checkbox;
         checkbox.addEventListener("change", () => {
           if (checkbox.checked) state.selectedOptions.add(option);
           else state.selectedOptions.delete(option);
+          if (option === "Nur Fleisch") updateNurFleischState();
         });
         optGrid.appendChild(label);
       }
       area.appendChild(optGrid);
+
+      // Apply initial state if "Nur Fleisch" was pre-selected (edit mode)
+      if (nurFleischCheckbox && nurFleischCheckbox.checked) updateNurFleischState();
     }
 
     // Extras section integrated into options modal
@@ -1181,8 +1261,8 @@ function proceedToExtras() {
     return;
   }
 
-  // If product has optionsEnabled, extras are already in the modal → go straight to finalize
-  if (state.selectedProduct?.optionsEnabled) {
+  // If product has optionsEnabled or is curry, extras are already in the modal → go straight to finalize
+  if (state.selectedProduct?.optionsEnabled || CURRY_IDS.has(state.selectedProduct?.id)) {
     document.getElementById("optionsModal").classList.add("hidden");
     finalizeAddToCart();
     return;
@@ -1268,7 +1348,8 @@ function finalizeAddToCart() {
   const keyParts = allOptionsExcept ? `OHNE_${allOptionsExcept.join("|")}` : (allOptions ? "MIT_ALLEM" : options.join("|"));
   const breadKey = state.breadWanted != null ? (state.breadWanted ? "BROT" : "KEIN_BROT") : "";
   const sauceKey = state.sauceWanted != null ? (state.sauceWanted ? "SAUCE" : "KEINE_SAUCE") : "";
-  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, sauceKey, note].join("::");
+  const curryKey = state.currySauceWanted != null ? (state.currySauceWanted ? "CURRY" : "KEINE_CURRY") : "";
+  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, sauceKey, curryKey, note].join("::");
   const extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
   const donerboxFee = state.donerboxExtraFee || 0;
 
@@ -1296,6 +1377,7 @@ function finalizeAddToCart() {
     donerboxExtraFee: donerboxFee,
     breadWanted: state.breadWanted,
     sauceWanted: state.sauceWanted,
+    currySauceWanted: state.currySauceWanted,
     note: note || null,
     isDrink: product.isDrink || false
   };
@@ -1560,6 +1642,7 @@ async function sendOrder() {
       options: item.options, extras: item.extras || [],
       breadWanted: item.breadWanted ?? null,
       sauceWanted: item.sauceWanted ?? null,
+      currySauceWanted: item.currySauceWanted ?? null,
       note: item.note || null,
       isDrink: item.isDrink || false
     }))

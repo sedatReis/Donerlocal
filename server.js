@@ -735,6 +735,13 @@ function renderItemFull(chunks, item) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> OHNE BROT\n`), Buffer.from([ESC, 0x45, 0x00]));
   }
 
+  // Curry sauce option
+  if (item.currySauceWanted === true) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT CURRYSAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
+  } else if (item.currySauceWanted === false) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> OHNE CURRYSAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
+  }
+
   // Options/ingredients
   if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
     const ohneText = `   >> MIT ALLEM OHNE ${item.allOptionsExcept.map(o => o.toUpperCase()).join(", ")}`;
@@ -801,6 +808,13 @@ function renderItemKitchen(chunks, item) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT BROT\n`), Buffer.from([ESC, 0x45, 0x00]));
   } else if (item.breadWanted === false) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> OHNE BROT\n`), Buffer.from([ESC, 0x45, 0x00]));
+  }
+
+  // Curry sauce option
+  if (item.currySauceWanted === true) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT CURRYSAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
+  } else if (item.currySauceWanted === false) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> OHNE CURRYSAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
   }
 
   // Options/ingredients

@@ -14,7 +14,8 @@ const TRANSLATIONS = {
     carColor: "Farbe",
     carBrandPlaceholder: "z.B. BMW",
     carColorPlaceholder: "z.B. Schwarz",
-    carFieldsRequired: "Bitte Automarke und Farbe eingeben."
+    carFieldsRequired: "Bitte Automarke und Farbe eingeben.",
+    back: "Zurück"
   },
   en: {
     nameQuestion: "What is your name?",
@@ -31,7 +32,8 @@ const TRANSLATIONS = {
     carColor: "Color",
     carBrandPlaceholder: "e.g. BMW",
     carColorPlaceholder: "e.g. Black",
-    carFieldsRequired: "Please enter car brand and color."
+    carFieldsRequired: "Please enter car brand and color.",
+    back: "Back"
   },
   tr: {
     nameQuestion: "Adınız nedir?",
@@ -48,7 +50,8 @@ const TRANSLATIONS = {
     carColor: "Renk",
     carBrandPlaceholder: "örn. BMW",
     carColorPlaceholder: "örn. Siyah",
-    carFieldsRequired: "Lütfen araba markası ve renk girin."
+    carFieldsRequired: "Lütfen araba markası ve renk girin.",
+    back: "Geri"
   }
 };
 
@@ -181,6 +184,15 @@ if (carSubmitBtn) {
     localStorage.setItem("carBrand", brand);
     localStorage.setItem("carColor", color);
     window.location.replace("/index.html");
+  });
+}
+
+// Car back button → zurück zur Dine-Auswahl
+const carBackBtn = document.getElementById("carBackBtnAccess");
+if (carBackBtn) {
+  carBackBtn.addEventListener("click", () => {
+    document.getElementById("carScreenAccess").classList.add("hidden");
+    document.getElementById("dineScreenAccess").classList.remove("hidden");
   });
 }
 
