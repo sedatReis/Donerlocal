@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sark Kebab - Preise bearbeiten</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 20px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: #f7ecd8; color: #1e130a;
+    }
+    h1 { font-size: 24px; margin-bottom: 20px; }
+    h2 { font-size: 18px; margin: 24px 0 12px; color: #735f45; border-bottom: 2px solid #e0d4b8; padding-bottom: 6px; }
+    .item-row {
+      display: flex; align-items: center; gap: 12px; padding: 8px 0;
+      border-bottom: 1px solid #ede3d0;
+    }
+    .item-name { flex: 1; font-weight: 600; }
+    .item-id { font-size: 11px; color: #8b7a65; }
+    .price-input {
+      width: 100px; padding: 8px 10px; border: 2px solid #d4c4a0; border-radius: 10px;
+      font-size: 16px; font-weight: 700; text-align: right; background: #fff;
+    }
+    .price-input:focus { border-color: #d6281f; outline: none; }
+    .btn {
+      padding: 14px 32px; font-size: 18px; font-weight: 800; border: none; border-radius: 14px;
+      color: #fff; background: linear-gradient(135deg, #d6281f, #f04f26); cursor: pointer;
+      margin-top: 24px;
+    }
+    .btn:hover { opacity: .9; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .msg { margin-top: 12px; font-weight: 700; }
+    .msg--ok { color: #2e7d32; }
+    .msg--err { color: #b4232b; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .back-link { color: #d6281f; font-weight: 700; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>Preise bearbeiten</h1>
+    <a href="/admin" class="back-link">← Zurück zum Admin</a>
+  </div>
+  <div id="content">Laden...</div>
+  <button class="btn" id="saveBtn" disabled>Preise speichern</button>
+  <div id="msg" class="msg"></div>
+
+  <script>
+    let products = null;
+
+    async function load() {
+      const res = await fetch("/api/products");
+      products = await res.json();
+      render();
+    }
+
+    function render() {
+      const root = document.getElementById("content");
+      root.innerHTML = "";
+
+      for (const cat of products.categories || []) {
+        const h = document.createElement("h2");
+        h.textContent = cat.title;
+        root.appendChild(h);
+
+        for (const item of cat.items || []) {
+          const row = document.createElement("div");
+          row.className = "item-row";
+          row.innerHTML = `
+            <div>
+              <div class="item-name">#${item.number || ""} ${item.name}</div>
+              <div class="item-id">${item.id}</div>
+            </div>
+            <input type="number" step="0.10" min="0" class="price-input" data-id="${item.id}" value="${item.price.toFixed(2)}" />
+            <span>EUR</span>
+          `;
+          root.appendChild(row);
+        }
+      }
+
+      // Extras
+      if (products.extras?.length) {
+        const h = document.createElement("h2");
+        h.textContent = "EXTRAS";
+        root.appendChild(h);
+
+        for (const extra of products.extras) {
+          const row = document.createElement("div");
+          row.className = "item-row";
+          row.innerHTML = `
+            <div>
+              <div class="item-name">#${extra.number || ""} ${extra.name}</div>
+              <div class="item-id">${extra.id}</div>
+            </div>
+            <input type="number" step="0.10" min="0" class="price-input" data-id="${extra.id}" value="${extra.price.toFixed(2)}" />
+            <span>EUR</span>
+          `;
+          root.appendChild(row);
+        }
+      }
+
+      document.getElementById("saveBtn").disabled = false;
+    }
+
+    document.getElementById("saveBtn").addEventListener("click", async () => {
+      const msg = document.getElementById("msg");
+      const btn = document.getElementById("saveBtn");
+      btn.disabled = true;
+      msg.textContent = "Speichern...";
+      msg.className = "msg";
+
+      const prices = {};
+      for (const input of document.querySelectorAll(".price-input")) {
+        prices[input.dataset.id] = parseFloat(input.value) || 0;
+      }
+
+      try {
+        const res = await fetch("/api/products/prices", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prices })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Fehler");
+        msg.textContent = "Preise gespeichert!";
+        msg.className = "msg msg--ok";
+      } catch (e) {
+        msg.textContent = "Fehler: " + e.message;
+        msg.className = "msg msg--err";
+      }
+      btn.disabled = false;
+    });
+
+    load();
+  </script>
+</body>
+</html>

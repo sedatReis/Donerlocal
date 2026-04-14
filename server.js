@@ -628,30 +628,62 @@ function buildOrderReceiptPayload(order) {
     cp858Buffer("\n")
   );
 
-  // Customer name (large)
+  // Customer name (large) - with random number for mitnehmen/imauto
+  const showRandomNum = order.dineOption === "mitnehmen" || order.dineOption === "imauto";
+  const randomNum = showRandomNum ? Math.floor(Math.random() * 50) + 1 : 0;
+  const customerDisplay = showRandomNum
+    ? `${order.customerName.toUpperCase()} #${randomNum}`
+    : order.customerName.toUpperCase();
+
   chunks.push(
     Buffer.from([ESC, 0x45, 0x01]), // bold on
     escPosTextSize(2, 2),
-    cp858Buffer(`${order.customerName.toUpperCase()}\n`),
+    cp858Buffer(`${customerDisplay}\n`),
     Buffer.from([ESC, 0x45, 0x00]), // bold off
     escPosTextSize(1, 1),
     cp858Buffer("\n")
   );
 
   // Dine option (extra large, very prominent)
-  const dineLabel = order.dineOption === "mitnehmen" ? "*** MITNEHMEN ***" : "HIER ESSEN";
+  let dineLabel = "HIER ESSEN";
+  if (order.dineOption === "mitnehmen") dineLabel = "*** MITNEHMEN ***";
+  else if (order.dineOption === "imauto") dineLabel = "*** IM AUTO ***";
+
   chunks.push(
     cp858Buffer("================================\n"),
     Buffer.from([ESC, 0x45, 0x01]), // bold on
     escPosTextSize(3, 3),
-    cp858Buffer(`${dineLabel}\n`),
+    cp858Buffer(`${dineLabel}\n`)
+  );
+
+  // Car details for "im auto"
+  if (order.dineOption === "imauto" && (order.carBrand || order.carColor)) {
+    chunks.push(
+      escPosTextSize(2, 2),
+      cp858Buffer(`${(order.carBrand || "").toUpperCase()} ${(order.carColor || "").toUpperCase()}\n`)
+    );
+  }
+
+  chunks.push(
     escPosTextSize(2, 2),
     cp858Buffer(`Zahlung: ${order.paymentMethod === "karte" ? "KARTE" : "BAR"}\n`),
     Buffer.from([ESC, 0x45, 0x00]), // bold off
     escPosTextSize(1, 1),
-    cp858Buffer("================================\n"),
-    cp858Buffer("\n")
+    cp858Buffer("================================\n")
   );
+
+  // Batch Nr for "hier essen"
+  if (order.dineOption === "hieressen") {
+    chunks.push(
+      Buffer.from([ESC, 0x45, 0x01]),
+      escPosTextSize(2, 2),
+      cp858Buffer("Batch Nr: ___\n"),
+      Buffer.from([ESC, 0x45, 0x00]),
+      escPosTextSize(1, 1)
+    );
+  }
+
+  chunks.push(cp858Buffer("\n"));
 
   // Order ID and date
   chunks.push(
@@ -684,12 +716,33 @@ function buildOrderReceiptPayload(order) {
       cp858Buffer(`   ${formatPrice(lineTotal)}\n`)
     );
 
-    // Options/ingredients
-    if (item.allOptions) {
+    // Bread option for Tellergerichte
+    if (item.breadWanted === true) {
       chunks.push(
-        Buffer.from([ESC, 0x45, 0x01]), // bold on
+        Buffer.from([ESC, 0x45, 0x01]),
+        cp858Buffer(`   >> MIT BROT\n`),
+        Buffer.from([ESC, 0x45, 0x00])
+      );
+    } else if (item.breadWanted === false) {
+      chunks.push(
+        Buffer.from([ESC, 0x45, 0x01]),
+        cp858Buffer(`   >> OHNE BROT\n`),
+        Buffer.from([ESC, 0x45, 0x00])
+      );
+    }
+
+    // Options/ingredients - "mit allem ohne" logic
+    if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
+      chunks.push(
+        Buffer.from([ESC, 0x45, 0x01]),
+        cp858Buffer(`   >> MIT ALLEM OHNE ${item.allOptionsExcept.map(o => o.toUpperCase()).join(", ")}\n`),
+        Buffer.from([ESC, 0x45, 0x00])
+      );
+    } else if (item.allOptions) {
+      chunks.push(
+        Buffer.from([ESC, 0x45, 0x01]),
         cp858Buffer(`   >> MIT ALLEM\n`),
-        Buffer.from([ESC, 0x45, 0x00]) // bold off
+        Buffer.from([ESC, 0x45, 0x00])
       );
     } else if (Array.isArray(item.options) && item.options.length > 0) {
       for (const opt of item.options) {
@@ -699,13 +752,26 @@ function buildOrderReceiptPayload(order) {
       }
     }
 
-    // Extras
+    // Extras - price in smaller font
     if (Array.isArray(item.extras) && item.extras.length > 0) {
       for (const extra of item.extras) {
         chunks.push(
-          cp858Buffer(`   + ${extra.name.toUpperCase()} (${formatPrice(extra.price)})\n`)
+          cp858Buffer(`   + ${extra.name.toUpperCase()} `),
+          escPosTextSize(1, 1),
+          cp858Buffer(`(${formatPrice(extra.price)})`),
+          escPosTextSize(2, 2),
+          cp858Buffer(`\n`)
         );
       }
+    }
+
+    // Note in smaller font
+    if (item.note) {
+      chunks.push(
+        escPosTextSize(1, 1),
+        cp858Buffer(`   * ${item.note}\n`),
+        escPosTextSize(2, 2)
+      );
     }
 
     chunks.push(
@@ -909,12 +975,17 @@ app.post("/api/orders", async (req, res) => {
   if (customerName.length < 2) return res.status(400).json({ error: "customerName must be at least 2 characters" });
   if (items.length === 0) return res.status(400).json({ error: "items is required" });
 
+  const carBrand = String(body.carBrand ?? "").trim();
+  const carColor = String(body.carColor ?? "").trim();
+
   const createdAt = nowMs();
   const order = {
     id: nanoid(10),
     customerName,
     paymentMethod,
     dineOption,
+    carBrand: carBrand || null,
+    carColor: carColor || null,
     items,
     status: "PENDING",
     createdAt,
@@ -945,6 +1016,43 @@ app.post("/api/orders/:id/complete", requireAdminApi, async (req, res) => {
   await queueWriteOrders();
 
   res.json({ ok: true, order: o });
+});
+
+// Admin: update product prices
+app.put("/api/products/prices", requireAdminApi, async (req, res) => {
+  try {
+    const prices = req.body?.prices;
+    if (!prices || typeof prices !== "object") {
+      return res.status(400).json({ error: "prices object is required" });
+    }
+
+    if (!productsCache) await loadProducts();
+    const data = JSON.parse(JSON.stringify(productsCache));
+
+    // Update category item prices
+    for (const cat of data.categories || []) {
+      for (const item of cat.items || []) {
+        if (prices[item.id] !== undefined) {
+          const p = Number(prices[item.id]);
+          if (Number.isFinite(p) && p >= 0) item.price = p;
+        }
+      }
+    }
+
+    // Update extra prices
+    for (const extra of data.extras || []) {
+      if (prices[extra.id] !== undefined) {
+        const p = Number(prices[extra.id]);
+        if (Number.isFinite(p) && p >= 0) extra.price = p;
+      }
+    }
+
+    await fs.writeFile(PRODUCTS_FILE, JSON.stringify(data, null, 2), "utf-8");
+    productsCache = data;
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.delete("/api/orders/:id", requireAdminApi, async (req, res) => {
@@ -981,6 +1089,13 @@ app.get(["/admin", "/admin/", "/admin.html"], (req, res) => {
   }
   res.setHeader("Cache-Control", "no-store");
   return res.sendFile(path.join(PUBLIC_DIR, "admin.html"));
+});
+app.get(["/admin-prices", "/admin-prices.html"], (req, res) => {
+  if (!isAdminAuthenticated(req)) {
+    return res.redirect("/admin-login.html");
+  }
+  res.setHeader("Cache-Control", "no-store");
+  return res.sendFile(path.join(PUBLIC_DIR, "admin-prices.html"));
 });
 app.get(["/completed", "/completed/", "/completed.html"], (req, res) => {
   res.setHeader("Cache-Control", "no-store");

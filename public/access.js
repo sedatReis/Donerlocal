@@ -8,7 +8,13 @@ const TRANSLATIONS = {
     nameShort: "Der Name muss mindestens 2 Zeichen lang sein.",
     dineQuestion: "Wo möchtest du essen?",
     dineHere: "Hier essen",
-    dineTakeaway: "Mitnehmen"
+    dineTakeaway: "Mitnehmen",
+    dineInCar: "Ich warte im Auto",
+    carBrand: "Automarke",
+    carColor: "Farbe",
+    carBrandPlaceholder: "z.B. BMW",
+    carColorPlaceholder: "z.B. Schwarz",
+    carFieldsRequired: "Bitte Automarke und Farbe eingeben."
   },
   en: {
     nameQuestion: "What is your name?",
@@ -19,7 +25,13 @@ const TRANSLATIONS = {
     nameShort: "Name must be at least 2 characters.",
     dineQuestion: "Where would you like to eat?",
     dineHere: "Dine in",
-    dineTakeaway: "Takeaway"
+    dineTakeaway: "Takeaway",
+    dineInCar: "I'm waiting in the car",
+    carBrand: "Car brand",
+    carColor: "Color",
+    carBrandPlaceholder: "e.g. BMW",
+    carColorPlaceholder: "e.g. Black",
+    carFieldsRequired: "Please enter car brand and color."
   },
   tr: {
     nameQuestion: "Adınız nedir?",
@@ -30,7 +42,13 @@ const TRANSLATIONS = {
     nameShort: "Ad en az 2 karakter olmalıdır.",
     dineQuestion: "Nerede yemek istersiniz?",
     dineHere: "Burada yemek",
-    dineTakeaway: "Paket"
+    dineTakeaway: "Paket",
+    dineInCar: "Arabada bekliyorum",
+    carBrand: "Araba markası",
+    carColor: "Renk",
+    carBrandPlaceholder: "örn. BMW",
+    carColorPlaceholder: "örn. Siyah",
+    carFieldsRequired: "Lütfen araba markası ve renk girin."
   }
 };
 
@@ -138,7 +156,30 @@ form.addEventListener("submit", (event) => {
 // Dine option buttons
 for (const btn of document.querySelectorAll("[data-dine]")) {
   btn.addEventListener("click", () => {
+    if (btn.dataset.dine === "imauto") {
+      // Show car details screen
+      document.getElementById("dineScreenAccess").classList.add("hidden");
+      document.getElementById("carScreenAccess").classList.remove("hidden");
+      return;
+    }
     localStorage.setItem("dineOption", btn.dataset.dine);
+    window.location.replace("/index.html");
+  });
+}
+
+// Car submit button
+const carSubmitBtn = document.getElementById("carSubmitBtnAccess");
+if (carSubmitBtn) {
+  carSubmitBtn.addEventListener("click", () => {
+    const brand = document.getElementById("carBrandInputAccess")?.value.trim();
+    const color = document.getElementById("carColorInputAccess")?.value.trim();
+    if (!brand || !color) {
+      setError(t("carFieldsRequired") || "Bitte Automarke und Farbe eingeben.");
+      return;
+    }
+    localStorage.setItem("dineOption", "imauto");
+    localStorage.setItem("carBrand", brand);
+    localStorage.setItem("carColor", color);
     window.location.replace("/index.html");
   });
 }

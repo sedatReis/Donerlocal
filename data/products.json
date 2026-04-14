@@ -99,7 +99,7 @@
       "title": "CHICKEN (Fajitas gegrillt)",
       "title_en": "CHICKEN (Grilled fajitas)",
       "title_tr": "TAVUK (Izgara fajita)",
-      "icon": "img/chicken-fajitas-durum.png",
+      "icon": "imagesforsark/chickencategory.png",
       "items": [
         { "id": "chicken_33", "number": 33, "name": "Chicken Fajitas Dürüm", "name_en": "Chicken Fajitas Wrap", "name_tr": "Tavuk Fajita Dürüm", "desc": "Chicken Fajitas mit Salat, Sauce & Grillgemüse", "desc_en": "Chicken fajitas with salad, sauce & grilled vegetables", "desc_tr": "Tavuk fajita, salata, sos ve ızgara sebze ile", "price": 11.90, "image": "img/chicken-fajitas-durum.png", "optionsEnabled": true },
         { "id": "chicken_34", "number": 34, "name": "Chicken Box Klein mit Pommes", "name_en": "Chicken Box Small with Fries", "name_tr": "Tavuk Kutu Küçük Patates ile", "desc": "Chicken mit Pommes, Sauce & Grillgemüse", "desc_en": "Chicken with fries, sauce & grilled vegetables", "desc_tr": "Tavuk, patates, sos ve ızgara sebze ile", "price": 11.90, "image": "img/chicken-box-pommes.png", "optionsEnabled": true },
@@ -115,7 +115,7 @@
       "title": "FITNESS BOWL",
       "title_en": "FITNESS BOWL",
       "title_tr": "FITNESS KASE",
-      "icon": "img/fitness-bowl.png",
+      "icon": "imagesforsark/fitnessbowlcategory.png",
       "items": [
         { "id": "fitness_40", "number": 40, "name": "Fitness Bowl", "name_en": "Fitness Bowl", "name_tr": "Fitness Kase", "desc": "Gemischter Salat mit Hühnerfleischstücken, Sauce & Grillgemüse", "desc_en": "Mixed salad with chicken pieces, sauce & grilled vegetables", "desc_tr": "Karışık salata, tavuk parçaları, sos ve ızgara sebze", "price": 14.50, "image": "img/fitness-bowl.png", "optionsEnabled": true }
       ]
@@ -157,7 +157,7 @@
       "title": "VEGETARISCH",
       "title_en": "VEGETARIAN",
       "title_tr": "VEJETARYEN",
-      "icon": "img/veg-doner.png",
+      "icon": "imagesforsark/vegetarischcategory.png",
       "items": [
         { "id": "veg_47", "number": 47, "name": "Vegetarisches Dönerbrot", "name_en": "Vegetarian Döner Bread", "name_tr": "Vejetaryen Döner Ekmek", "desc": "mit Käse, Salat & Sauce im Brot", "desc_en": "with cheese, salad & sauce in bread", "desc_tr": "peynir, salata ve sos ile ekmekte", "price": 7.50, "image": "img/veg-doner.png", "optionsEnabled": true },
         { "id": "veg_48a", "number": 48, "name": "Vegetarischer Dürüm", "name_en": "Vegetarian Wrap", "name_tr": "Vejetaryen Dürüm", "desc": "mit Käse, Salat & Sauce im Dürüm", "desc_en": "with cheese, salad & sauce in wrap", "desc_tr": "peynir, salata ve sos ile dürümde", "price": 7.50, "image": "img/veg-durum.png", "optionsEnabled": true },
@@ -192,9 +192,12 @@
       "items": [
         { "id": "drink_66", "number": 66, "name": "Mineralwasser 0,5L", "name_en": "Mineral Water 0.5L", "name_tr": "Maden Suyu 0,5L", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.00, "image": "img/mineralwasser.png", "optionsEnabled": false },
         { "id": "drink_67", "number": 67, "name": "Ayran 0,25L", "name_en": "Ayran 0.25L", "name_tr": "Ayran 0,25L", "desc": "", "desc_en": "", "desc_tr": "", "price": 2.80, "image": "img/ayran-sark.png", "optionsEnabled": false },
-        { "id": "drink_68", "number": 68, "name": "Dose Limo (pfandfrei)", "name_en": "Canned Soda (no deposit)", "name_tr": "Kutu İçecek (depozitosuz)", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.00, "image": "img/limodose.png", "optionsEnabled": false },
-        { "id": "drink_69", "number": 69, "name": "Pet Flaschen 0,5L", "name_en": "PET Bottle 0.5L", "name_tr": "Pet Şişe 0,5L", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.70, "image": "img/pet-flasche.png", "optionsEnabled": false },
-        { "id": "drink_70", "number": 70, "name": "Red Bull 0,25L", "name_en": "Red Bull 0.25L", "name_tr": "Red Bull 0,25L", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.90, "image": "img/redbull-sark.png", "optionsEnabled": false }
+        { "id": "drink_68", "number": 68, "name": "Dose Limo (pfandfrei)", "name_en": "Canned Soda (no deposit)", "name_tr": "Kutu İçecek (depozitosuz)", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.00, "image": "imagesforsark/dosegetranke.png", "optionsEnabled": false },
+        { "id": "drink_69", "number": 69, "name": "Pet Flaschen 0,5L", "name_en": "PET Bottle 0.5L", "name_tr": "Pet Şişe 0,5L", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.70, "image": "imagesforsark/pet05l.png", "optionsEnabled": false },
+        { "id": "drink_70", "number": 70, "name": "Red Bull 0,25L", "name_en": "Red Bull 0.25L", "name_tr": "Red Bull 0,25L", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.90, "image": "img/redbull-sark.png", "optionsEnabled": false },
+        { "id": "drink_71", "number": 71, "name": "Dolu Sprudel", "name_en": "Dolu Sparkling Water", "name_tr": "Dolu Maden Suyu", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.00, "image": "img/placeholder-drink.png", "optionsEnabled": false },
+        { "id": "drink_72", "number": 72, "name": "Şalgam (az acılı)", "name_en": "Şalgam (mild)", "name_tr": "Şalgam (az acılı)", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.00, "image": "img/placeholder-drink.png", "optionsEnabled": false },
+        { "id": "drink_73", "number": 73, "name": "Christaline Wasser", "name_en": "Christaline Water", "name_tr": "Christaline Su", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.00, "image": "img/placeholder-drink.png", "optionsEnabled": false }
       ]
     },
     {
@@ -204,19 +207,21 @@
       "title_tr": "DİĞER",
       "icon": "img/baklava-sark.png",
       "items": [
-        { "id": "sonst_71", "number": 71, "name": "Baklava", "name_en": "Baklava", "name_tr": "Baklava", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.90, "image": "img/baklava-sark.png", "optionsEnabled": false },
-        { "id": "sonst_72", "number": 72, "name": "Chili Sauce 445g", "name_en": "Chili Sauce 445g", "name_tr": "Acı Sos 445g", "desc": "", "desc_en": "", "desc_tr": "", "price": 8.90, "image": "img/chili-sauce.png", "optionsEnabled": false },
-        { "id": "sonst_73", "number": 73, "name": "Scharfe Paprika Flocken 100g", "name_en": "Hot Paprika Flakes 100g", "name_tr": "Acı Pul Biber 100g", "desc": "", "desc_en": "", "desc_tr": "", "price": 5.00, "image": "img/paprika-flocken.png", "optionsEnabled": false },
-        { "id": "sonst_74", "number": 74, "name": "Paprika Flocken Mini Becher", "name_en": "Paprika Flakes Mini Cup", "name_tr": "Pul Biber Mini Bardak", "desc": "", "desc_en": "", "desc_tr": "", "price": 1.00, "image": "img/paprika-mini.png", "optionsEnabled": false },
-        { "id": "sonst_75", "number": 75, "name": "Portion Reis", "name_en": "Portion of Rice", "name_tr": "Porsiyon Pilav", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.80, "image": "img/reis-portion.png", "optionsEnabled": false },
-        { "id": "sonst_76", "number": 76, "name": "Dönerfleisch per 100g", "name_en": "Döner Meat per 100g", "name_tr": "Döner Et 100g", "desc": "", "desc_en": "", "desc_tr": "", "price": 4.50, "image": "img/doner-fleisch.png", "optionsEnabled": false }
+        { "id": "sonst_74", "number": 74, "name": "Baklava", "name_en": "Baklava", "name_tr": "Baklava", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.90, "image": "img/baklava-sark.png", "optionsEnabled": false },
+        { "id": "sonst_75", "number": 75, "name": "Chili Sauce 445g", "name_en": "Chili Sauce 445g", "name_tr": "Acı Sos 445g", "desc": "", "desc_en": "", "desc_tr": "", "price": 8.90, "image": "img/chili-sauce.png", "optionsEnabled": false },
+        { "id": "sonst_76", "number": 76, "name": "Scharfe Paprika Flocken 100g", "name_en": "Hot Paprika Flakes 100g", "name_tr": "Acı Pul Biber 100g", "desc": "", "desc_en": "", "desc_tr": "", "price": 5.00, "image": "img/paprika-flocken.png", "optionsEnabled": false },
+        { "id": "sonst_77", "number": 77, "name": "Paprika Flocken Mini Becher", "name_en": "Paprika Flakes Mini Cup", "name_tr": "Pul Biber Mini Bardak", "desc": "", "desc_en": "", "desc_tr": "", "price": 1.00, "image": "img/paprika-mini.png", "optionsEnabled": false },
+        { "id": "sonst_78", "number": 78, "name": "Portion Reis", "name_en": "Portion of Rice", "name_tr": "Porsiyon Pilav", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.80, "image": "img/reis-portion.png", "optionsEnabled": false },
+        { "id": "sonst_79", "number": 79, "name": "Dönerfleisch per 100g", "name_en": "Döner Meat per 100g", "name_tr": "Döner Et 100g", "desc": "", "desc_en": "", "desc_tr": "", "price": 4.50, "image": "img/doner-fleisch.png", "optionsEnabled": false }
       ]
     }
   ],
   "extras": [
     { "id": "extra_59", "number": 59, "name": "mit Grillgemüse", "name_en": "with grilled vegetables", "name_tr": "Izgara sebze ile", "price": 2.50 },
     { "id": "extra_60", "number": 60, "name": "mit Pommes", "name_en": "with fries", "name_tr": "Patates ile", "price": 1.00 },
-    { "id": "extra_61", "number": 61, "name": "Ketchup / Mayonnaise / Currysauce", "name_en": "Ketchup / Mayonnaise / Curry sauce", "name_tr": "Ketçap / Mayonez / Köri sosu", "price": 0.40 },
+    { "id": "extra_61_ketchup", "number": 61, "name": "Ketchup", "name_en": "Ketchup", "name_tr": "Ketçap", "price": 0.40, "sauceGroup": true },
+    { "id": "extra_61_mayo", "number": 61, "name": "Mayonnaise", "name_en": "Mayonnaise", "name_tr": "Mayonez", "price": 0.40, "sauceGroup": true },
+    { "id": "extra_61_curry", "number": 61, "name": "Currysauce", "name_en": "Curry sauce", "name_tr": "Köri sosu", "price": 0.40, "sauceGroup": true },
     { "id": "extra_62", "number": 62, "name": "Dönerbrot Gross", "name_en": "Döner bread large", "name_tr": "Döner ekmeği büyük", "price": 1.00 },
     { "id": "extra_63", "number": 63, "name": "Dönerbrot Klein", "name_en": "Döner bread small", "name_tr": "Döner ekmeği küçük", "price": 0.80 },
     { "id": "extra_64", "number": 64, "name": "mit Käse", "name_en": "with cheese", "name_tr": "Peynir ile", "price": 1.00 },

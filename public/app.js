@@ -65,7 +65,24 @@ const TRANSLATIONS = {
     cancelConfirm: "Möchtest du die Bestellung wirklich abbrechen?",
     yes: "Ja",
     no: "Nein",
-    tryAgain: "Erneut versuchen"
+    tryAgain: "Erneut versuchen",
+    extras: "Extras",
+    breadQuestion: "Brot erwünscht?",
+    withBread: "Mit Brot",
+    withoutBread: "Ohne Brot",
+    note: "Bemerkung",
+    notePlaceholder: "z.B. extra scharf (max 7 Wörter)",
+    noteMaxWords: "Maximal 7 Wörter erlaubt.",
+    mitAllemOhne: "Mit allem ohne",
+    edit: "Bearbeiten",
+    save: "Speichern",
+    dineInCar: "Ich warte im Auto",
+    carBrand: "Automarke",
+    carColor: "Farbe",
+    carBrandPlaceholder: "z.B. BMW",
+    carColorPlaceholder: "z.B. Schwarz",
+    carFieldsRequired: "Bitte Automarke und Farbe eingeben.",
+    sauces: "Saucen"
   },
   en: {
     changeName: "Change name",
@@ -130,7 +147,24 @@ const TRANSLATIONS = {
     cancelConfirm: "Do you really want to cancel the order?",
     yes: "Yes",
     no: "No",
-    tryAgain: "Try again"
+    tryAgain: "Try again",
+    extras: "Extras",
+    breadQuestion: "Bread wanted?",
+    withBread: "With bread",
+    withoutBread: "Without bread",
+    note: "Note",
+    notePlaceholder: "e.g. extra spicy (max 7 words)",
+    noteMaxWords: "Maximum 7 words allowed.",
+    mitAllemOhne: "With everything except",
+    edit: "Edit",
+    save: "Save",
+    dineInCar: "I'm waiting in the car",
+    carBrand: "Car brand",
+    carColor: "Color",
+    carBrandPlaceholder: "e.g. BMW",
+    carColorPlaceholder: "e.g. Black",
+    carFieldsRequired: "Please enter car brand and color.",
+    sauces: "Sauces"
   },
   tr: {
     changeName: "İsim değiştir",
@@ -195,7 +229,24 @@ const TRANSLATIONS = {
     cancelConfirm: "Siparişi gerçekten iptal etmek istiyor musunuz?",
     yes: "Evet",
     no: "Hayır",
-    tryAgain: "Tekrar dene"
+    tryAgain: "Tekrar dene",
+    extras: "Ekstralar",
+    breadQuestion: "Ekmek ister misiniz?",
+    withBread: "Ekmek ile",
+    withoutBread: "Ekmeksiz",
+    note: "Not",
+    notePlaceholder: "örn. ekstra acı (maks 7 kelime)",
+    noteMaxWords: "Maksimum 7 kelime.",
+    mitAllemOhne: "Her şeyle, hariç",
+    edit: "Düzenle",
+    save: "Kaydet",
+    dineInCar: "Arabada bekliyorum",
+    carBrand: "Araba markası",
+    carColor: "Renk",
+    carBrandPlaceholder: "örn. BMW",
+    carColorPlaceholder: "örn. Siyah",
+    carFieldsRequired: "Lütfen araba markası ve renk girin.",
+    sauces: "Soslar"
   }
 };
 
@@ -289,11 +340,24 @@ const EXTRA_ICONS = {
   "extra_59": `<svg viewBox="0 0 28 28" width="26" height="26"><circle cx="8" cy="18" r="4" fill="#e74c3c"/><circle cx="14" cy="12" r="3.5" fill="#f0b321"/><circle cx="20" cy="18" r="4" fill="#4caf50"/><path d="M8 14v-3M14 8v-3M20 14v-3" stroke="#6d8c3a" stroke-width="1.2" stroke-linecap="round"/></svg>`,
   "extra_60": `<svg viewBox="0 0 28 28" width="26" height="26"><rect x="6" y="14" width="16" height="10" rx="2" fill="#d32f2f"/><rect x="9" y="5" width="2.8" height="13" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/><rect x="13" y="4" width="2.8" height="14" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/><rect x="17" y="6" width="2.8" height="12" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/></svg>`,
   "extra_61": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M6 6h5l1 2H5z" fill="#c62828"/><path d="M5 8h7l-.8 14H5.8z" fill="#c62828"/><path d="M11 6h5l1 2h-6z" fill="#fef9e7" stroke="#d4c57a" stroke-width=".5"/><path d="M11 8h6l-.8 14h-5.4z" fill="#fef9e7" stroke="#d4c57a" stroke-width=".5"/><path d="M17 6h5l1 2h-6z" fill="#ff9800"/><path d="M17 8h6l-.8 14h-5.4z" fill="#ff9800" stroke="#e67c00" stroke-width=".5"/></svg>`,
+  "extra_61_ketchup": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M10 4h8l1 3H9z" fill="#c62828"/><path d="M9 7h10l-1 17H10z" fill="#c62828"/><path d="M12 11h4M12 15h4" stroke="#ffcdd2" stroke-width=".6" fill="none"/></svg>`,
+  "extra_61_mayo": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M10 4h8l1 3H9z" fill="#fef9e7" stroke="#d4c57a" stroke-width=".5"/><path d="M9 7h10l-1 17H10z" fill="#fef9e7" stroke="#d4c57a" stroke-width=".5"/><path d="M12 11h4M12 15h4" stroke="#d4c57a" stroke-width=".6" fill="none"/></svg>`,
+  "extra_61_curry": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M10 4h8l1 3H9z" fill="#ff9800"/><path d="M9 7h10l-1 17H10z" fill="#ff9800" stroke="#e67c00" stroke-width=".5"/><path d="M12 11h4M12 15h4" stroke="#fff3e0" stroke-width=".6" fill="none"/></svg>`,
   "extra_62": `<svg viewBox="0 0 28 28" width="26" height="26"><ellipse cx="14" cy="14" rx="11" ry="9" fill="#d4a060" stroke="#a07840" stroke-width=".8"/><ellipse cx="14" cy="12" rx="8" ry="5" fill="#e8c890" stroke="#c8a060" stroke-width=".6"/><path d="M8 15c3 2 9 2 12 0" stroke="#a07840" stroke-width=".6" fill="none"/></svg>`,
   "extra_63": `<svg viewBox="0 0 28 28" width="26" height="26"><ellipse cx="14" cy="14" rx="9" ry="7" fill="#d4a060" stroke="#a07840" stroke-width=".8"/><ellipse cx="14" cy="12.5" rx="6" ry="4" fill="#e8c890" stroke="#c8a060" stroke-width=".6"/><path d="M9.5 15c2.5 1.5 6.5 1.5 9 0" stroke="#a07840" stroke-width=".6" fill="none"/></svg>`,
   "extra_64": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M5 8h18l-1 16H6z" fill="#fdd835" stroke="#c8a415" stroke-width=".8"/><path d="M7 12h14" stroke="#e8c020" stroke-width=".6"/><path d="M7 16h14" stroke="#e8c020" stroke-width=".6"/><path d="M7 20h14" stroke="#e8c020" stroke-width=".6"/><circle cx="18" cy="10" r="3" fill="#fff" stroke="#ddd" stroke-width=".5"/></svg>`,
   "extra_65": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M16 3h-4a1 1 0 00-1 1v3l-2 1v1h10v-1l-2-1V4a1 1 0 00-1-1z" fill="#e8e0d0" stroke="#b0a090" stroke-width=".6"/><path d="M9 9l1 15h8l1-15z" fill="#f5f0e0" stroke="#b0a090" stroke-width=".6"/><path d="M10.5 13c1.5 2 5.5 2 7 0" stroke="#e8a030" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M11 17c1 1 5 1 6 0" stroke="#e8a030" stroke-width="1" fill="none" stroke-linecap="round"/></svg>`
 };
+
+/* ── Teller IDs (for bread question) ── */
+const TELLER_IDS = new Set([
+  "doner_08", "doner_09", "kofte_27", "kofte_28", "curry_32",
+  "chicken_38", "chicken_39", "iskender_44", "grill_45",
+  "veg_52", "veg_54"
+]);
+
+/* ── Category SVG Icons ── */
+const CATEGORY_ICONS = {};
 
 /* ── Kids portion IDs ── */
 const KIDS_PORTION_IDS = new Set([
@@ -320,10 +384,15 @@ const state = {
   selectedExtras: [],
   donerboxBase: null, // "reis" or "pommes" for Dönerbox
   donerboxExtraFee: 0, // 1.50€ if more than 1 ingredient selected
+  breadWanted: null, // true/false for Tellergerichte
+  productNote: "", // per-product note (max 7 words)
+  editingCartIndex: -1, // -1 = not editing, >= 0 = index in cart
   cart: loadCart(),
   customerName: localStorage.getItem("customerName") || "",
   checkoutDine: localStorage.getItem("dineOption") || null,
   checkoutPayment: null,
+  carBrand: "",
+  carColor: "",
   noticeTimer: null
 };
 
@@ -492,6 +561,10 @@ async function init() {
   setupLangDropdown();
   renderCustomerName();
 
+  // Load car details from localStorage (set during access flow)
+  state.carBrand = localStorage.getItem("carBrand") || "";
+  state.carColor = localStorage.getItem("carColor") || "";
+
   try {
     const res = await fetch("/api/products");
     if (!res.ok) throw new Error(t("loadError"));
@@ -544,7 +617,8 @@ function renderMenu() {
     categoryBtn.type = "button";
     categoryBtn.className = "kioskCategoryBtn";
     categoryBtn.dataset.categoryId = String(category.id);
-    const iconHtml = category.icon ? `<img class="kioskCategoryBtn__icon" src="/${category.icon}" alt="" />` : "";
+    const catSvg = CATEGORY_ICONS[category.id];
+    const iconHtml = catSvg ? `<span class="kioskCategoryBtn__icon">${catSvg}</span>` : (category.icon ? `<img class="kioskCategoryBtn__icon" src="/${category.icon}" alt="" />` : "");
     const translatedCatTitle = catTitle(category);
     categoryBtn.innerHTML = `${iconHtml}<span class="kioskCategoryBtn__title">${translatedCatTitle}</span><span class="kioskCategoryBtn__meta">${category.items.length} ${t("products")}</span>`;
     categoryBtn.addEventListener("click", () => showKioskCategory(String(category.id)));
@@ -652,7 +726,9 @@ function closeBackdrop() { document.getElementById("modalBackdrop").classList.ad
 
 function composeItemMeta(item) {
   const parts = [];
-  if (item.allOptions) {
+  if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
+    parts.push(`${t("mitAllemOhne")} ${item.allOptionsExcept.join(", ")}`);
+  } else if (item.allOptions) {
     parts.push(t("withAll"));
   } else if (item.options?.length) {
     parts.push(...item.options);
@@ -660,14 +736,17 @@ function composeItemMeta(item) {
   if (item.donerboxExtraFee > 0) {
     parts.push(`+${euro(item.donerboxExtraFee)} Zutaten`);
   }
+  if (item.breadWanted === true) parts.push(t("withBread"));
+  else if (item.breadWanted === false) parts.push(t("withoutBread"));
   if (Array.isArray(item.extras) && item.extras.length) {
     parts.push(...item.extras.map(e => `+${e.name} (${euro(e.price)})`));
   }
+  if (item.note) parts.push(`"${item.note}"`);
   return parts.length ? parts.join(", ") : "";
 }
 
 /* ── Product Modal ── */
-function openProduct(product, category) {
+function openProduct(product, category, editIndex) {
   state.selectedProduct = product;
   state.selectedCategory = category ?? null;
   state.selectedQty = 1;
@@ -676,16 +755,83 @@ function openProduct(product, category) {
   state.selectedExtras = [];
   state.donerboxBase = null;
   state.donerboxExtraFee = 0;
+  state.breadWanted = null;
+  state.productNote = "";
+  state.editingCartIndex = typeof editIndex === "number" ? editIndex : -1;
+
+  // If editing, pre-fill from cart item
+  const editItem = state.editingCartIndex >= 0 ? state.cart[state.editingCartIndex] : null;
+  if (editItem) {
+    state.selectedQty = editItem.qty || 1;
+    if (editItem.allOptions) {
+      state.allOptionsSelected = true;
+      // Select all standard options
+      const STANDARD_COUNT = 6;
+      for (let i = 0; i < Math.min(STANDARD_COUNT, state.options.length); i++) {
+        state.selectedOptions.add(state.options[i]);
+      }
+    } else if (editItem.allOptionsExcept) {
+      state.allOptionsSelected = false;
+      const STANDARD_COUNT = 6;
+      for (let i = 0; i < Math.min(STANDARD_COUNT, state.options.length); i++) {
+        if (!editItem.allOptionsExcept.includes(state.options[i])) {
+          state.selectedOptions.add(state.options[i]);
+        }
+      }
+    }
+    if (editItem.options) {
+      for (const opt of editItem.options) {
+        // Map translated back to original
+        const idx = state.options.indexOf(opt);
+        if (idx >= 0) state.selectedOptions.add(opt);
+        else state.selectedOptions.add(opt); // keep as-is
+      }
+    }
+    if (editItem.donerboxBase) state.donerboxBase = editItem.donerboxBase;
+    state.donerboxExtraFee = editItem.donerboxExtraFee || 0;
+    if (editItem.breadWanted != null) state.breadWanted = editItem.breadWanted;
+    state.productNote = editItem.note || "";
+    if (editItem.extras) state.selectedExtras = editItem.extras.map(e => ({ ...e }));
+  }
 
   document.getElementById("modalTitle").textContent = itemName(product);
   document.getElementById("modalPrice").textContent = euro(product.price);
-  document.getElementById("qtyValue").textContent = "1";
+  document.getElementById("qtyValue").textContent = String(state.selectedQty);
+
+  // Update button text for edit mode
+  const addBtn = document.getElementById("addToCartBtn");
+  if (addBtn) addBtn.textContent = state.editingCartIndex >= 0 ? t("save") : t("continue");
 
   const area = document.getElementById("optionsArea");
   area.innerHTML = "";
 
-  // Check if this is a Dönerbox product (not Extra Salat or Grillgemüse)
+  const isTeller = TELLER_IDS.has(product.id);
   const isDonerbox = category?.id === "donerbox" && (product.id === "donerbox_19" || product.id === "donerbox_20");
+
+  // Bread question for Tellergerichte
+  if (isTeller) {
+    const breadSection = document.createElement("div");
+    breadSection.style.cssText = "margin-bottom:18px;padding:12px 16px;border-radius:14px;background:rgba(92,184,92,.08);border:2px solid rgba(92,184,92,.2);";
+    breadSection.innerHTML = `
+      <div style="font-weight:700;font-size:16px;color:#2b170b;margin-bottom:10px">${t("breadQuestion")}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <button type="button" class="breadBtn" data-bread="yes" style="padding:12px;border-radius:12px;border:2px solid rgba(112,77,45,.15);background:${state.breadWanted === true ? 'rgba(92,184,92,.15)' : 'rgba(255,255,255,.7)'};border-color:${state.breadWanted === true ? '#5cb85c' : 'rgba(112,77,45,.15)'};cursor:pointer;font-weight:700;font-size:15px">✓ ${t("withBread")}</button>
+        <button type="button" class="breadBtn" data-bread="no" style="padding:12px;border-radius:12px;border:2px solid rgba(112,77,45,.15);background:${state.breadWanted === false ? 'rgba(214,40,31,.08)' : 'rgba(255,255,255,.7)'};border-color:${state.breadWanted === false ? '#d6281f' : 'rgba(112,77,45,.15)'};cursor:pointer;font-weight:700;font-size:15px">✗ ${t("withoutBread")}</button>
+      </div>
+    `;
+    for (const btn of breadSection.querySelectorAll(".breadBtn")) {
+      btn.addEventListener("click", () => {
+        state.breadWanted = btn.dataset.bread === "yes";
+        for (const b of breadSection.querySelectorAll(".breadBtn")) {
+          const isYes = b.dataset.bread === "yes";
+          const isActive = (isYes && state.breadWanted) || (!isYes && !state.breadWanted);
+          b.style.borderColor = isActive ? (isYes ? "#5cb85c" : "#d6281f") : "rgba(112,77,45,.15)";
+          b.style.background = isActive ? (isYes ? "rgba(92,184,92,.15)" : "rgba(214,40,31,.08)") : "rgba(255,255,255,.7)";
+        }
+      });
+    }
+    area.appendChild(breadSection);
+  }
 
   if (isDonerbox) {
     // Step 1: Reis oder Pommes selection
@@ -709,8 +855,9 @@ function openProduct(product, category) {
       btn.type = "button";
       btn.className = "donerboxBaseBtn";
       btn.dataset.base = base.key;
+      const isActive = state.donerboxBase === base.key;
       btn.innerHTML = `<div>${base.icon}</div><div style="font-weight:700;font-size:15px;margin-top:4px">${base.label}</div>`;
-      btn.style.cssText = "display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;border-radius:16px;border:2px solid rgba(112,77,45,.15);background:rgba(255,255,255,.7);cursor:pointer;transition:all .2s;";
+      btn.style.cssText = `display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;border-radius:16px;border:2px solid ${isActive ? '#d6281f' : 'rgba(112,77,45,.15)'};background:${isActive ? 'rgba(214,40,31,.08)' : 'rgba(255,255,255,.7)'};cursor:pointer;transition:all .2s;`;
       btn.addEventListener("click", () => {
         state.donerboxBase = base.key;
         for (const b of baseGrid.querySelectorAll(".donerboxBaseBtn")) {
@@ -740,7 +887,6 @@ function openProduct(product, category) {
     const grid = document.createElement("div");
     grid.className = "checkboxGrid";
     const translatedOpts = getTranslatedOptions();
-    const donerboxCheckboxes = [];
 
     for (let i = 0; i < state.options.length; i++) {
       const option = state.options[i];
@@ -748,13 +894,12 @@ function openProduct(product, category) {
       const label = document.createElement("label");
       label.className = "chk";
       const iconSvg = INGREDIENT_ICONS[option] || "";
-      label.innerHTML = `<input type="checkbox" data-option="${option}" /> ${iconSvg} <span>${optionLabel}</span>`;
+      const isChecked = state.selectedOptions.has(option);
+      label.innerHTML = `<input type="checkbox" data-option="${option}" ${isChecked ? 'checked' : ''} /> ${iconSvg} <span>${optionLabel}</span>`;
       const checkbox = label.querySelector("input");
-      donerboxCheckboxes.push(checkbox);
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) state.selectedOptions.add(option);
         else state.selectedOptions.delete(option);
-        // Calculate fee: 1 free, then 1.50€ flat for any additional
         const count = state.selectedOptions.size;
         state.donerboxExtraFee = count > 1 ? 1.50 : 0;
         feeHint.textContent = count > 1
@@ -768,16 +913,22 @@ function openProduct(product, category) {
     area.appendChild(grid);
 
   } else if (product.optionsEnabled) {
-    const STANDARD_COUNT = 6; // first 6 are standard (Sauce to Gurke)
+    const STANDARD_COUNT = 6;
     const standardCheckboxes = [];
-    const optionalCheckboxes = [];
     const allCheckboxes = [];
 
     const mitAllemBtn = document.createElement("button");
     mitAllemBtn.type = "button";
     mitAllemBtn.className = "btn btn--primary btn--full";
     mitAllemBtn.style.marginBottom = "12px";
-    mitAllemBtn.textContent = t("withAll");
+    const allStdSelected = state.allOptionsSelected || (() => {
+      let c = 0;
+      for (let i = 0; i < Math.min(STANDARD_COUNT, state.options.length); i++) {
+        if (state.selectedOptions.has(state.options[i])) c++;
+      }
+      return c === Math.min(STANDARD_COUNT, state.options.length) && c > 0;
+    })();
+    mitAllemBtn.textContent = allStdSelected ? t("deselectAll") : t("withAll");
 
     mitAllemBtn.addEventListener("click", () => {
       const allStandardChecked = standardCheckboxes.every(cb => cb.checked);
@@ -792,7 +943,7 @@ function openProduct(product, category) {
 
     area.appendChild(mitAllemBtn);
 
-    // Standard ingredients (Kategorie 1)
+    // Standard ingredients
     const title = document.createElement("div");
     title.className = "muted small";
     title.style.marginBottom = "8px";
@@ -809,7 +960,8 @@ function openProduct(product, category) {
       const label = document.createElement("label");
       label.className = "chk";
       const iconSvg = INGREDIENT_ICONS[option] || "";
-      label.innerHTML = `<input type="checkbox" data-option="${option}" /> ${iconSvg} <span>${optionLabel}</span>`;
+      const isChecked = state.selectedOptions.has(option);
+      label.innerHTML = `<input type="checkbox" data-option="${option}" ${isChecked ? 'checked' : ''} /> ${iconSvg} <span>${optionLabel}</span>`;
       const checkbox = label.querySelector("input");
       standardCheckboxes.push(checkbox);
       allCheckboxes.push(checkbox);
@@ -823,7 +975,7 @@ function openProduct(product, category) {
     }
     area.appendChild(grid);
 
-    // Optional ingredients (Kategorie 2: Mais, Jalapeño, Chili Sauce, Scharf)
+    // Optional ingredients
     if (state.options.length > STANDARD_COUNT) {
       const optTitle = document.createElement("div");
       optTitle.className = "muted small";
@@ -840,9 +992,9 @@ function openProduct(product, category) {
         const label = document.createElement("label");
         label.className = "chk";
         const iconSvg = INGREDIENT_ICONS[option] || "";
-        label.innerHTML = `<input type="checkbox" data-option="${option}" /> ${iconSvg} <span>${optionLabel}</span>`;
+        const isChecked = state.selectedOptions.has(option);
+        label.innerHTML = `<input type="checkbox" data-option="${option}" ${isChecked ? 'checked' : ''} /> ${iconSvg} <span>${optionLabel}</span>`;
         const checkbox = label.querySelector("input");
-        optionalCheckboxes.push(checkbox);
         allCheckboxes.push(checkbox);
         checkbox.addEventListener("change", () => {
           if (checkbox.checked) state.selectedOptions.add(option);
@@ -852,11 +1004,76 @@ function openProduct(product, category) {
       }
       area.appendChild(optGrid);
     }
+
+    // Extras section integrated into options modal
+    if (state.extras.length > 0) {
+      renderExtrasInModal(area);
+    }
   }
+
+  // Note field
+  const noteSection = document.createElement("div");
+  noteSection.style.cssText = "margin-top:16px;";
+  noteSection.innerHTML = `
+    <div class="muted small" style="margin-bottom:6px;font-weight:600">${t("note")}</div>
+    <input type="text" id="productNoteInput" class="accessFullscreen__input" style="font-size:14px;padding:10px 14px;text-align:left;border-radius:12px" placeholder="${t("notePlaceholder")}" value="${state.productNote}" maxlength="100" />
+    <div id="noteError" style="color:#b4232b;font-size:12px;margin-top:4px;min-height:16px"></div>
+  `;
+  area.appendChild(noteSection);
+  const noteInput = noteSection.querySelector("#productNoteInput");
+  noteInput.addEventListener("input", () => {
+    const words = noteInput.value.trim().split(/\s+/).filter(Boolean);
+    const errEl = noteSection.querySelector("#noteError");
+    if (words.length > 7) {
+      errEl.textContent = t("noteMaxWords");
+    } else {
+      errEl.textContent = "";
+      state.productNote = noteInput.value.trim();
+    }
+  });
 
   openBackdrop();
   document.getElementById("optionsModal").classList.remove("hidden");
   updateModalSubtotal();
+}
+
+function renderExtrasInModal(area) {
+  const extrasTitle = document.createElement("div");
+  extrasTitle.className = "muted small";
+  extrasTitle.style.marginBottom = "8px";
+  extrasTitle.style.marginTop = "18px";
+  extrasTitle.style.fontWeight = "700";
+  extrasTitle.textContent = t("extras");
+  area.appendChild(extrasTitle);
+
+  const grid = document.createElement("div");
+  grid.className = "extrasGrid";
+
+  for (const extra of state.extras) {
+    const card = document.createElement("label");
+    card.className = "extraCard";
+    const isSelected = state.selectedExtras.some(e => e.id === extra.id);
+    if (isSelected) card.classList.add("extraCard--selected");
+    const iconSvg = EXTRA_ICONS[extra.id] || "";
+    const translatedExtraName = extraName(extra);
+    card.innerHTML = `
+      <input type="checkbox" data-extra-id="${extra.id}" ${isSelected ? 'checked' : ''} />
+      <div class="extraCard__icon">${iconSvg}</div>
+      <div class="extraCard__info">
+        <div class="extraCard__name">${translatedExtraName}</div>
+        <div class="extraCard__price">+${euro(extra.price)}</div>
+      </div>
+    `;
+    const cb = card.querySelector("input");
+    cb.addEventListener("change", () => {
+      card.classList.toggle("extraCard--selected", cb.checked);
+      if (cb.checked) state.selectedExtras.push({ id: extra.id, name: translatedExtraName, price: extra.price });
+      else state.selectedExtras = state.selectedExtras.filter(e => e.id !== extra.id);
+      updateModalSubtotal();
+    });
+    grid.appendChild(card);
+  }
+  area.appendChild(grid);
 }
 
 function closeOptions() {
@@ -874,12 +1091,20 @@ function setQty(qty) {
 function updateModalSubtotal() {
   const el = document.getElementById("modalSubtotal");
   if (!el || !state.selectedProduct) return;
-  const subtotal = (state.selectedProduct.price + state.donerboxExtraFee) * state.selectedQty;
+  const extrasTotal = state.selectedExtras.reduce((s, e) => s + e.price, 0);
+  const subtotal = (state.selectedProduct.price + state.donerboxExtraFee + extrasTotal) * state.selectedQty;
   el.textContent = `${t("subtotal")}: ${euro(subtotal)}`;
 }
 
 /* ── Extras ── */
 function proceedToExtras() {
+  // Validate note
+  const noteWords = state.productNote.trim().split(/\s+/).filter(Boolean);
+  if (noteWords.length > 7) {
+    showAppNotice(t("noteMaxWords"), "error");
+    return;
+  }
+
   // Validate Dönerbox base selection
   const isDonerbox = state.selectedCategory?.id === "donerbox" && (state.selectedProduct?.id === "donerbox_19" || state.selectedProduct?.id === "donerbox_20");
   if (isDonerbox && !state.donerboxBase) {
@@ -887,6 +1112,14 @@ function proceedToExtras() {
     return;
   }
 
+  // If product has optionsEnabled, extras are already in the modal → go straight to finalize
+  if (state.selectedProduct?.optionsEnabled) {
+    document.getElementById("optionsModal").classList.add("hidden");
+    finalizeAddToCart();
+    return;
+  }
+
+  // For products WITHOUT optionsEnabled: show extras modal
   document.getElementById("optionsModal").classList.add("hidden");
   if (state.extras.length === 0) { finalizeAddToCart(); return; }
 
@@ -934,39 +1167,70 @@ function finalizeAddToCart() {
   if (!product) return;
   state.cart = sanitizeCart(state.cart);
 
+  const STANDARD_COUNT = 6;
   const options = [...state.selectedOptions].sort();
-  const allOptions = state.allOptionsSelected;
   const extras = state.selectedExtras.map(e => ({ id: e.id, name: e.name, price: e.price }));
   const extrasKey = extras.map(e => e.id).sort().join(",");
   const donerboxBaseKey = state.donerboxBase || "";
-  const key = [product.id, state.selectedCategory?.id || "", allOptions ? "MIT_ALLEM" : options.join("|"), extrasKey, donerboxBaseKey].join("::");
+  const note = state.productNote.trim();
+
+  // "Mit allem ohne" logic: if >=4 of first 6 standard ingredients are selected
+  let allOptions = false;
+  let allOptionsExcept = null;
+  const standardOptions = state.options.slice(0, STANDARD_COUNT);
+  const selectedStandard = standardOptions.filter(o => state.selectedOptions.has(o));
+  const unselectedStandard = standardOptions.filter(o => !state.selectedOptions.has(o));
+
+  if (product.optionsEnabled && selectedStandard.length >= 4 && unselectedStandard.length > 0 && unselectedStandard.length <= 2) {
+    allOptions = false;
+    allOptionsExcept = unselectedStandard;
+  } else if (state.allOptionsSelected || selectedStandard.length === standardOptions.length) {
+    allOptions = true;
+  }
+
+  const keyParts = allOptionsExcept ? `OHNE_${allOptionsExcept.join("|")}` : (allOptions ? "MIT_ALLEM" : options.join("|"));
+  const breadKey = state.breadWanted != null ? (state.breadWanted ? "BROT" : "KEIN_BROT") : "";
+  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, note].join("::");
   const extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
   const donerboxFee = state.donerboxExtraFee || 0;
 
   const translatedProductName = itemName(product);
-  const existing = state.cart.find(i => i.key === key);
-  if (existing) {
-    existing.qty += state.selectedQty;
-  } else {
-    // Build options list - add Dönerbox base (Reis/Pommes) as first option
-    const finalOptions = state.donerboxBase
-      ? [state.donerboxBase === "reis" ? t("rice") : t("fries"), ...options]
-      : options;
 
-    state.cart.push({
-      key, productId: product.id, name: product.name, displayName: translatedProductName,
-      price: product.price + extrasTotal + donerboxFee, basePrice: product.price,
-      categoryId: state.selectedCategory?.id ?? null,
-      categoryTitle: state.selectedCategory?.title ?? null,
-      allOptions, options: finalOptions, extras, qty: state.selectedQty,
-      donerboxBase: state.donerboxBase || null,
-      donerboxExtraFee: donerboxFee
-    });
+  // Build options list - add Dönerbox base (Reis/Pommes) as first option
+  const finalOptions = state.donerboxBase
+    ? [state.donerboxBase === "reis" ? t("rice") : t("fries"), ...options]
+    : options;
+
+  const newItem = {
+    key, productId: product.id, name: product.name, displayName: translatedProductName,
+    price: product.price + extrasTotal + donerboxFee, basePrice: product.price,
+    categoryId: state.selectedCategory?.id ?? null,
+    categoryTitle: state.selectedCategory?.title ?? null,
+    allOptions, allOptionsExcept: allOptionsExcept || null,
+    options: finalOptions, extras, qty: state.selectedQty,
+    donerboxBase: state.donerboxBase || null,
+    donerboxExtraFee: donerboxFee,
+    breadWanted: state.breadWanted,
+    note: note || null
+  };
+
+  if (state.editingCartIndex >= 0) {
+    // Replace existing cart item
+    state.cart[state.editingCartIndex] = newItem;
+    state.editingCartIndex = -1;
+  } else {
+    const existing = state.cart.find(i => i.key === key);
+    if (existing) {
+      existing.qty += state.selectedQty;
+    } else {
+      state.cart.push(newItem);
+    }
   }
 
   saveCart();
   renderCart();
   closeExtrasModal();
+  closeOptions();
   showAppNotice(`${translatedProductName} ${t("added")}`, "success");
 }
 
@@ -1032,16 +1296,35 @@ function renderCart() {
         </div>
         <div><strong>${euro(item.price * item.qty)}</strong></div>
       </div>
+      ${item.note ? `<div class="cartItem__note">"${item.note}"</div>` : ""}
       <div class="cartItem__actions">
         <button class="btn" data-act="minus">−</button>
         <div class="cartItem__qty">${item.qty}</div>
         <button class="btn" data-act="plus">+</button>
-        <button class="btn" data-act="remove" style="margin-left:auto;border-color:rgba(255,90,95,.35)">${t("remove")}</button>
+        <button class="btn" data-act="edit" style="margin-left:auto;border-color:rgba(79,140,255,.35)">${t("edit")}</button>
+        <button class="btn" data-act="remove" style="border-color:rgba(255,90,95,.35)">${t("remove")}</button>
       </div>
     `;
     card.querySelector('[data-act="minus"]').addEventListener("click", () => { item.qty = Math.max(1, item.qty - 1); saveCart(); renderCart(); });
     card.querySelector('[data-act="plus"]').addEventListener("click", () => { item.qty = Math.min(50, item.qty + 1); saveCart(); renderCart(); });
     card.querySelector('[data-act="remove"]').addEventListener("click", () => { state.cart = state.cart.filter(e => e.key !== item.key); saveCart(); renderCart(); });
+    const editBtn = card.querySelector('[data-act="edit"]');
+    if (editBtn) {
+      editBtn.addEventListener("click", () => {
+        const idx = state.cart.indexOf(item);
+        if (idx < 0) return;
+        // Find product in products data
+        let foundProduct = null;
+        let foundCategory = null;
+        for (const cat of (state.products?.categories || [])) {
+          const prod = cat.items.find(p => p.id === item.productId);
+          if (prod) { foundProduct = prod; foundCategory = cat; break; }
+        }
+        if (!foundProduct) return;
+        closeCart();
+        openProduct(foundProduct, foundCategory, idx);
+      });
+    }
     root.appendChild(card);
 
     if (sidebarRoot) {
@@ -1127,7 +1410,29 @@ function setupCheckoutListeners() {
   for (const btn of document.querySelectorAll("[data-dine]")) {
     btn.addEventListener("click", () => {
       state.checkoutDine = btn.dataset.dine;
+      if (btn.dataset.dine === "imauto") {
+        // Show car fields modal
+        document.getElementById("dineScreen").classList.add("hidden");
+        document.getElementById("carScreen").classList.remove("hidden");
+        return;
+      }
       document.getElementById("dineScreen").classList.add("hidden");
+      document.getElementById("paymentScreen").classList.remove("hidden");
+    });
+  }
+  // Car screen submit
+  const carSubmitBtn = document.getElementById("carSubmitBtn");
+  if (carSubmitBtn) {
+    carSubmitBtn.addEventListener("click", () => {
+      const brand = document.getElementById("carBrandInput")?.value.trim();
+      const color = document.getElementById("carColorInput")?.value.trim();
+      if (!brand || !color) {
+        showAppNotice(t("carFieldsRequired"), "error");
+        return;
+      }
+      state.carBrand = brand;
+      state.carColor = color;
+      document.getElementById("carScreen").classList.add("hidden");
       document.getElementById("paymentScreen").classList.remove("hidden");
     });
   }
@@ -1145,10 +1450,15 @@ async function sendOrder() {
     customerName: state.customerName,
     paymentMethod: state.checkoutPayment || "bar",
     dineOption: state.checkoutDine || "hieressen",
+    carBrand: state.carBrand || null,
+    carColor: state.carColor || null,
     items: state.cart.map(item => ({
       productId: item.productId, name: item.name, price: item.price, qty: item.qty,
       categoryId: item.categoryId ?? null, categoryTitle: item.categoryTitle ?? null,
-      allOptions: item.allOptions || false, options: item.options, extras: item.extras || []
+      allOptions: item.allOptions || false, allOptionsExcept: item.allOptionsExcept || null,
+      options: item.options, extras: item.extras || [],
+      breadWanted: item.breadWanted ?? null,
+      note: item.note || null
     }))
   };
 
@@ -1211,6 +1521,8 @@ function showThankYouScreen() {
     localStorage.removeItem("customerName");
     localStorage.removeItem("cart_v1");
     localStorage.removeItem("dineOption");
+    localStorage.removeItem("carBrand");
+    localStorage.removeItem("carColor");
     redirectToAccess();
   }, 5000);
 }
