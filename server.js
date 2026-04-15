@@ -721,6 +721,11 @@ function renderItemFull(chunks, item) {
   // Price in smaller font
   chunks.push(escPosTextSize(1, 1), cp858Buffer(`   ${formatPrice(lineTotal)}\n`), escPosTextSize(2, 2));
 
+  // Size choice (e.g. 100ml / 300ml)
+  if (item.selectedSize && item.selectedSize.label) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> ${item.selectedSize.label.toUpperCase()}\n`), Buffer.from([ESC, 0x45, 0x00]));
+  }
+
   // Sauce option
   if (item.sauceWanted === true) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT SAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
@@ -795,6 +800,11 @@ function renderItemKitchen(chunks, item) {
   chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(2, 2));
   for (const line of nameLines) chunks.push(cp858Buffer(`${line}\n`));
   chunks.push(Buffer.from([ESC, 0x45, 0x00]));
+
+  // Size choice
+  if (item.selectedSize && item.selectedSize.label) {
+    chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> ${item.selectedSize.label.toUpperCase()}\n`), Buffer.from([ESC, 0x45, 0x00]));
+  }
 
   // Sauce option
   if (item.sauceWanted === true) {

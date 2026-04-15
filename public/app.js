@@ -40,6 +40,7 @@ const TRANSLATIONS = {
     add: "Hinzufügen",
     withAll: "Mit allem",
     deselectAll: "Alles abwählen",
+    chooseSize: "Größe wählen:",
     chooseIngredients: "Zutaten auswählen:",
     optionalIngredients: "Optional dazu:",
     riceOrFries: "Mit Reis oder Pommes?",
@@ -130,6 +131,7 @@ const TRANSLATIONS = {
     add: "Add",
     withAll: "With everything",
     deselectAll: "Deselect all",
+    chooseSize: "Choose size:",
     chooseIngredients: "Choose ingredients:",
     optionalIngredients: "Optional extras:",
     riceOrFries: "With rice or fries?",
@@ -220,6 +222,7 @@ const TRANSLATIONS = {
     add: "Ekle",
     withAll: "Her şeyle",
     deselectAll: "Tümünü kaldır",
+    chooseSize: "Boyut seçin:",
     chooseIngredients: "Malzeme seçin:",
     optionalIngredients: "İsteğe bağlı:",
     riceOrFries: "Pilav mı patates mi?",
@@ -755,6 +758,7 @@ function closeBackdrop() { document.getElementById("modalBackdrop").classList.ad
 
 function composeItemMeta(item) {
   const parts = [];
+  if (item.selectedSize) parts.push(item.selectedSize.label);
   if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
     parts.push(`${t("mitAllemOhne")} ${item.allOptionsExcept.join(", ")}`);
   } else if (item.allOptions) {
@@ -795,6 +799,7 @@ function openProduct(product, category, editIndex) {
   state.sauceWanted = null;
   state.currySauceWanted = null;
   state.productNote = "";
+  state.selectedSize = null;
   state.editingCartIndex = typeof editIndex === "number" ? editIndex : -1;
 
   // If editing, pre-fill from cart item
@@ -832,6 +837,7 @@ function openProduct(product, category, editIndex) {
     if (editItem.currySauceWanted != null) state.currySauceWanted = editItem.currySauceWanted;
     state.productNote = editItem.note || "";
     if (editItem.extras) state.selectedExtras = editItem.extras.map(e => ({ ...e }));
+    if (editItem.selectedSize) state.selectedSize = editItem.selectedSize;
   }
 
   // Drinks: skip all modals, add directly to cart
@@ -865,6 +871,42 @@ function openProduct(product, category, editIndex) {
 
   const area = document.getElementById("optionsArea");
   area.innerHTML = "";
+
+  // Size choice (e.g. Döner Sauce 100ml / 300ml)
+  if (product.hasSizeChoice && Array.isArray(product.sizes)) {
+    if (!state.selectedSize) state.selectedSize = product.sizes[0];
+    state.selectedProduct = { ...product, price: state.selectedSize.price };
+    document.getElementById("modalPrice").textContent = euro(state.selectedSize.price);
+
+    const sizeSection = document.createElement("div");
+    sizeSection.style.cssText = "margin-bottom:18px;";
+    sizeSection.innerHTML = `<div style="font-weight:700;font-size:16px;color:#2b170b;margin-bottom:10px">${t("chooseSize") || "Größe wählen"}</div>`;
+    const sizeGrid = document.createElement("div");
+    sizeGrid.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
+    for (const size of product.sizes) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "sizeBtn";
+      btn.dataset.sizeKey = size.key;
+      const isActive = state.selectedSize.key === size.key;
+      btn.innerHTML = `<div style="font-weight:700;font-size:17px">${size.label}</div><div style="font-size:14px;color:#735f45;margin-top:2px">${euro(size.price)}</div>`;
+      btn.style.cssText = `padding:14px 10px;border-radius:14px;border:2px solid ${isActive ? '#d6281f' : 'rgba(112,77,45,.15)'};background:${isActive ? 'rgba(214,40,31,.08)' : 'rgba(255,255,255,.7)'};cursor:pointer;text-align:center;`;
+      btn.addEventListener("click", () => {
+        state.selectedSize = size;
+        state.selectedProduct = { ...product, price: size.price };
+        document.getElementById("modalPrice").textContent = euro(size.price);
+        for (const b of sizeGrid.querySelectorAll(".sizeBtn")) {
+          const active = b.dataset.sizeKey === size.key;
+          b.style.borderColor = active ? "#d6281f" : "rgba(112,77,45,.15)";
+          b.style.background = active ? "rgba(214,40,31,.08)" : "rgba(255,255,255,.7)";
+        }
+        updateModalSubtotal();
+      });
+      sizeGrid.appendChild(btn);
+    }
+    sizeSection.appendChild(sizeGrid);
+    area.appendChild(sizeSection);
+  }
 
   const isTeller = TELLER_IDS.has(product.id);
   const isCurry = CURRY_IDS.has(product.id);
@@ -999,6 +1041,11 @@ function openProduct(product, category, editIndex) {
       grid.appendChild(label);
     }
     area.appendChild(grid);
+
+    // Extras inline for dönerbox
+    if (state.extras.length > 0) {
+      renderExtrasInModal(area);
+    }
 
   } else if (isCurry) {
     // Currysauce question
@@ -1271,42 +1318,9 @@ function proceedToExtras() {
     return;
   }
 
-  // For products WITHOUT optionsEnabled: show extras modal
+  // For products WITHOUT optionsEnabled: skip extras, go straight to cart
   document.getElementById("optionsModal").classList.add("hidden");
-  if (state.extras.length === 0) { finalizeAddToCart(); return; }
-
-  state.selectedExtras = [];
-  const nameEl = document.getElementById("extrasProductName");
-  if (nameEl) nameEl.textContent = itemName(state.selectedProduct) || "";
-
-  const area = document.getElementById("extrasArea");
-  area.innerHTML = "";
-  const grid = document.createElement("div");
-  grid.className = "extrasGrid";
-
-  for (const extra of state.extras) {
-    const card = document.createElement("label");
-    card.className = "extraCard";
-    const iconSvg = EXTRA_ICONS[extra.id] || "";
-    const translatedExtraName = extraName(extra);
-    card.innerHTML = `
-      <input type="checkbox" data-extra-id="${extra.id}" />
-      <div class="extraCard__icon">${iconSvg}</div>
-      <div class="extraCard__info">
-        <div class="extraCard__name">${translatedExtraName}</div>
-        <div class="extraCard__price">+${euro(extra.price)}</div>
-      </div>
-    `;
-    const cb = card.querySelector("input");
-    cb.addEventListener("change", () => {
-      card.classList.toggle("extraCard--selected", cb.checked);
-      if (cb.checked) state.selectedExtras.push({ id: extra.id, name: translatedExtraName, price: extra.price });
-      else state.selectedExtras = state.selectedExtras.filter(e => e.id !== extra.id);
-    });
-    grid.appendChild(card);
-  }
-  area.appendChild(grid);
-  document.getElementById("extrasModal").classList.remove("hidden");
+  finalizeAddToCart();
 }
 
 function closeExtrasModal() {
@@ -1352,7 +1366,8 @@ function finalizeAddToCart() {
   const breadKey = state.breadWanted != null ? (state.breadWanted ? "BROT" : "KEIN_BROT") : "";
   const sauceKey = state.sauceWanted != null ? (state.sauceWanted ? "SAUCE" : "KEINE_SAUCE") : "";
   const curryKey = state.currySauceWanted != null ? (state.currySauceWanted ? "CURRY" : "KEINE_CURRY") : "";
-  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, sauceKey, curryKey, note].join("::");
+  const sizeKey = state.selectedSize ? state.selectedSize.key : "";
+  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, sauceKey, curryKey, note, sizeKey].join("::");
   const extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
   const donerboxFee = state.donerboxExtraFee || 0;
 
@@ -1382,7 +1397,8 @@ function finalizeAddToCart() {
     sauceWanted: state.sauceWanted,
     currySauceWanted: state.currySauceWanted,
     note: note || null,
-    isDrink: product.isDrink || false
+    isDrink: product.isDrink || false,
+    selectedSize: state.selectedSize ? { key: state.selectedSize.key, label: state.selectedSize.label, price: state.selectedSize.price } : null
   };
 
   if (state.editingCartIndex >= 0) {

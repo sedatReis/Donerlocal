@@ -213,7 +213,8 @@
         { "id": "sonst_78", "number": 78, "name": "Scharfe Paprika Flocken 100g", "name_en": "Hot Paprika Flakes 100g", "name_tr": "Acı Pul Biber 100g", "desc": "", "desc_en": "", "desc_tr": "", "price": 5.00, "image": "img/paprika-flocken.png", "optionsEnabled": false },
         { "id": "sonst_79", "number": 79, "name": "Paprika Flocken Mini Becher", "name_en": "Paprika Flakes Mini Cup", "name_tr": "Pul Biber Mini Bardak", "desc": "", "desc_en": "", "desc_tr": "", "price": 1.00, "image": "img/paprika-mini.png", "optionsEnabled": false },
         { "id": "sonst_80", "number": 80, "name": "Portion Reis", "name_en": "Portion of Rice", "name_tr": "Porsiyon Pilav", "desc": "", "desc_en": "", "desc_tr": "", "price": 3.80, "image": "img/reis-portion.png", "optionsEnabled": false },
-        { "id": "sonst_81", "number": 81, "name": "Dönerfleisch per 100g", "name_en": "Döner Meat per 100g", "name_tr": "Döner Et 100g", "desc": "", "desc_en": "", "desc_tr": "", "price": 4.50, "image": "img/doner-fleisch.png", "optionsEnabled": false }
+        { "id": "sonst_81", "number": 81, "name": "Dönerfleisch per 100g", "name_en": "Döner Meat per 100g", "name_tr": "Döner Et 100g", "desc": "", "desc_en": "", "desc_tr": "", "price": 4.50, "image": "img/doner-fleisch.png", "optionsEnabled": false },
+        { "id": "sonst_82", "number": 82, "name": "Döner Sauce Şark", "name_en": "Döner Sauce Şark", "name_tr": "Döner Sos Şark", "desc": "hausgemacht", "desc_en": "homemade", "desc_tr": "ev yapımı", "price": 1.50, "image": "imagesforsark/hausgemachterdoenersauce.png", "optionsEnabled": false, "hasSizeChoice": true, "sizes": [{"key": "100ml", "label": "100 ml", "price": 1.50}, {"key": "300ml", "label": "300 ml", "price": 3.50}] }
       ]
     }
   ],
