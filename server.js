@@ -791,11 +791,11 @@ function renderItemFull(chunks, item) {
 }
 
 // Render a single item on receipt (kitchen version - no prices)
-function renderItemKitchen(chunks, item) {
+function renderItemKitchen(chunks, item, itemNum) {
   const ESC = 0x1b;
   const qty = item.qty || 1;
 
-  const nameText = `${qty}x ${item.name.toUpperCase()}`;
+  const nameText = `${itemNum}.) ${qty}x ${item.name.toUpperCase()}`;
   const nameLines = wordWrap(nameText, 16);
   chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(2, 2));
   for (const line of nameLines) chunks.push(cp858Buffer(`${line}\n`));
@@ -933,7 +933,11 @@ function buildKitchenReceipt(order, randomNum) {
   const foodItems = order.items.filter(i => !i.isDrink);
 
   if (foodItems.length > 0) {
-    for (const item of foodItems) renderItemKitchen(chunks, item);
+    let itemNum = 1;
+    for (const item of foodItems) {
+      renderItemKitchen(chunks, item, itemNum);
+      itemNum++;
+    }
   }
 
   // No total, no drinks
