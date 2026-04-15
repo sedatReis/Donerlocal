@@ -1662,6 +1662,8 @@ async function sendOrder() {
       breadWanted: item.breadWanted ?? null,
       sauceWanted: item.sauceWanted ?? null,
       currySauceWanted: item.currySauceWanted ?? null,
+      donerboxBase: item.donerboxBase || null,
+      selectedSize: item.selectedSize || null,
       note: item.note || null,
       isDrink: item.isDrink || false
     }))

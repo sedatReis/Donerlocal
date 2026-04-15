@@ -623,7 +623,7 @@ function wordWrap(text, maxChars) {
 }
 
 // Shared: render header (name, dine option, car, payment, batch)
-function buildReceiptHeader(order, randomNum) {
+function buildReceiptHeader(order, randomNum, { skipRestaurantName = false } = {}) {
   const ESC = 0x1b;
   const chunks = [];
 
@@ -633,15 +633,17 @@ function buildReceiptHeader(order, randomNum) {
     Buffer.from([ESC, 0x61, 0x01]) // center
   );
 
-  // Restaurant name
-  chunks.push(
-    Buffer.from([ESC, 0x45, 0x01]),
-    escPosTextSize(2, 2),
-    cp858Buffer("SARK KEBAB\n"),
-    Buffer.from([ESC, 0x45, 0x00]),
-    escPosTextSize(1, 1),
-    cp858Buffer("\n")
-  );
+  // Restaurant name (skip for kitchen bon)
+  if (!skipRestaurantName) {
+    chunks.push(
+      Buffer.from([ESC, 0x45, 0x01]),
+      escPosTextSize(2, 2),
+      cp858Buffer("SARK KEBAB\n"),
+      Buffer.from([ESC, 0x45, 0x00]),
+      escPosTextSize(1, 1),
+      cp858Buffer("\n")
+    );
+  }
 
   // Customer name with random number
   const customerDisplay = `${order.customerName.toUpperCase()} #${randomNum}`;
@@ -795,7 +797,15 @@ function renderItemKitchen(chunks, item, itemNum) {
   const ESC = 0x1b;
   const qty = item.qty || 1;
 
-  const nameText = `${itemNum}.) ${qty}x ${item.name.toUpperCase()}`;
+  // Number right-aligned, small font
+  chunks.push(
+    Buffer.from([ESC, 0x61, 0x02]), // right align
+    escPosTextSize(1, 1),
+    cp858Buffer(`${itemNum}.)\n`),
+    Buffer.from([ESC, 0x61, 0x00])  // back to left align
+  );
+
+  const nameText = `${qty}x ${item.name.toUpperCase()}`;
   const nameLines = wordWrap(nameText, 16);
   chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(2, 2));
   for (const line of nameLines) chunks.push(cp858Buffer(`${line}\n`));
@@ -925,7 +935,7 @@ function buildCustomerReceipt(order, randomNum) {
 function buildKitchenReceipt(order, randomNum) {
   const ESC = 0x1b;
   const GS = 0x1d;
-  const chunks = buildReceiptHeader(order, randomNum);
+  const chunks = buildReceiptHeader(order, randomNum, { skipRestaurantName: true });
 
   // Left align for items
   chunks.push(Buffer.from([ESC, 0x61, 0x00]));
