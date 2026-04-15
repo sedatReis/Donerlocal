@@ -862,7 +862,7 @@ function renderItemKitchen(chunks, item, itemNum) {
     chunks.push(Buffer.from([0x1b, 0x45, 0x01]), escPosTextSize(1, 2), cp858Buffer(`   * ${item.note}\n`), Buffer.from([0x1b, 0x45, 0x00]), escPosTextSize(2, 2));
   }
 
-  chunks.push(escPosTextSize(1, 1), cp858Buffer("\n"));
+  chunks.push(escPosTextSize(1, 1), cp858Buffer("- - - - - - - - - - - - - -\n\n"));
 }
 
 // BON 1: Full customer receipt (everything + "Bitte Bon nicht wegschmeißen")
