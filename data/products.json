@@ -872,7 +872,7 @@
           "desc_en": "incl. 0.25€ deposit",
           "desc_tr": "0,25€ depozito dahil",
           "price": 3.25,
-          "image": "img/mineralwasser.png",
+          "image": "imagesforsark/romerquellemineral.png",
           "optionsEnabled": false,
           "isDrink": true
         },
@@ -886,7 +886,7 @@
           "desc_en": "incl. 0.25€ deposit",
           "desc_tr": "0,25€ depozito dahil",
           "price": 3.25,
-          "image": "imagesforsark/dosegetranke.png",
+          "image": "imagesforsark/dosenneu.png",
           "optionsEnabled": false,
           "isDrink": true
         },
