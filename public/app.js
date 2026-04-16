@@ -1210,6 +1210,43 @@ function openProduct(product, category, editIndex) {
     }
   }
 
+  // Sauce choice for Pommes / Chicken Nuggets
+  if (product.hasSauceChoice) {
+    const SAUCE_OPTIONS = [
+      { id: "extra_61_ketchup", name: "Ketchup", price: 0.40 },
+      { id: "extra_61_mayo", name: "Mayonnaise", price: 0.40 },
+      { id: "extra_61_curry", name: "Currysauce", price: 0.40 },
+      { id: "extra_65", name: "Dönersauce", price: 1.50 }
+    ];
+    const sauceSection = document.createElement("div");
+    sauceSection.style.cssText = "margin-bottom:18px;";
+    sauceSection.innerHTML = `<div style="font-weight:700;font-size:16px;color:#2b170b;margin-bottom:10px">${t("sauces")} (${t("extras")})</div>`;
+    const sauceGrid = document.createElement("div");
+    sauceGrid.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
+    for (const sauce of SAUCE_OPTIONS) {
+      const isSelected = state.selectedExtras.some(e => e.id === sauce.id);
+      const card = document.createElement("label");
+      card.style.cssText = `display:flex;align-items:center;gap:10px;padding:14px 12px;border-radius:14px;border:2px solid ${isSelected ? '#d6281f' : 'rgba(112,77,45,.15)'};background:${isSelected ? 'rgba(214,40,31,.08)' : 'rgba(255,255,255,.7)'};cursor:pointer;transition:all .2s;`;
+      card.innerHTML = `<input type="checkbox" data-sauce-id="${sauce.id}" ${isSelected ? 'checked' : ''} style="width:20px;height:20px;accent-color:#d6281f" /><div><div style="font-weight:700;font-size:15px">${sauce.name}</div><div style="font-size:13px;color:#735f45">+${euro(sauce.price)}</div></div>`;
+      const cb = card.querySelector("input");
+      cb.addEventListener("change", () => {
+        if (cb.checked) {
+          state.selectedExtras.push({ id: sauce.id, name: sauce.name, price: sauce.price });
+          card.style.borderColor = "#d6281f";
+          card.style.background = "rgba(214,40,31,.08)";
+        } else {
+          state.selectedExtras = state.selectedExtras.filter(e => e.id !== sauce.id);
+          card.style.borderColor = "rgba(112,77,45,.15)";
+          card.style.background = "rgba(255,255,255,.7)";
+        }
+        updateModalSubtotal();
+      });
+      sauceGrid.appendChild(card);
+    }
+    sauceSection.appendChild(sauceGrid);
+    area.appendChild(sauceSection);
+  }
+
   // Note field
   const noteSection = document.createElement("div");
   noteSection.style.cssText = "margin-top:16px;";

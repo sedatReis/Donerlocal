@@ -198,6 +198,43 @@
       ]
     },
     {
+      "id": "pommes",
+      "title": "POMMES",
+      "title_en": "FRIES",
+      "title_tr": "PATATES",
+      "icon": "imagesforsark/Pommescategory.png",
+      "items": [
+        {
+          "id": "pommes_55",
+          "number": 55,
+          "name": "Pommes Frites Klein",
+          "name_en": "French Fries Small",
+          "name_tr": "Patates Kızartması Küçük",
+          "desc": "",
+          "desc_en": "",
+          "desc_tr": "",
+          "price": 4.9,
+          "image": "imagesforsark/KleinerPommes.png",
+          "optionsEnabled": false,
+          "hasSauceChoice": true
+        },
+        {
+          "id": "pommes_56",
+          "number": 56,
+          "name": "Pommes Frites Gross",
+          "name_en": "French Fries Large",
+          "name_tr": "Patates Kızartması Büyük",
+          "desc": "",
+          "desc_en": "",
+          "desc_tr": "",
+          "price": 6.5,
+          "image": "img/pommes-sark.png",
+          "optionsEnabled": false,
+          "hasSauceChoice": true
+        }
+      ]
+    },
+    {
       "id": "lahmacun",
       "title": "LAHMACUN",
       "title_en": "LAHMACUN",
@@ -451,6 +488,43 @@
           "price": 12.5,
           "image": "img/currywurst-teller.png",
           "optionsEnabled": false
+        }
+      ]
+    },
+    {
+      "id": "chickennuggets",
+      "title": "CHICKEN NUGGETS",
+      "title_en": "CHICKEN NUGGETS",
+      "title_tr": "TAVUK NUGGETS",
+      "icon": "imagesforsark/chickennuggetscategory.png",
+      "items": [
+        {
+          "id": "nuggets_57",
+          "number": 57,
+          "name": "Chicken Nuggets 1 Stk.",
+          "name_en": "Chicken Nuggets 1 Pc.",
+          "name_tr": "Tavuk Nugget 1 Adet",
+          "desc": "",
+          "desc_en": "",
+          "desc_tr": "",
+          "price": 1,
+          "image": "img/chicken-nugget-1stk.png",
+          "optionsEnabled": false,
+          "hasSauceChoice": true
+        },
+        {
+          "id": "nuggets_58",
+          "number": 58,
+          "name": "Chicken Nuggets mit Pommes",
+          "name_en": "Chicken Nuggets with Fries",
+          "name_tr": "Tavuk Nugget Patates ile",
+          "desc": "",
+          "desc_en": "",
+          "desc_tr": "",
+          "price": 10.9,
+          "image": "img/chicken-nuggets-pommes.png",
+          "optionsEnabled": false,
+          "hasSauceChoice": true
         }
       ]
     },
@@ -791,67 +865,6 @@
           "price": 9.9,
           "image": "img/lambada-teller.png",
           "optionsEnabled": true
-        }
-      ]
-    },
-    {
-      "id": "nuggets",
-      "title": "CHICKEN NUGGETS & POMMES",
-      "title_en": "CHICKEN NUGGETS & FRIES",
-      "title_tr": "TAVUK NUGGETS & PATATES",
-      "icon": "imagesforsark/nuggetspommescategory.png",
-      "items": [
-        {
-          "id": "nuggets_55",
-          "number": 55,
-          "name": "Pommes Frites Klein",
-          "name_en": "French Fries Small",
-          "name_tr": "Patates Kızartması Küçük",
-          "desc": "",
-          "desc_en": "",
-          "desc_tr": "",
-          "price": 4.9,
-          "image": "imagesforsark/KleinerPommes.png",
-          "optionsEnabled": false
-        },
-        {
-          "id": "nuggets_56",
-          "number": 56,
-          "name": "Pommes Frites Gross",
-          "name_en": "French Fries Large",
-          "name_tr": "Patates Kızartması Büyük",
-          "desc": "",
-          "desc_en": "",
-          "desc_tr": "",
-          "price": 6.5,
-          "image": "img/pommes-sark.png",
-          "optionsEnabled": false
-        },
-        {
-          "id": "nuggets_57",
-          "number": 57,
-          "name": "Chicken Nuggets 1 Stk.",
-          "name_en": "Chicken Nuggets 1 Pc.",
-          "name_tr": "Tavuk Nugget 1 Adet",
-          "desc": "",
-          "desc_en": "",
-          "desc_tr": "",
-          "price": 1,
-          "image": "img/chicken-nugget-1stk.png",
-          "optionsEnabled": false
-        },
-        {
-          "id": "nuggets_58",
-          "number": 58,
-          "name": "Chicken Nuggets mit Pommes",
-          "name_en": "Chicken Nuggets with Fries",
-          "name_tr": "Tavuk Nugget Patates ile",
-          "desc": "",
-          "desc_en": "",
-          "desc_tr": "",
-          "price": 10.9,
-          "image": "img/chicken-nuggets-pommes.png",
-          "optionsEnabled": false
         }
       ]
     },
