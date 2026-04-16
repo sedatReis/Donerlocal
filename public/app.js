@@ -1216,7 +1216,7 @@ function openProduct(product, category, editIndex) {
       { id: "extra_61_ketchup", name: "Ketchup", price: 0.40 },
       { id: "extra_61_mayo", name: "Mayonnaise", price: 0.40 },
       { id: "extra_61_curry", name: "Currysauce", price: 0.40 },
-      { id: "extra_65", name: "Dönersauce", price: 1.50 }
+      { id: "extra_65", name: "Dönersauce", price: 0.40 }
     ];
     const sauceSection = document.createElement("div");
     sauceSection.style.cssText = "margin-bottom:18px;";
