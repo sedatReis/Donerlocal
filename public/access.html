@@ -14,10 +14,10 @@
       align-items: center;
       justify-content: center;
       background:
-        radial-gradient(900px 520px at 8% -2%, rgba(240,179,33,.26), transparent 58%),
-        radial-gradient(700px 520px at 98% 15%, rgba(214,40,31,.13), transparent 60%),
-        linear-gradient(180deg, #f7ecd8 0%, #efe1c8 52%, #ead8bb 100%);
-      color: #1e130a;
+        radial-gradient(900px 520px at 8% -2%, rgba(255,255,255,.08), transparent 58%),
+        radial-gradient(700px 520px at 98% 15%, rgba(0,0,0,.06), transparent 60%),
+        linear-gradient(180deg, #f45022 0%, #e8461c 52%, #d93d16 100%);
+      color: #fff;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
 
@@ -34,12 +34,12 @@
       gap: 6px;
       padding: 8px 14px;
       border-radius: 14px;
-      border: 2px solid rgba(112,77,45,.12);
-      background: rgba(255,255,255,.75);
+      border: 2px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.12);
       cursor: pointer;
       font-size: 14px;
       font-weight: 800;
-      color: #2b170b;
+      color: #fff;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       backdrop-filter: blur(8px);
@@ -47,8 +47,8 @@
     }
 
     .langDropdown__toggle:hover {
-      border-color: rgba(214,40,31,.25);
-      background: rgba(255,255,255,.9);
+      border-color: rgba(255,255,255,.35);
+      background: rgba(255,255,255,.2);
     }
 
     .langDropdown__toggle svg {
@@ -73,10 +73,10 @@
       right: 0;
       min-width: 100%;
       background: rgba(255,255,255,.95);
-      border: 2px solid rgba(112,77,45,.12);
+      border: 2px solid rgba(0,0,0,.06);
       border-radius: 14px;
       overflow: hidden;
-      box-shadow: 0 8px 24px rgba(77,45,18,.15);
+      box-shadow: 0 8px 24px rgba(0,0,0,.15);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
@@ -98,7 +98,7 @@
     }
 
     .langDropdown__item:hover {
-      background: rgba(214,40,31,.08);
+      background: rgba(244,80,34,.08);
     }
 
     .langDropdown__item svg {
@@ -124,14 +124,14 @@
 
     .accessFullscreen__subtitle {
       font-size: 16px;
-      color: #735f45;
+      color: rgba(255,255,255,.75);
       margin-bottom: 48px;
     }
 
     .accessFullscreen__question {
       font-size: 28px;
       font-weight: 900;
-      color: #2b170b;
+      color: #fff;
       margin-bottom: 24px;
     }
 
@@ -142,33 +142,33 @@
       font-weight: 700;
       text-align: center;
       border-radius: 20px;
-      border: 2px solid rgba(112,77,45,.18);
-      background: rgba(255,255,255,.85);
-      color: #1e130a;
+      border: 2px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.15);
+      color: #fff;
       outline: none;
-      box-shadow: 0 8px 24px rgba(77,45,18,.08);
+      box-shadow: 0 8px 24px rgba(0,0,0,.08);
     }
 
     .accessFullscreen__input:focus {
-      border-color: rgba(214,40,31,.4);
-      box-shadow: 0 8px 24px rgba(214,40,31,.12);
+      border-color: rgba(255,255,255,.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
     }
 
     .accessFullscreen__input::placeholder {
-      color: #b5a48e;
+      color: rgba(255,255,255,.5);
       font-weight: 500;
     }
 
     .accessFullscreen__hint {
       margin-top: 12px;
       font-size: 14px;
-      color: #8b7a65;
+      color: rgba(255,255,255,.65);
     }
 
     .accessFullscreen__error {
       min-height: 24px;
       margin-top: 12px;
-      color: #b4232b;
+      color: #ffd4d4;
       font-weight: 700;
       font-size: 15px;
     }
@@ -181,16 +181,16 @@
       font-weight: 800;
       border: none;
       border-radius: 20px;
-      color: #fff7ef;
-      background: linear-gradient(135deg, #d6281f, #f04f26 70%, #f0b321);
-      box-shadow: 0 10px 24px rgba(214,40,31,.22);
+      color: #f45022;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
 
     .accessFullscreen__btn:hover {
-      background: linear-gradient(135deg, #cc231b, #ea4a23 70%, #eead12);
+      background: rgba(255,255,255,.9);
     }
 
     .accessFullscreen__btn:active {
@@ -311,7 +311,7 @@
           <input id="carColorInputAccess" type="text" class="accessFullscreen__input" style="font-size:18px;padding:14px 16px;text-align:left" data-i18n-placeholder="carColorPlaceholder" placeholder="z.B. Schwarz" maxlength="30" />
         </label>
         <button id="carSubmitBtnAccess" class="accessFullscreen__btn" style="margin-top:12px" data-i18n="nameSubmit">Weiter zur Speisekarte</button>
-        <button id="carBackBtnAccess" class="accessFullscreen__btn" style="margin-top:12px;background:transparent;color:#735f45;border:2px solid rgba(112,77,45,.2);" data-i18n="back">Zurück</button>
+        <button id="carBackBtnAccess" class="accessFullscreen__btn" style="margin-top:12px;background:transparent;color:rgba(255,255,255,.8);border:2px solid rgba(255,255,255,.2);" data-i18n="back">Zurück</button>
       </div>
     </div>
   </div>
