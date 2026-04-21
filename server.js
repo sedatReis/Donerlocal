@@ -713,8 +713,13 @@ function renderItemFull(chunks, item) {
   const qty = item.qty || 1;
   const lineTotal = qty * item.price;
 
-  // Item name (bold, large) with word wrap
-  const nameText = `${qty}x ${item.name.toUpperCase()}`;
+  // Item name (bold, large) — Dönerbox: size + base on same line (e.g. "DOENER BOX GROSS MIT POMMES")
+  let displayName = item.name.toUpperCase();
+  if (item.donerboxBase) {
+    const baseLabel = item.donerboxBase === "reis" ? "M. REIS" : item.donerboxBase === "pommes" ? "M. POMMES" : "OHNE BEIL.";
+    displayName += ` ${baseLabel}`;
+  }
+  const nameText = `${qty}x ${displayName}`;
   const nameLines = wordWrap(nameText, 16);
   chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(2, 2));
   for (const line of nameLines) chunks.push(cp858Buffer(`${line}\n`));
@@ -728,7 +733,7 @@ function renderItemFull(chunks, item) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> ${item.selectedSize.label.toUpperCase()}\n`), Buffer.from([ESC, 0x45, 0x00]));
   }
 
-  // Sauce option
+  // Sauce option (only for non-Dönerbox or when explicitly set)
   if (item.sauceWanted === true) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT SAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
   } else if (item.sauceWanted === false) {
@@ -749,7 +754,8 @@ function renderItemFull(chunks, item) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> OHNE CURRYSAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
   }
 
-  // Options/ingredients
+  // Options/ingredients (skip Dönerbox base options already in name)
+  const fullDonerboxBaseOpts = ["Reis", "Pommes", "Ohne Reis & Pommes"];
   if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
     const ohneText = `   >> MIT ALLEM OHNE ${item.allOptionsExcept.map(o => o.toUpperCase()).join(", ")}`;
     const ohneLines = wordWrap(ohneText, 16);
@@ -760,6 +766,7 @@ function renderItemFull(chunks, item) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT ALLEM\n`), Buffer.from([ESC, 0x45, 0x00]));
   } else if (Array.isArray(item.options) && item.options.length > 0) {
     for (const opt of item.options) {
+      if (item.donerboxBase && fullDonerboxBaseOpts.includes(opt)) continue;
       const optLines = wordWrap(`   - ${opt.toUpperCase()}`, 16);
       for (const line of optLines) chunks.push(cp858Buffer(`${line}\n`));
     }
@@ -781,6 +788,18 @@ function renderItemFull(chunks, item) {
         escPosTextSize(2, 2), cp858Buffer(`\n`)
       );
     }
+  }
+
+  // Extra pieces (Stück Köfte / Stück Falafel)
+  if (item.extraPieces > 0 && item.extraPiecesLabel) {
+    const piecesTotal = item.extraPieces * (item.extraPiecesPrice || 0);
+    chunks.push(
+      Buffer.from([ESC, 0x45, 0x01]),
+      cp858Buffer(`   + ${item.extraPieces}x ${item.extraPiecesLabel.toUpperCase()} `),
+      escPosTextSize(1, 1), cp858Buffer(`(${formatPrice(piecesTotal)})`),
+      escPosTextSize(2, 2), cp858Buffer(`\n`),
+      Buffer.from([ESC, 0x45, 0x00])
+    );
   }
 
   // Note
@@ -805,7 +824,13 @@ function renderItemKitchen(chunks, item, itemNum) {
     Buffer.from([ESC, 0x61, 0x00])  // back to left align
   );
 
-  const nameText = `${qty}x ${item.name.toUpperCase()}`;
+  // Item name — Dönerbox: size + base on same line
+  let kitchenDisplayName = item.name.toUpperCase();
+  if (item.donerboxBase) {
+    const baseLabel = item.donerboxBase === "reis" ? "M. REIS" : item.donerboxBase === "pommes" ? "M. POMMES" : "OHNE BEIL.";
+    kitchenDisplayName += ` ${baseLabel}`;
+  }
+  const nameText = `${qty}x ${kitchenDisplayName}`;
   const nameLines = wordWrap(nameText, 16);
   chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(2, 2));
   for (const line of nameLines) chunks.push(cp858Buffer(`${line}\n`));
@@ -837,7 +862,8 @@ function renderItemKitchen(chunks, item, itemNum) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> OHNE CURRYSAUCE\n`), Buffer.from([ESC, 0x45, 0x00]));
   }
 
-  // Options/ingredients
+  // Options/ingredients (skip base options like Reis/Pommes/Ohne that are already in the name)
+  const donerboxBaseOptions = ["Reis", "Pommes", "Ohne Reis & Pommes"];
   if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
     const ohneText = `   >> MIT ALLEM OHNE ${item.allOptionsExcept.map(o => o.toUpperCase()).join(", ")}`;
     const ohneLines = wordWrap(ohneText, 16);
@@ -848,6 +874,8 @@ function renderItemKitchen(chunks, item, itemNum) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT ALLEM\n`), Buffer.from([ESC, 0x45, 0x00]));
   } else if (Array.isArray(item.options) && item.options.length > 0) {
     for (const opt of item.options) {
+      // Skip Dönerbox base options from the ingredient list (already in name)
+      if (item.donerboxBase && donerboxBaseOptions.includes(opt)) continue;
       const optLines = wordWrap(`   - ${opt.toUpperCase()}`, 16);
       for (const line of optLines) chunks.push(cp858Buffer(`${line}\n`));
     }
@@ -865,6 +893,16 @@ function renderItemKitchen(chunks, item, itemNum) {
     for (const extra of item.extras) {
       chunks.push(escPosTextSize(2, 2), cp858Buffer(`   + ${extra.name.toUpperCase()}\n`));
     }
+  }
+
+  // Extra pieces (Stück Köfte / Stück Falafel) — no prices on kitchen bon
+  if (item.extraPieces > 0 && item.extraPiecesLabel) {
+    chunks.push(
+      Buffer.from([0x1b, 0x45, 0x01]),
+      escPosTextSize(2, 2),
+      cp858Buffer(`   + ${item.extraPieces}x ${item.extraPiecesLabel.toUpperCase()}\n`),
+      Buffer.from([0x1b, 0x45, 0x00])
+    );
   }
 
   // Note
@@ -932,31 +970,63 @@ function buildCustomerReceipt(order, randomNum) {
 }
 
 // BON 2: Kitchen receipt (name + info + only food, NO prices, NO drinks)
+// Splits into multiple bons if more than 4 food items
+const KITCHEN_BON_MAX_ITEMS = 4;
+
 function buildKitchenReceipt(order, randomNum) {
+  const ESC = 0x1b;
+  const GS = 0x1d;
+  const foodItems = order.items.filter(i => !i.isDrink);
+
+  // If <= 4 items, single bon
+  if (foodItems.length <= KITCHEN_BON_MAX_ITEMS) {
+    return buildSingleKitchenBon(order, randomNum, foodItems, 1, 1);
+  }
+
+  // Split into chunks of 4
+  const bonChunks = [];
+  const totalBons = Math.ceil(foodItems.length / KITCHEN_BON_MAX_ITEMS);
+  for (let i = 0; i < totalBons; i++) {
+    const slice = foodItems.slice(i * KITCHEN_BON_MAX_ITEMS, (i + 1) * KITCHEN_BON_MAX_ITEMS);
+    bonChunks.push(buildSingleKitchenBon(order, randomNum, slice, i + 1, totalBons, i * KITCHEN_BON_MAX_ITEMS));
+  }
+  return Buffer.concat(bonChunks);
+}
+
+function buildSingleKitchenBon(order, randomNum, items, bonNum, totalBons, startIdx = 0) {
   const ESC = 0x1b;
   const GS = 0x1d;
   const chunks = buildReceiptHeader(order, randomNum, { skipRestaurantName: true });
 
+  // Show bon part number if split
+  if (totalBons > 1) {
+    chunks.push(
+      Buffer.from([ESC, 0x61, 0x01]),
+      Buffer.from([ESC, 0x45, 0x01]),
+      escPosTextSize(2, 2),
+      cp858Buffer(`TEIL ${bonNum}/${totalBons}\n`),
+      Buffer.from([ESC, 0x45, 0x00]),
+      escPosTextSize(1, 1),
+      cp858Buffer("\n")
+    );
+  }
+
   // Left align for items
   chunks.push(Buffer.from([ESC, 0x61, 0x00]));
 
-  const foodItems = order.items.filter(i => !i.isDrink);
-
-  if (foodItems.length > 0) {
-    let itemNum = 1;
-    for (const item of foodItems) {
+  if (items.length > 0) {
+    let itemNum = startIdx + 1;
+    for (const item of items) {
       renderItemKitchen(chunks, item, itemNum);
       itemNum++;
     }
   }
 
-  // No total, no drinks
-
   // Footer
   chunks.push(
     Buffer.from([ESC, 0x61, 0x01]),
     cp858Buffer("\n"),
-    cp858Buffer("--- KUECHENBON ---\n")
+    cp858Buffer(`--- KUECHENBON${totalBons > 1 ? ` ${bonNum}/${totalBons}` : ""} ---\n`)
   );
 
   // Feed and cut

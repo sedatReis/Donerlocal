@@ -24,9 +24,9 @@
         {
           "id": "suppe_02",
           "number": 2,
-          "name": "Tagessuppe",
-          "name_en": "Soup of the Day",
-          "name_tr": "Günün Çorbası",
+          "name": "Tagessuppe Iskembe (Kutelsuppe)",
+          "name_en": "Daily Soup Iskembe (Tripe Soup)",
+          "name_tr": "Günün Çorbası İşkembe",
           "desc": "hausgemacht, mit Brot",
           "desc_en": "homemade, with bread",
           "desc_tr": "ev yapımı, ekmek ile",
@@ -426,6 +426,32 @@
           "desc_tr": "Köfte, salata, sos, ızgara sebze, pilav ve ekmek",
           "price": 19.9,
           "image": "img/kofte-teller-reis.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "kofte_28a",
+          "number": 28,
+          "name": "Kleine Köfte Teller",
+          "name_en": "Small Meatball Plate",
+          "name_tr": "Küçük Köfte Tabak",
+          "desc": "Kleine Portion Köfte mit Pommes oder Reis",
+          "desc_en": "Small portion meatballs with fries or rice",
+          "desc_tr": "Küçük porsiyon köfte, patates veya pilav ile",
+          "price": 17.9,
+          "image": "img/kofte-teller-pommes.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "kofte_28b",
+          "number": 28,
+          "name": "Kleine Köfte Brot",
+          "name_en": "Small Meatball Bread",
+          "name_tr": "Küçük Köfte Ekmek",
+          "desc": "Kleine Portion Köfte im Brot",
+          "desc_en": "Small portion meatballs in bread",
+          "desc_tr": "Küçük porsiyon köfte ekmekte",
+          "price": 9.5,
+          "image": "img/kofte-brot.png",
           "optionsEnabled": true
         }
       ]

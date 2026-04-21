@@ -72,8 +72,8 @@ const TRANSLATIONS = {
     withBread: "Mit Brot",
     withoutBread: "Ohne Brot",
     note: "Bemerkung",
-    notePlaceholder: "z.B. extra scharf (max 7 Wörter)",
-    noteMaxWords: "Maximal 7 Wörter erlaubt.",
+    notePlaceholder: "z.B. extra scharf (max 10 Wörter)",
+    noteMaxWords: "Maximal 10 Wörter erlaubt.",
     mitAllemOhne: "Mit allem ohne",
     edit: "Bearbeiten",
     save: "Speichern",
@@ -163,8 +163,8 @@ const TRANSLATIONS = {
     withBread: "With bread",
     withoutBread: "Without bread",
     note: "Note",
-    notePlaceholder: "e.g. extra spicy (max 7 words)",
-    noteMaxWords: "Maximum 7 words allowed.",
+    notePlaceholder: "e.g. extra spicy (max 10 words)",
+    noteMaxWords: "Maximum 10 words allowed.",
     mitAllemOhne: "With everything except",
     edit: "Edit",
     save: "Save",
@@ -254,8 +254,8 @@ const TRANSLATIONS = {
     withBread: "Ekmek ile",
     withoutBread: "Ekmeksiz",
     note: "Not",
-    notePlaceholder: "örn. ekstra acı (maks 7 kelime)",
-    noteMaxWords: "Maksimum 7 kelime.",
+    notePlaceholder: "örn. ekstra acı (maks 10 kelime)",
+    noteMaxWords: "Maksimum 10 kelime.",
     mitAllemOhne: "Her şeyle, hariç",
     edit: "Düzenle",
     save: "Kaydet",
@@ -388,6 +388,14 @@ const CURRY_IDS = new Set([
   "curry_29", "curry_30", "curry_31", "curry_32"
 ]);
 
+const KOFTE_IDS = new Set([
+  "kofte_25", "kofte_26", "kofte_27", "kofte_28", "kofte_28a", "kofte_28b"
+]);
+
+const FALAFEL_IDS = new Set([
+  "veg_48b", "veg_49", "veg_50", "veg_51", "veg_52"
+]);
+
 /* ── Category SVG Icons ── */
 const CATEGORY_ICONS = {};
 
@@ -417,7 +425,10 @@ const state = {
   donerboxBase: null, // "reis" or "pommes" for Dönerbox
   donerboxExtraFee: 0, // 1.50€ if more than 1 ingredient selected
   breadWanted: null, // true/false for Tellergerichte
-  productNote: "", // per-product note (max 7 words)
+  productNote: "", // per-product note (max 10 words)
+  extraPieces: 0, // extra Köfte/Falafel pieces (3€/2€ each)
+  extraPiecesPrice: 0, // price per extra piece
+  extraPiecesLabel: "", // "Stück Köfte" or "Stück Falafel"
   editingCartIndex: -1, // -1 = not editing, >= 0 = index in cart
   cart: loadCart(),
   customerName: localStorage.getItem("customerName") || "",
@@ -781,6 +792,7 @@ function composeItemMeta(item) {
   if (Array.isArray(item.extras) && item.extras.length) {
     parts.push(...item.extras.map(e => `+${e.name} (${euro(e.price)})`));
   }
+  if (item.extraPieces > 0) parts.push(`+${item.extraPieces}x ${item.extraPiecesLabel} (${euro(item.extraPieces * item.extraPiecesPrice)})`);
   if (item.note) parts.push(`"${item.note}"`);
   return parts.length ? parts.join(", ") : "";
 }
@@ -799,6 +811,9 @@ function openProduct(product, category, editIndex) {
   state.sauceWanted = null;
   state.currySauceWanted = null;
   state.productNote = "";
+  state.extraPieces = 0;
+  state.extraPiecesPrice = 0;
+  state.extraPiecesLabel = "";
   state.selectedSize = null;
   state.editingCartIndex = typeof editIndex === "number" ? editIndex : -1;
 
@@ -838,6 +853,11 @@ function openProduct(product, category, editIndex) {
     state.productNote = editItem.note || "";
     if (editItem.extras) state.selectedExtras = editItem.extras.map(e => ({ ...e }));
     if (editItem.selectedSize) state.selectedSize = editItem.selectedSize;
+    if (editItem.extraPieces) {
+      state.extraPieces = editItem.extraPieces;
+      state.extraPiecesPrice = editItem.extraPiecesPrice || 0;
+      state.extraPiecesLabel = editItem.extraPiecesLabel || "";
+    }
   }
 
   // Drinks: skip all modals, add directly to cart
@@ -935,6 +955,40 @@ function openProduct(product, category, editIndex) {
       });
     }
     area.appendChild(breadSection);
+  }
+
+  // Extra pieces: Stück Köfte / Stück Falafel
+  const isKofte = KOFTE_IDS.has(product.id);
+  const isFalafel = FALAFEL_IDS.has(product.id);
+  if (isKofte || isFalafel) {
+    const piecePrice = isKofte ? 3.00 : 2.00;
+    const pieceLabel = isKofte ? "Stück Köfte" : "Stück Falafel";
+    state.extraPiecesPrice = piecePrice;
+    state.extraPiecesLabel = pieceLabel;
+
+    const piecesSection = document.createElement("div");
+    piecesSection.style.cssText = "margin-bottom:18px;padding:12px 16px;border-radius:14px;background:rgba(255,160,0,.08);border:2px solid rgba(255,160,0,.2);";
+    piecesSection.innerHTML = `
+      <div style="font-weight:700;font-size:16px;color:#2b170b;margin-bottom:10px">Extra ${pieceLabel} (+${euro(piecePrice)}/Stk.)</div>
+      <div style="display:flex;align-items:center;gap:14px;justify-content:center">
+        <button type="button" id="piecesMinus" style="width:44px;height:44px;border-radius:12px;border:2px solid rgba(112,77,45,.15);background:rgba(255,255,255,.7);cursor:pointer;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center">−</button>
+        <span id="piecesCount" style="font-size:28px;font-weight:900;min-width:40px;text-align:center;color:#2b170b">${state.extraPieces}</span>
+        <button type="button" id="piecesPlus" style="width:44px;height:44px;border-radius:12px;border:2px solid rgba(112,77,45,.15);background:rgba(255,255,255,.7);cursor:pointer;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center">+</button>
+      </div>
+      <div id="piecesTotal" style="text-align:center;margin-top:6px;font-size:13px;color:#8b7a65;font-weight:600">${state.extraPieces > 0 ? `+${euro(state.extraPieces * piecePrice)}` : ""}</div>
+    `;
+    const updatePiecesUI = () => {
+      piecesSection.querySelector("#piecesCount").textContent = state.extraPieces;
+      piecesSection.querySelector("#piecesTotal").textContent = state.extraPieces > 0 ? `+${euro(state.extraPieces * piecePrice)}` : "";
+      updateModalSubtotal();
+    };
+    piecesSection.querySelector("#piecesMinus").addEventListener("click", () => {
+      if (state.extraPieces > 0) { state.extraPieces--; updatePiecesUI(); }
+    });
+    piecesSection.querySelector("#piecesPlus").addEventListener("click", () => {
+      if (state.extraPieces < 20) { state.extraPieces++; updatePiecesUI(); }
+    });
+    area.appendChild(piecesSection);
   }
 
   if (isDonerbox) {
@@ -1260,7 +1314,7 @@ function openProduct(product, category, editIndex) {
   noteInput.addEventListener("input", () => {
     const words = noteInput.value.trim().split(/\s+/).filter(Boolean);
     const errEl = noteSection.querySelector("#noteError");
-    if (words.length > 7) {
+    if (words.length > 10) {
       errEl.textContent = t("noteMaxWords");
     } else {
       errEl.textContent = "";
@@ -1328,7 +1382,8 @@ function updateModalSubtotal() {
   const el = document.getElementById("modalSubtotal");
   if (!el || !state.selectedProduct) return;
   const extrasTotal = state.selectedExtras.reduce((s, e) => s + e.price, 0);
-  const subtotal = (state.selectedProduct.price + state.donerboxExtraFee + extrasTotal) * state.selectedQty;
+  const piecesTotal = state.extraPieces * state.extraPiecesPrice;
+  const subtotal = (state.selectedProduct.price + state.donerboxExtraFee + extrasTotal + piecesTotal) * state.selectedQty;
   el.textContent = `${t("subtotal")}: ${euro(subtotal)}`;
 }
 
@@ -1336,7 +1391,7 @@ function updateModalSubtotal() {
 function proceedToExtras() {
   // Validate note
   const noteWords = state.productNote.trim().split(/\s+/).filter(Boolean);
-  if (noteWords.length > 7) {
+  if (noteWords.length > 10) {
     showAppNotice(t("noteMaxWords"), "error");
     return;
   }
@@ -1392,10 +1447,11 @@ function finalizeAddToCart() {
   // Separate optional ingredients (index >= STANDARD_COUNT) that were selected
   const optionalSelected = state.options.slice(STANDARD_COUNT).filter(o => state.selectedOptions.has(o));
 
-  if (product.optionsEnabled && selectedStandard.length >= 4 && unselectedStandard.length > 0 && unselectedStandard.length <= 2) {
+  const isDonerboxProduct = state.selectedCategory?.id === "donerbox" && (product.id === "donerbox_19" || product.id === "donerbox_20");
+  if (product.optionsEnabled && !isDonerboxProduct && selectedStandard.length >= 4 && unselectedStandard.length > 0 && unselectedStandard.length <= 2) {
     allOptions = false;
     allOptionsExcept = unselectedStandard;
-  } else if (state.allOptionsSelected || selectedStandard.length === standardOptions.length) {
+  } else if (!isDonerboxProduct && (state.allOptionsSelected || selectedStandard.length === standardOptions.length)) {
     allOptions = true;
   }
 
@@ -1404,9 +1460,11 @@ function finalizeAddToCart() {
   const sauceKey = state.sauceWanted != null ? (state.sauceWanted ? "SAUCE" : "KEINE_SAUCE") : "";
   const curryKey = state.currySauceWanted != null ? (state.currySauceWanted ? "CURRY" : "KEINE_CURRY") : "";
   const sizeKey = state.selectedSize ? state.selectedSize.key : "";
-  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, sauceKey, curryKey, note, sizeKey].join("::");
+  const piecesKey = state.extraPieces > 0 ? `PIECES_${state.extraPieces}` : "";
+  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, sauceKey, curryKey, note, sizeKey, piecesKey].join("::");
   const extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
   const donerboxFee = state.donerboxExtraFee || 0;
+  const piecesTotal = state.extraPieces * state.extraPiecesPrice;
 
   const translatedProductName = itemName(product);
 
@@ -1422,7 +1480,7 @@ function finalizeAddToCart() {
 
   const newItem = {
     key, productId: product.id, name: product.name, displayName: translatedProductName,
-    price: product.price + extrasTotal + donerboxFee, basePrice: product.price,
+    price: product.price + extrasTotal + donerboxFee + piecesTotal, basePrice: product.price,
     categoryId: state.selectedCategory?.id ?? null,
     categoryTitle: state.selectedCategory?.title ?? null,
     allOptions, allOptionsExcept: allOptionsExcept || null,
@@ -1435,7 +1493,10 @@ function finalizeAddToCart() {
     currySauceWanted: state.currySauceWanted,
     note: note || null,
     isDrink: product.isDrink || false,
-    selectedSize: state.selectedSize ? { key: state.selectedSize.key, label: state.selectedSize.label, price: state.selectedSize.price } : null
+    selectedSize: state.selectedSize ? { key: state.selectedSize.key, label: state.selectedSize.label, price: state.selectedSize.price } : null,
+    extraPieces: state.extraPieces || 0,
+    extraPiecesPrice: state.extraPiecesPrice || 0,
+    extraPiecesLabel: state.extraPiecesLabel || ""
   };
 
   if (state.editingCartIndex >= 0) {
@@ -1702,7 +1763,10 @@ async function sendOrder() {
       donerboxBase: item.donerboxBase || null,
       selectedSize: item.selectedSize || null,
       note: item.note || null,
-      isDrink: item.isDrink || false
+      isDrink: item.isDrink || false,
+      extraPieces: item.extraPieces || 0,
+      extraPiecesPrice: item.extraPiecesPrice || 0,
+      extraPiecesLabel: item.extraPiecesLabel || ""
     }))
   };
 
