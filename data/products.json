@@ -22,6 +22,19 @@
           "optionsEnabled": false
         },
         {
+          "id": "suppe_01a",
+          "number": 1,
+          "name": "Kleine Suppe",
+          "name_en": "Small Soup",
+          "name_tr": "Küçük Çorba",
+          "desc": "hausgemacht",
+          "desc_en": "homemade",
+          "desc_tr": "ev yapımı",
+          "price": 6.5,
+          "image": "img/linsensuppe.png",
+          "optionsEnabled": false
+        },
+        {
           "id": "suppe_02",
           "number": 2,
           "name": "Tagessuppe Iskembe (Kutelsuppe)",
@@ -431,14 +444,27 @@
         {
           "id": "kofte_28a",
           "number": 28,
-          "name": "Kleine Köfte Teller",
-          "name_en": "Small Meatball Plate",
-          "name_tr": "Küçük Köfte Tabak",
-          "desc": "Kleine Portion Köfte mit Pommes oder Reis",
-          "desc_en": "Small portion meatballs with fries or rice",
-          "desc_tr": "Küçük porsiyon köfte, patates veya pilav ile",
+          "name": "Kleine Köfte Teller mit Pommes",
+          "name_en": "Small Meatball Plate with Fries",
+          "name_tr": "Küçük Köfte Tabak Patates ile",
+          "desc": "Kleine Portion Köfte mit Pommes",
+          "desc_en": "Small portion meatballs with fries",
+          "desc_tr": "Küçük porsiyon köfte, patates ile",
           "price": 17.9,
           "image": "img/kofte-teller-pommes.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "kofte_28c",
+          "number": 28,
+          "name": "Kleine Köfte Teller mit Reis",
+          "name_en": "Small Meatball Plate with Rice",
+          "name_tr": "Küçük Köfte Tabak Pilav ile",
+          "desc": "Kleine Portion Köfte mit Reis",
+          "desc_en": "Small portion meatballs with rice",
+          "desc_tr": "Küçük porsiyon köfte, pilav ile",
+          "price": 17.9,
+          "image": "img/kofte-teller-reis.png",
           "optionsEnabled": true
         },
         {

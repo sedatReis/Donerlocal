@@ -389,7 +389,7 @@ const CURRY_IDS = new Set([
 ]);
 
 const KOFTE_IDS = new Set([
-  "kofte_25", "kofte_26", "kofte_27", "kofte_28", "kofte_28a", "kofte_28b"
+  "kofte_25", "kofte_26", "kofte_27", "kofte_28", "kofte_28a", "kofte_28b", "kofte_28c"
 ]);
 
 const FALAFEL_IDS = new Set([
