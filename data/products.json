@@ -826,7 +826,16 @@
           "price": 7.5,
           "image": "img/veg-durum.png",
           "optionsEnabled": true
-        },
+        }
+      ]
+    },
+    {
+      "id": "falafel",
+      "title": "FALAFEL",
+      "title_en": "FALAFEL",
+      "title_tr": "FALAFEL",
+      "icon": "imagesforsark/falafelcategory.png",
+      "items": [
         {
           "id": "veg_48b",
           "number": 48,
@@ -891,7 +900,16 @@
           "price": 16.5,
           "image": "img/falafel-teller.png",
           "optionsEnabled": true
-        },
+        }
+      ]
+    },
+    {
+      "id": "lambada",
+      "title": "LAMBADA",
+      "title_en": "LAMBADA",
+      "title_tr": "LAMBADA",
+      "icon": "imagesforsark/lambadacategory.png",
+      "items": [
         {
           "id": "veg_53",
           "number": 53,
@@ -1257,7 +1275,9 @@
     "Jalapeño",
     "Chili Sauce",
     "Scharf",
-    "Nur Fleisch"
+    "Nur Fleisch",
+    "Olivenöldressing",
+    "Granatapfeldressing"
   ],
   "defaultOptions_en": [
     "Sauce",
@@ -1270,7 +1290,9 @@
     "Jalapeño",
     "Chili Sauce",
     "Spicy",
-    "Meat only"
+    "Meat only",
+    "Olive oil dressing",
+    "Pomegranate dressing"
   ],
   "defaultOptions_tr": [
     "Sos",
@@ -1283,6 +1305,8 @@
     "Jalapeño",
     "Acı Sos",
     "Acı",
-    "Sadece Et"
+    "Sadece Et",
+    "Zeytinyağı Sos",
+    "Nar Sos"
   ]
 }

@@ -1,3 +1,7 @@
+/* Prevent all zoom (double-tap, pinch) on kiosk */
+*{touch-action:manipulation}
+html{-ms-touch-action:manipulation;touch-action:manipulation}
+
 :root{
   --bg:#0b0c10;
   --card:#12131a;

@@ -361,7 +361,9 @@ const INGREDIENT_ICONS = {
   "Jalapeño": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M10 4c-1 1-1 2 0 3l2 3c2 4 1 8-1 11 3-1 6-5 6-10 0-3-1-5-3-6l-2-1z" fill="#4caf50" stroke="#2e7d32" stroke-width=".8"/><path d="M10 4c1-1 3-1 4 0" stroke="#2e7d32" stroke-width=".8" fill="none"/></svg>`,
   "Chili Sauce": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M9 3h6l1 2H8zM8 5h8l-1 17H9z" fill="#d32f2f" stroke="#b71c1c" stroke-width=".7"/><path d="M10 8h4M10 12h4M10 16h4" stroke="#ffcdd2" stroke-width=".6" fill="none"/></svg>`,
   "Scharf": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2c-2 3-3 5-2 8 1 4 0 7-2 10h2c3-2 5-6 4-10-.5-3 0-5 2-8z" fill="#ff5722" stroke="#d84315" stroke-width=".8"/><path d="M14 4c1 2 1 4 0 7-1 3-1 6 1 9" stroke="#ff8a65" stroke-width=".7" fill="none"/></svg>`,
-  "Nur Fleisch": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 12c0-3 2-6 5-7 2 0 4 1 5 3 2 0 4 2 4 5s-2 5-5 5H9c-3 0-5-3-5-6z" fill="#c8846c" stroke="#8b5e3c" stroke-width=".8"/><path d="M8 10c1-1 3-1 4 0M14 13c0 1-2 2-4 1" stroke="#8b5e3c" stroke-width=".6" fill="none"/></svg>`
+  "Nur Fleisch": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 12c0-3 2-6 5-7 2 0 4 1 5 3 2 0 4 2 4 5s-2 5-5 5H9c-3 0-5-3-5-6z" fill="#c8846c" stroke="#8b5e3c" stroke-width=".8"/><path d="M8 10c1-1 3-1 4 0M14 13c0 1-2 2-4 1" stroke="#8b5e3c" stroke-width=".6" fill="none"/></svg>`,
+  "Olivenöldressing": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M10 3h4l1 2H9z" fill="#a0c060" stroke="#6d8c3a" stroke-width=".6"/><path d="M9 5h6l-.5 8c-.3 3-1.5 5-2.5 6-1-1-2.2-3-2.5-6z" fill="#c8d84c" stroke="#8ba830" stroke-width=".7"/><ellipse cx="12" cy="9" rx="2" ry="1.5" fill="#a8c030" opacity=".6"/><circle cx="11" cy="12" r=".8" fill="#8ba830"/><circle cx="13" cy="11" r=".6" fill="#8ba830"/><path d="M16 2c1 1 2 3 1 5" stroke="#6d8c3a" stroke-width=".8" fill="none" stroke-linecap="round"/><ellipse cx="17.5" cy="2" rx="1.5" ry="2" fill="#7cb342" opacity=".7"/></svg>`,
+  "Granatapfeldressing": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M10 3h4l1 2H9z" fill="#c0607a" stroke="#8b3050" stroke-width=".6"/><path d="M9 5h6l-.5 8c-.3 3-1.5 5-2.5 6-1-1-2.2-3-2.5-6z" fill="#d4536a" stroke="#a03050" stroke-width=".7"/><circle cx="11" cy="8" r="1" fill="#e88098"/><circle cx="13" cy="9" r=".8" fill="#e88098"/><circle cx="12" cy="11" r=".9" fill="#e88098"/><circle cx="10.5" cy="10.5" r=".6" fill="#e88098"/><circle cx="13.5" cy="7.5" r=".7" fill="#e88098"/><path d="M12 2V1M11 1.5h2" stroke="#6d8c3a" stroke-width=".8" fill="none" stroke-linecap="round"/></svg>`
 };
 
 const EXTRA_ICONS = {
@@ -931,6 +933,7 @@ function openProduct(product, category, editIndex) {
   const isTeller = TELLER_IDS.has(product.id);
   const isCurry = CURRY_IDS.has(product.id);
   const isDonerbox = category?.id === "donerbox" && (product.id === "donerbox_19" || product.id === "donerbox_20");
+  const isSalatbox = category?.id === "donerbox" && (product.id === "donerbox_21" || product.id === "donerbox_22");
 
   // Bread question for Tellergerichte
   if (isTeller) {
@@ -1070,10 +1073,11 @@ function openProduct(product, category, editIndex) {
     grid.className = "checkboxGrid";
     const translatedOpts = getTranslatedOptions();
 
+    const DONERBOX_HIDE = new Set(["Sauce", "Olivenöldressing", "Granatapfeldressing"]);
     for (let i = 0; i < state.options.length; i++) {
       const option = state.options[i];
-      // Skip "Sauce" — handled by sauce question above
-      if (option === "Sauce") continue;
+      // Skip Sauce and dressings for Dönerbox
+      if (DONERBOX_HIDE.has(option)) continue;
       const optionLabel = translatedOpts[i] || option;
       const label = document.createElement("label");
       label.className = "chk";
@@ -1097,6 +1101,147 @@ function openProduct(product, category, editIndex) {
     area.appendChild(grid);
 
     // Extras inline for dönerbox
+    if (state.extras.length > 0) {
+      renderExtrasInModal(area);
+    }
+
+  } else if (isSalatbox) {
+    // Sauce question for Salatbox
+    const salatSauceSection = document.createElement("div");
+    salatSauceSection.style.cssText = "margin-bottom:18px;padding:12px 16px;border-radius:14px;background:rgba(214,40,31,.05);border:2px solid rgba(214,40,31,.15);";
+    salatSauceSection.innerHTML = `
+      <div style="font-weight:700;font-size:16px;color:#2b170b;margin-bottom:10px">${t("sauceQuestion")}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <button type="button" class="sauceBtn" data-sauce="yes" style="padding:12px;border-radius:12px;border:2px solid ${state.sauceWanted === true ? '#5cb85c' : 'rgba(112,77,45,.15)'};background:${state.sauceWanted === true ? 'rgba(92,184,92,.15)' : 'rgba(255,255,255,.7)'};cursor:pointer;font-weight:700;font-size:15px">✓ ${t("withSauce")}</button>
+        <button type="button" class="sauceBtn" data-sauce="no" style="padding:12px;border-radius:12px;border:2px solid ${state.sauceWanted === false ? '#d6281f' : 'rgba(112,77,45,.15)'};background:${state.sauceWanted === false ? 'rgba(214,40,31,.08)' : 'rgba(255,255,255,.7)'};cursor:pointer;font-weight:700;font-size:15px">✗ ${t("withoutSauce")}</button>
+      </div>
+    `;
+    for (const btn of salatSauceSection.querySelectorAll(".sauceBtn")) {
+      btn.addEventListener("click", () => {
+        state.sauceWanted = btn.dataset.sauce === "yes";
+        for (const b of salatSauceSection.querySelectorAll(".sauceBtn")) {
+          const isYes = b.dataset.sauce === "yes";
+          const isActive = (isYes && state.sauceWanted) || (!isYes && !state.sauceWanted);
+          b.style.borderColor = isActive ? (isYes ? "#5cb85c" : "#d6281f") : "rgba(112,77,45,.15)";
+          b.style.background = isActive ? (isYes ? "rgba(92,184,92,.15)" : "rgba(214,40,31,.08)") : "rgba(255,255,255,.7)";
+        }
+      });
+    }
+    area.appendChild(salatSauceSection);
+
+    // "Mit allem" button + Standard/Optional ingredients (like regular products)
+    const SALAT_STANDARD_COUNT = 6; // Sauce(0), Zwiebel(1), Grüner Salat(2), Tomate(3), Blaukraut(4), Gurke(5)
+    const salatStandardCheckboxes = [];
+    const salatAllCheckboxes = [];
+
+    const salatMitAllemBtn = document.createElement("button");
+    salatMitAllemBtn.type = "button";
+    salatMitAllemBtn.className = "btn btn--full";
+    salatMitAllemBtn.style.marginBottom = "12px";
+    salatMitAllemBtn.style.fontWeight = "800";
+    salatMitAllemBtn.style.fontSize = "17px";
+    salatMitAllemBtn.style.padding = "14px 20px";
+    salatMitAllemBtn.style.borderRadius = "14px";
+    salatMitAllemBtn.style.border = "none";
+    // Check if all standard (non-Sauce) are selected
+    const salatStdSelected = state.allOptionsSelected || (() => {
+      let c = 0;
+      for (let i = 1; i < Math.min(SALAT_STANDARD_COUNT, state.options.length); i++) {
+        if (state.selectedOptions.has(state.options[i])) c++;
+      }
+      return c === Math.min(SALAT_STANDARD_COUNT - 1, state.options.length - 1) && c > 0;
+    })();
+    function styleSalatMitAllem(active) {
+      if (active) {
+        salatMitAllemBtn.style.background = "#fff";
+        salatMitAllemBtn.style.color = "#f45022";
+        salatMitAllemBtn.style.boxShadow = "inset 0 0 0 2px #f45022";
+      } else {
+        salatMitAllemBtn.style.background = "linear-gradient(135deg, #f45022, #ff6b3d)";
+        salatMitAllemBtn.style.color = "#fff";
+        salatMitAllemBtn.style.boxShadow = "none";
+      }
+    }
+    salatMitAllemBtn.textContent = salatStdSelected ? t("deselectAll") : t("withAll");
+    styleSalatMitAllem(salatStdSelected);
+
+    salatMitAllemBtn.addEventListener("click", () => {
+      const allChecked = salatStandardCheckboxes.every(cb => cb.checked);
+      for (const cb of salatStandardCheckboxes) {
+        cb.checked = !allChecked;
+        if (cb.checked) state.selectedOptions.add(cb.dataset.option);
+        else state.selectedOptions.delete(cb.dataset.option);
+      }
+      state.allOptionsSelected = !allChecked;
+      salatMitAllemBtn.textContent = !allChecked ? t("deselectAll") : t("withAll");
+      styleSalatMitAllem(!allChecked);
+    });
+    area.appendChild(salatMitAllemBtn);
+
+    // Standard ingredients title
+    const salatIngTitle = document.createElement("div");
+    salatIngTitle.className = "muted small";
+    salatIngTitle.style.marginBottom = "8px";
+    salatIngTitle.textContent = t("chooseIngredients");
+    area.appendChild(salatIngTitle);
+
+    const salatGrid = document.createElement("div");
+    salatGrid.className = "checkboxGrid";
+    const translatedOpts = getTranslatedOptions();
+
+    // Standard ingredients (skip Sauce at index 0 — handled by sauce question)
+    for (let i = 1; i < Math.min(SALAT_STANDARD_COUNT, state.options.length); i++) {
+      const option = state.options[i];
+      const optionLabel = translatedOpts[i] || option;
+      const label = document.createElement("label");
+      label.className = "chk";
+      const iconSvg = INGREDIENT_ICONS[option] || "";
+      const isChecked = state.selectedOptions.has(option);
+      label.innerHTML = `<input type="checkbox" data-option="${option}" ${isChecked ? 'checked' : ''} /> ${iconSvg} <span>${optionLabel}</span>`;
+      const checkbox = label.querySelector("input");
+      salatStandardCheckboxes.push(checkbox);
+      salatAllCheckboxes.push(checkbox);
+      checkbox.addEventListener("change", () => {
+        if (checkbox.checked) state.selectedOptions.add(option);
+        else state.selectedOptions.delete(option);
+        state.allOptionsSelected = salatStandardCheckboxes.every(cb => cb.checked);
+        salatMitAllemBtn.textContent = state.allOptionsSelected ? t("deselectAll") : t("withAll");
+      });
+      salatGrid.appendChild(label);
+    }
+    area.appendChild(salatGrid);
+
+    // Optional ingredients (from STANDARD_COUNT onwards)
+    if (state.options.length > SALAT_STANDARD_COUNT) {
+      const optTitle = document.createElement("div");
+      optTitle.className = "muted small";
+      optTitle.style.marginBottom = "8px";
+      optTitle.style.marginTop = "16px";
+      optTitle.textContent = t("optionalIngredients");
+      area.appendChild(optTitle);
+
+      const optGrid = document.createElement("div");
+      optGrid.className = "checkboxGrid";
+      for (let i = SALAT_STANDARD_COUNT; i < state.options.length; i++) {
+        const option = state.options[i];
+        const optionLabel = translatedOpts[i] || option;
+        const label = document.createElement("label");
+        label.className = "chk";
+        const iconSvg = INGREDIENT_ICONS[option] || "";
+        const isChecked = state.selectedOptions.has(option);
+        label.innerHTML = `<input type="checkbox" data-option="${option}" ${isChecked ? 'checked' : ''} /> ${iconSvg} <span>${optionLabel}</span>`;
+        const checkbox = label.querySelector("input");
+        salatAllCheckboxes.push(checkbox);
+        checkbox.addEventListener("change", () => {
+          if (checkbox.checked) state.selectedOptions.add(option);
+          else state.selectedOptions.delete(option);
+        });
+        optGrid.appendChild(label);
+      }
+      area.appendChild(optGrid);
+    }
+
+    // Extras inline for salatbox
     if (state.extras.length > 0) {
       renderExtrasInModal(area);
     }
@@ -1137,8 +1282,24 @@ function openProduct(product, category, editIndex) {
 
     const mitAllemBtn = document.createElement("button");
     mitAllemBtn.type = "button";
-    mitAllemBtn.className = "btn btn--primary btn--full";
+    mitAllemBtn.className = "btn btn--full";
     mitAllemBtn.style.marginBottom = "12px";
+    mitAllemBtn.style.fontWeight = "800";
+    mitAllemBtn.style.fontSize = "17px";
+    mitAllemBtn.style.padding = "14px 20px";
+    mitAllemBtn.style.borderRadius = "14px";
+    mitAllemBtn.style.border = "none";
+    function styleMitAllem(active) {
+      if (active) {
+        mitAllemBtn.style.background = "#fff";
+        mitAllemBtn.style.color = "#f45022";
+        mitAllemBtn.style.boxShadow = "inset 0 0 0 2px #f45022";
+      } else {
+        mitAllemBtn.style.background = "linear-gradient(135deg, #f45022, #ff6b3d)";
+        mitAllemBtn.style.color = "#fff";
+        mitAllemBtn.style.boxShadow = "none";
+      }
+    }
     const allStdSelected = state.allOptionsSelected || (() => {
       let c = 0;
       for (let i = 0; i < Math.min(STANDARD_COUNT, state.options.length); i++) {
@@ -1147,6 +1308,7 @@ function openProduct(product, category, editIndex) {
       return c === Math.min(STANDARD_COUNT, state.options.length) && c > 0;
     })();
     mitAllemBtn.textContent = allStdSelected ? t("deselectAll") : t("withAll");
+    styleMitAllem(allStdSelected);
 
     mitAllemBtn.addEventListener("click", () => {
       const allStandardChecked = standardCheckboxes.every(cb => cb.checked);
@@ -1157,6 +1319,7 @@ function openProduct(product, category, editIndex) {
       }
       state.allOptionsSelected = !allStandardChecked;
       mitAllemBtn.textContent = !allStandardChecked ? t("deselectAll") : t("withAll");
+      styleMitAllem(!allStandardChecked);
     });
 
     area.appendChild(mitAllemBtn);
@@ -1448,10 +1611,17 @@ function finalizeAddToCart() {
   const optionalSelected = state.options.slice(STANDARD_COUNT).filter(o => state.selectedOptions.has(o));
 
   const isDonerboxProduct = state.selectedCategory?.id === "donerbox" && (product.id === "donerbox_19" || product.id === "donerbox_20");
-  if (product.optionsEnabled && !isDonerboxProduct && selectedStandard.length >= 4 && unselectedStandard.length > 0 && unselectedStandard.length <= 2) {
+  const isSalatboxProduct = state.selectedCategory?.id === "donerbox" && (product.id === "donerbox_21" || product.id === "donerbox_22");
+
+  // For Salatbox: exclude Sauce from standard options (handled separately via sauceWanted)
+  const effectiveStandard = isSalatboxProduct ? standardOptions.filter(o => o !== "Sauce") : standardOptions;
+  const effectiveSelected = isSalatboxProduct ? selectedStandard.filter(o => o !== "Sauce") : selectedStandard;
+  const effectiveUnselected = isSalatboxProduct ? unselectedStandard.filter(o => o !== "Sauce") : unselectedStandard;
+
+  if (product.optionsEnabled && !isDonerboxProduct && effectiveSelected.length >= 4 && effectiveUnselected.length > 0 && effectiveUnselected.length <= 2) {
     allOptions = false;
-    allOptionsExcept = unselectedStandard;
-  } else if (!isDonerboxProduct && (state.allOptionsSelected || selectedStandard.length === standardOptions.length)) {
+    allOptionsExcept = effectiveUnselected;
+  } else if (!isDonerboxProduct && (state.allOptionsSelected || effectiveSelected.length === effectiveStandard.length)) {
     allOptions = true;
   }
 
