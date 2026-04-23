@@ -395,7 +395,7 @@ const KOFTE_IDS = new Set([
 ]);
 
 const FALAFEL_IDS = new Set([
-  "veg_48b", "veg_49", "veg_50", "veg_51", "veg_52"
+  "veg_48b", "veg_49", "veg_50", "veg_51", "veg_51b", "veg_52"
 ]);
 
 /* ── Category SVG Icons ── */

@@ -796,9 +796,9 @@
     },
     {
       "id": "vegetarisch",
-      "title": "VEGETARISCH",
-      "title_en": "VEGETARIAN",
-      "title_tr": "VEJETARYEN",
+      "title": "VEGI DÖNER",
+      "title_en": "VEGI DÖNER",
+      "title_tr": "VEGI DÖNER",
       "icon": "imagesforsark/vegetarischcategory.png",
       "items": [
         {
@@ -872,7 +872,7 @@
           "desc_en": "Fried chickpea balls with salad & sauce",
           "desc_tr": "Kızarmış nohut köftesi, salata ve sos ile",
           "price": 9.5,
-          "image": "img/falafel-box-salat.png",
+          "image": "imagesforsark/falafelboxneu2.png",
           "optionsEnabled": true
         },
         {
@@ -885,7 +885,20 @@
           "desc_en": "Fried chickpea balls with fries & sauce",
           "desc_tr": "Kızarmış nohut köftesi, patates ve sos ile",
           "price": 9.5,
-          "image": "img/falafel-box-pommes.png",
+          "image": "imagesforsark/falafelboxpommesneu2.png",
+          "optionsEnabled": true
+        },
+        {
+          "id": "veg_51b",
+          "number": 51,
+          "name": "Falafel Box mit Reis",
+          "name_en": "Falafel Box with Rice",
+          "name_tr": "Falafel Kutu Pilav ile",
+          "desc": "Frittierte Kichererbsenbällchen mit Reis & Sauce",
+          "desc_en": "Fried chickpea balls with rice & sauce",
+          "desc_tr": "Kızarmış nohut köftesi, pilav ve sos ile",
+          "price": 9.5,
+          "image": "imagesforsark/Falafelboxmitreis.png",
           "optionsEnabled": true
         },
         {
@@ -969,7 +982,7 @@
           "desc_en": "incl. 0.25€ deposit",
           "desc_tr": "0,25€ depozito dahil",
           "price": 3.25,
-          "image": "imagesforsark/dosenneu.png",
+          "image": "imagesforsark/dosegetrankeneu.png",
           "optionsEnabled": false,
           "isDrink": true
         },
