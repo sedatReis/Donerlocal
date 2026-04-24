@@ -118,7 +118,7 @@
           "desc_en": "Extra döner meat with grilled vegetables, grilled meatballs, salad & sauce in bread",
           "desc_tr": "Ekstra döner et, ızgara sebze, ızgara köfte, salata ve sos ile ekmekte",
           "price": 18.9,
-          "image": "img/kraft-doner.png",
+          "image": "imagesforsark/kraftdonerneu.png",
           "optionsEnabled": true
         },
         {
@@ -205,7 +205,7 @@
           "desc_en": "Extra döner meat with grilled vegetables, grilled meatballs, salad & sauce in wrap",
           "desc_tr": "Ekstra döner et, ızgara sebze, ızgara köfte, salata ve sos ile dürümde",
           "price": 18.9,
-          "image": "img/kraft-durum.png",
+          "image": "imagesforsark/kraftdurumneu.png",
           "optionsEnabled": true
         }
       ]
@@ -1196,6 +1196,19 @@
               "price": 3.5
             }
           ]
+        },
+        {
+          "id": "sonstiges_PRD3Id",
+          "number": 83,
+          "name": "Haribo 100gr",
+          "name_en": "Haribo 100gr",
+          "name_tr": "Haribo 100gr",
+          "desc": "",
+          "desc_en": "",
+          "desc_tr": "",
+          "price": 2.5,
+          "image": "imagesforsark/4001686006061_Goldb-ren-Halal-100g_front.png",
+          "optionsEnabled": false
         }
       ]
     }

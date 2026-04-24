@@ -386,6 +386,9 @@ const TELLER_IDS = new Set([
   "veg_52", "veg_54"
 ]);
 
+const SUPPEN_IDS = new Set(["suppe_01", "suppe_01a", "suppe_02"]);
+const SALATBOX_IDS = new Set(["donerbox_21", "donerbox_22"]);
+
 const CURRY_IDS = new Set([
   "curry_29", "curry_30", "curry_31", "curry_32"
 ]);
@@ -932,11 +935,12 @@ function openProduct(product, category, editIndex) {
 
   const isTeller = TELLER_IDS.has(product.id);
   const isCurry = CURRY_IDS.has(product.id);
+  const isSuppe = SUPPEN_IDS.has(product.id);
   const isDonerbox = category?.id === "donerbox" && (product.id === "donerbox_19" || product.id === "donerbox_20");
   const isSalatbox = category?.id === "donerbox" && (product.id === "donerbox_21" || product.id === "donerbox_22");
 
-  // Bread question for Tellergerichte
-  if (isTeller) {
+  // Bread question for Tellergerichte, Suppen & Salatbox
+  if (isTeller || isSuppe || isSalatbox) {
     const breadSection = document.createElement("div");
     breadSection.style.cssText = "margin-bottom:18px;padding:12px 16px;border-radius:14px;background:rgba(92,184,92,.08);border:2px solid rgba(92,184,92,.2);";
     breadSection.innerHTML = `

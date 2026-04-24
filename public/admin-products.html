@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Admin – Produkte verwalten</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+      background:#f5f3f0;
+      color:#2b170b;
+      min-height:100vh;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    /* ── Header ── */
+    .ap-header{
+      position:sticky;top:0;z-index:50;
+      background:linear-gradient(135deg,#f45022 0%,#ff6b3d 100%);
+      padding:20px 28px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 4px 20px rgba(244,80,34,.25);
+    }
+    .ap-header__brand h1{font-size:24px;font-weight:900;color:#fff;letter-spacing:-.3px}
+    .ap-header__brand p{font-size:14px;color:rgba(255,255,255,.8);margin-top:2px}
+    .ap-header__nav{display:flex;gap:10px}
+    .ap-header__link{
+      padding:10px 20px;border-radius:12px;
+      background:rgba(255,255,255,.18);color:#fff;
+      font-weight:700;font-size:14px;text-decoration:none;
+      border:2px solid rgba(255,255,255,.25);
+      backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+      transition:all .15s;
+    }
+    .ap-header__link:hover{background:rgba(255,255,255,.3);border-color:rgba(255,255,255,.4)}
+
+    /* ── Grid ── */
+    .ap-grid{
+      max-width:1100px;margin:0 auto;
+      padding:24px 20px 80px;
+      display:grid;gap:16px;
+    }
+
+    /* ── Category Card ── */
+    .ap-cat{
+      background:#fff;border-radius:20px;
+      box-shadow:0 2px 16px rgba(0,0,0,.05);
+      overflow:hidden;
+      transition:box-shadow .2s;
+    }
+    .ap-cat:hover{box-shadow:0 4px 24px rgba(0,0,0,.1)}
+
+    .ap-cat__head{
+      display:flex;align-items:center;gap:16px;
+      padding:18px 24px;
+      background:#fff;
+      cursor:pointer;user-select:none;
+      border-bottom:2px solid transparent;
+      transition:all .2s;
+    }
+    .ap-cat__head:hover{background:#faf8f6}
+    .ap-cat.is-open .ap-cat__head{border-bottom-color:#f0ebe6}
+
+    .ap-cat__icon{
+      width:56px;height:56px;border-radius:14px;
+      object-fit:cover;background:#f5f3f0;
+      flex-shrink:0;
+      box-shadow:0 2px 8px rgba(0,0,0,.08);
+    }
+    .ap-cat__titleWrap{flex:1}
+    .ap-cat__title{font-size:18px;font-weight:800;color:#2b170b;letter-spacing:-.2px}
+    .ap-cat__count{font-size:13px;color:#999;margin-top:2px}
+    .ap-cat__arrow{
+      width:32px;height:32px;border-radius:10px;
+      background:#f5f3f0;
+      display:flex;align-items:center;justify-content:center;
+      font-size:14px;color:#999;
+      transition:all .2s;flex-shrink:0;
+    }
+    .ap-cat.is-open .ap-cat__arrow{transform:rotate(180deg);background:#fee;color:#f45022}
+
+    .ap-cat__body{display:none;padding:0 24px 24px}
+    .ap-cat.is-open .ap-cat__body{display:block}
+
+    /* ── Category Edit Row ── */
+    .ap-cat__editRow{
+      display:flex;gap:10px;align-items:center;
+      padding:16px 0;margin-bottom:8px;
+      border-bottom:1px solid #f0ebe6;
+      flex-wrap:wrap;
+    }
+    .ap-cat__editRow input{
+      flex:1;min-width:160px;
+      padding:10px 16px;
+      border:2px solid #e8e4df;border-radius:12px;
+      font-size:15px;font-weight:700;color:#2b170b;
+      background:#faf8f6;
+      transition:all .15s;
+    }
+    .ap-cat__editRow input:focus{border-color:#f45022;outline:none;background:#fff}
+
+    /* ── Buttons ── */
+    .ap-btn{
+      padding:8px 16px;border:none;border-radius:10px;
+      font-size:13px;font-weight:700;cursor:pointer;
+      transition:all .15s;white-space:nowrap;
+      display:inline-flex;align-items:center;gap:6px;
+    }
+    .ap-btn--save{background:#ecfdf5;color:#059669;border:2px solid #a7f3d0}
+    .ap-btn--save:hover{background:#d1fae5;border-color:#6ee7b7}
+    .ap-btn--edit{background:#f5f3f0;color:#735f45;border:2px solid #e8e4df}
+    .ap-btn--edit:hover{background:#ebe7e2;border-color:#d5cfc7}
+    .ap-btn--delete{background:#fef2f2;color:#dc2626;border:2px solid #fecaca}
+    .ap-btn--delete:hover{background:#fee2e2;border-color:#fca5a5}
+    .ap-btn--photo{background:#eff6ff;color:#2563eb;border:2px solid #bfdbfe}
+    .ap-btn--photo:hover{background:#dbeafe;border-color:#93bbfd}
+    .ap-btn--add{
+      background:linear-gradient(135deg,#f45022,#ff6b3d);
+      color:#fff;border:none;
+      padding:14px 24px;font-size:15px;font-weight:800;
+      border-radius:14px;margin-top:12px;
+      box-shadow:0 4px 16px rgba(244,80,34,.2);
+      width:100%;justify-content:center;
+    }
+    .ap-btn--add:hover{filter:brightness(1.06);box-shadow:0 6px 20px rgba(244,80,34,.3)}
+
+    /* ── Product Item ── */
+    .ap-items{display:grid;gap:0}
+    .ap-item{
+      display:grid;
+      grid-template-columns:72px 1fr auto;
+      gap:16px;align-items:center;
+      padding:16px 0;
+      border-bottom:1px solid #f5f3f0;
+      transition:background .15s;
+    }
+    .ap-item:last-child{border-bottom:none}
+    .ap-item:hover{background:#fdfcfb;border-radius:12px;margin:0 -8px;padding:16px 8px}
+
+    .ap-item__img{
+      width:72px;height:72px;border-radius:14px;
+      object-fit:cover;background:#f5f3f0;
+      cursor:pointer;
+      box-shadow:0 2px 8px rgba(0,0,0,.06);
+      transition:all .15s;
+    }
+    .ap-item__img:hover{transform:scale(1.05);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+
+    .ap-item__info{display:grid;gap:3px;min-width:0}
+    .ap-item__name{font-weight:700;font-size:16px;color:#2b170b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ap-item__desc{font-size:13px;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ap-item__id{font-size:11px;color:#ccc;font-family:'SF Mono',Monaco,Menlo,monospace}
+
+    .ap-item__actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+    .ap-item__price{display:flex;align-items:center;gap:6px}
+    .ap-item__price input{
+      width:85px;padding:8px 12px;
+      border:2px solid #e8e4df;border-radius:10px;
+      font-size:16px;font-weight:800;text-align:right;
+      color:#2b170b;background:#faf8f6;
+      transition:all .15s;
+    }
+    .ap-item__price input:focus{border-color:#f45022;outline:none;background:#fff}
+    .ap-item__price span{font-size:13px;color:#999;font-weight:600}
+
+    .ap-btn-row{display:flex;gap:6px;flex-wrap:wrap}
+
+    /* ── Modal ── */
+    .ap-edit-modal{
+      position:fixed;inset:0;
+      background:rgba(0,0,0,.4);
+      backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+      display:flex;align-items:center;justify-content:center;
+      z-index:1000;padding:20px;
+    }
+    .ap-edit-modal__box{
+      background:#fff;border-radius:24px;
+      padding:32px;max-width:520px;width:100%;
+      max-height:90vh;overflow-y:auto;
+      box-shadow:0 24px 64px rgba(0,0,0,.2);
+    }
+    .ap-edit-modal h3{margin:0 0 20px;font-size:22px;font-weight:800;color:#2b170b}
+
+    .ap-field{display:grid;gap:5px;margin-bottom:14px}
+    .ap-field label{font-size:12px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.5px}
+    .ap-field input,.ap-field select{
+      padding:12px 16px;
+      border:2px solid #e8e4df;border-radius:12px;
+      font-size:16px;font-weight:600;color:#2b170b;
+      background:#faf8f6;
+      transition:all .15s;
+    }
+    .ap-field input:focus,.ap-field select:focus{border-color:#f45022;outline:none;background:#fff}
+
+    .ap-modal-btns{display:flex;gap:10px;margin-top:20px}
+    .ap-modal-btns .ap-btn{
+      padding:14px 24px;font-size:16px;font-weight:800;
+      border-radius:14px;flex:1;text-align:center;
+      justify-content:center;
+    }
+
+    .ap-imgRow{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+    .ap-imgPreview{
+      width:80px;height:80px;border-radius:14px;
+      object-fit:cover;background:#f5f3f0;
+      box-shadow:0 2px 8px rgba(0,0,0,.08);
+    }
+
+    /* ── Toast ── */
+    .ap-toast{
+      position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+      background:#2b170b;color:#fff;
+      padding:14px 28px;border-radius:14px;
+      font-weight:700;font-size:15px;z-index:2000;
+      opacity:0;transition:all .3s;pointer-events:none;
+      box-shadow:0 8px 24px rgba(0,0,0,.2);
+    }
+    .ap-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    .hidden{display:none!important}
+
+    /* ── Tablet optimization ── */
+    @media (min-width:768px){
+      .ap-grid{padding:32px 40px 80px}
+      .ap-cat__head{padding:20px 28px}
+      .ap-cat__body{padding:0 28px 28px}
+      .ap-cat__icon{width:64px;height:64px}
+      .ap-cat__title{font-size:20px}
+      .ap-item{grid-template-columns:80px 1fr auto;gap:20px;padding:18px 0}
+      .ap-item__img{width:80px;height:80px}
+      .ap-item__name{font-size:17px}
+      .ap-item__price input{width:95px;font-size:17px}
+      .ap-edit-modal__box{padding:36px}
+    }
+  </style>
+</head>
+<body>
+  <header class="ap-header">
+    <div class="ap-header__brand">
+      <h1>Produkte verwalten</h1>
+      <p>Preise, Namen, Fotos bearbeiten & neue Produkte</p>
+    </div>
+  </header>
+
+  <div class="ap-grid" id="categoriesGrid"></div>
+
+  <!-- Edit modal -->
+  <div id="editModal" class="ap-edit-modal hidden">
+    <div class="ap-edit-modal__box">
+      <h3 id="editModalTitle">Produkt bearbeiten</h3>
+      <div class="ap-imgRow">
+        <img id="editImgPreview" class="ap-imgPreview" src="" alt="" />
+        <button id="editImgBtn" class="ap-btn ap-btn--photo" type="button">Neues Foto</button>
+      </div>
+      <input id="editImgInput" type="file" accept="image/*" class="hidden" />
+      <div class="ap-field"><label>Name (DE)</label><input id="editName" /></div>
+      <div class="ap-field"><label>Name (EN)</label><input id="editNameEn" /></div>
+      <div class="ap-field"><label>Name (TR)</label><input id="editNameTr" /></div>
+      <div class="ap-field"><label>Beschreibung (DE)</label><input id="editDesc" /></div>
+      <div class="ap-field"><label>Beschreibung (EN)</label><input id="editDescEn" /></div>
+      <div class="ap-field"><label>Beschreibung (TR)</label><input id="editDescTr" /></div>
+      <div class="ap-field"><label>Preis (EUR)</label><input id="editPrice" type="number" step="0.1" min="0" /></div>
+      <div class="ap-modal-btns">
+        <button id="editCancelBtn" class="ap-btn ap-btn--edit">Abbrechen</button>
+        <button id="editSaveBtn" class="ap-btn ap-btn--save">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add product modal -->
+  <div id="addModal" class="ap-edit-modal hidden">
+    <div class="ap-edit-modal__box">
+      <h3>Neues Produkt</h3>
+      <div class="ap-imgRow">
+        <img id="addImgPreview" class="ap-imgPreview hidden" src="" alt="" />
+        <button id="addImgBtn" class="ap-btn ap-btn--photo" type="button">Foto hochladen</button>
+      </div>
+      <input id="addImgInput" type="file" accept="image/*" class="hidden" />
+      <div class="ap-field"><label>Name (DE)</label><input id="addName" /></div>
+      <div class="ap-field"><label>Name (EN)</label><input id="addNameEn" /></div>
+      <div class="ap-field"><label>Name (TR)</label><input id="addNameTr" /></div>
+      <div class="ap-field"><label>Beschreibung (DE)</label><input id="addDesc" /></div>
+      <div class="ap-field"><label>Beschreibung (EN)</label><input id="addDescEn" /></div>
+      <div class="ap-field"><label>Beschreibung (TR)</label><input id="addDescTr" /></div>
+      <div class="ap-field"><label>Preis (EUR)</label><input id="addPrice" type="number" step="0.1" min="0" /></div>
+      <div class="ap-field">
+        <label>Zutaten-Auswahl?</label>
+        <select id="addOptions"><option value="true">Ja</option><option value="false">Nein</option></select>
+      </div>
+      <div class="ap-field">
+        <label>Getraenk?</label>
+        <select id="addDrink"><option value="false">Nein</option><option value="true">Ja</option></select>
+      </div>
+      <div class="ap-modal-btns">
+        <button id="addCancelBtn" class="ap-btn ap-btn--edit">Abbrechen</button>
+        <button id="addSaveBtn" class="ap-btn ap-btn--save">Hinzufuegen</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="ap-toast"></div>
+
+  <script>
+    const $ = s => document.getElementById(s);
+    let data = null;
+    let editCtx = null;
+    let addCtx = null;
+
+    function toast(msg) {
+      const t = $("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2500);
+    }
+
+    async function api(url, opts = {}) {
+      const r = await fetch(url, { headers: { "Content-Type": "application/json" }, ...opts });
+      if (!r.ok) { toast("Fehler: " + r.status); return null; }
+      return r.json();
+    }
+
+    async function loadData() {
+      const r = await fetch("/api/products");
+      data = await r.json();
+      render();
+    }
+
+    function euro(n) { return Number(n).toFixed(2).replace(".", ",") + " \u20ac"; }
+
+    function render() {
+      const grid = $("categoriesGrid");
+      grid.innerHTML = "";
+      for (const cat of data.categories) {
+        const div = document.createElement("div");
+        div.className = "ap-cat";
+        div.innerHTML = `
+          <div class="ap-cat__head" data-cat="${cat.id}">
+            <img class="ap-cat__icon" src="/${cat.icon}" alt="" />
+            <div class="ap-cat__titleWrap">
+              <div class="ap-cat__title">${cat.title}</div>
+              <div class="ap-cat__count">${cat.items.length} Produkt${cat.items.length !== 1 ? 'e' : ''}</div>
+            </div>
+            <span class="ap-cat__arrow">&#9662;</span>
+          </div>
+          <div class="ap-cat__body">
+            <div class="ap-cat__editRow">
+              <input value="${cat.title}" data-field="title" placeholder="Kategorie-Name" />
+              <button class="ap-btn ap-btn--save" data-action="saveCat" data-cat="${cat.id}">Speichern</button>
+              <button class="ap-btn ap-btn--photo" data-action="catPhoto" data-cat="${cat.id}">Foto</button>
+              <input type="file" accept="image/*" class="hidden" data-catfile="${cat.id}" />
+            </div>
+            <div class="ap-items" data-items="${cat.id}"></div>
+            <button class="ap-btn ap-btn--add" data-action="addProduct" data-cat="${cat.id}">+ Neues Produkt</button>
+          </div>`;
+        grid.appendChild(div);
+
+        const itemsDiv = div.querySelector(`[data-items="${cat.id}"]`);
+        for (const item of cat.items) {
+          const row = document.createElement("div");
+          row.className = "ap-item";
+          row.innerHTML = `
+            <img class="ap-item__img" src="/${item.image}" alt="" title="Foto aendern" data-action="editItem" data-cat="${cat.id}" data-pid="${item.id}" />
+            <div class="ap-item__info">
+              <div class="ap-item__name">${item.name}</div>
+              <div class="ap-item__desc">${item.desc || "\u2014"}</div>
+              <div class="ap-item__id">${item.id}</div>
+            </div>
+            <div class="ap-item__actions">
+              <div class="ap-item__price">
+                <input value="${Number(item.price).toFixed(2)}" data-cat="${cat.id}" data-pid="${item.id}" data-field="price" />
+                <span>EUR</span>
+              </div>
+              <div class="ap-btn-row">
+                <button class="ap-btn ap-btn--save" data-action="quickSavePrice" data-cat="${cat.id}" data-pid="${item.id}">Preis</button>
+                <button class="ap-btn ap-btn--edit" data-action="editItem" data-cat="${cat.id}" data-pid="${item.id}">Bearbeiten</button>
+                <button class="ap-btn ap-btn--delete" data-action="deleteItem" data-cat="${cat.id}" data-pid="${item.id}">&#10005;</button>
+              </div>
+            </div>`;
+          itemsDiv.appendChild(row);
+        }
+      }
+
+      grid.querySelectorAll(".ap-cat__head").forEach(h => {
+        h.addEventListener("click", () => h.parentElement.classList.toggle("is-open"));
+      });
+
+      grid.addEventListener("click", handleGridClick);
+    }
+
+    async function handleGridClick(e) {
+      const btn = e.target.closest("[data-action]");
+      if (!btn) return;
+      const action = btn.dataset.action;
+      const catId = btn.dataset.cat;
+      const pid = btn.dataset.pid;
+
+      if (action === "saveCat") {
+        const input = btn.parentElement.querySelector("input[data-field='title']");
+        await api(`/api/admin/categories/${catId}`, {
+          method: "PUT", body: JSON.stringify({ title: input.value, title_en: input.value, title_tr: input.value })
+        });
+        toast("Kategorie gespeichert");
+        await loadData();
+      }
+
+      if (action === "catPhoto") {
+        const fileInput = btn.parentElement.querySelector(`input[data-catfile="${catId}"]`);
+        fileInput.onchange = async () => {
+          const file = fileInput.files[0];
+          if (!file) return;
+          const b64 = await fileToBase64(file);
+          await api(`/api/admin/categories/${catId}/image`, {
+            method: "PUT", body: JSON.stringify({ filename: file.name, data: b64 })
+          });
+          toast("Kategorie-Foto gespeichert");
+          await loadData();
+        };
+        fileInput.click();
+      }
+
+      if (action === "quickSavePrice") {
+        const input = btn.closest(".ap-item").querySelector("input[data-field='price']");
+        await api(`/api/admin/products/${catId}/${pid}`, {
+          method: "PUT", body: JSON.stringify({ price: parseFloat(input.value) })
+        });
+        toast("Preis gespeichert");
+      }
+
+      if (action === "editItem") {
+        openEditModal(catId, pid);
+      }
+
+      if (action === "deleteItem") {
+        if (!confirm("Produkt wirklich loeschen?")) return;
+        await api(`/api/admin/products/${catId}/${pid}`, { method: "DELETE" });
+        toast("Produkt geloescht");
+        await loadData();
+      }
+
+      if (action === "addProduct") {
+        openAddModal(catId);
+      }
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(",")[1]);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // --- Edit Modal ---
+    function openEditModal(catId, pid) {
+      const cat = data.categories.find(c => c.id === catId);
+      const item = cat.items.find(i => i.id === pid);
+      editCtx = { categoryId: catId, productId: pid, newImageData: null, newImageName: null };
+
+      $("editModalTitle").textContent = `${item.name} bearbeiten`;
+      $("editImgPreview").src = "/" + item.image;
+      $("editName").value = item.name;
+      $("editNameEn").value = item.name_en || "";
+      $("editNameTr").value = item.name_tr || "";
+      $("editDesc").value = item.desc || "";
+      $("editDescEn").value = item.desc_en || "";
+      $("editDescTr").value = item.desc_tr || "";
+      $("editPrice").value = Number(item.price).toFixed(2);
+      $("editModal").classList.remove("hidden");
+    }
+
+    $("editCancelBtn").onclick = () => { $("editModal").classList.add("hidden"); editCtx = null; };
+
+    $("editImgBtn").onclick = () => $("editImgInput").click();
+    $("editImgInput").onchange = async () => {
+      const file = $("editImgInput").files[0];
+      if (!file) return;
+      editCtx.newImageData = await fileToBase64(file);
+      editCtx.newImageName = file.name;
+      $("editImgPreview").src = URL.createObjectURL(file);
+    };
+
+    $("editSaveBtn").onclick = async () => {
+      if (!editCtx) return;
+      const { categoryId, productId } = editCtx;
+      await api(`/api/admin/products/${categoryId}/${productId}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          name: $("editName").value, name_en: $("editNameEn").value, name_tr: $("editNameTr").value,
+          desc: $("editDesc").value, desc_en: $("editDescEn").value, desc_tr: $("editDescTr").value,
+          price: parseFloat($("editPrice").value)
+        })
+      });
+      if (editCtx.newImageData) {
+        await api(`/api/admin/products/${categoryId}/${productId}/image`, {
+          method: "PUT", body: JSON.stringify({ filename: editCtx.newImageName, data: editCtx.newImageData })
+        });
+      }
+      toast("Produkt gespeichert");
+      $("editModal").classList.add("hidden");
+      editCtx = null;
+      await loadData();
+    };
+
+    // --- Add Modal ---
+    function openAddModal(catId) {
+      addCtx = { categoryId: catId, imageData: null, imageName: null };
+      $("addName").value = ""; $("addNameEn").value = ""; $("addNameTr").value = "";
+      $("addDesc").value = ""; $("addDescEn").value = ""; $("addDescTr").value = "";
+      $("addPrice").value = ""; $("addOptions").value = "true"; $("addDrink").value = "false";
+      $("addImgPreview").classList.add("hidden");
+      $("addModal").classList.remove("hidden");
+    }
+
+    $("addCancelBtn").onclick = () => { $("addModal").classList.add("hidden"); addCtx = null; };
+
+    $("addImgBtn").onclick = () => $("addImgInput").click();
+    $("addImgInput").onchange = async () => {
+      const file = $("addImgInput").files[0];
+      if (!file) return;
+      addCtx.imageData = await fileToBase64(file);
+      addCtx.imageName = file.name;
+      $("addImgPreview").src = URL.createObjectURL(file);
+      $("addImgPreview").classList.remove("hidden");
+    };
+
+    $("addSaveBtn").onclick = async () => {
+      if (!addCtx) return;
+      const name = $("addName").value.trim();
+      if (!name) { toast("Name ist Pflichtfeld"); return; }
+      const result = await api(`/api/admin/products/${addCtx.categoryId}`, {
+        method: "POST",
+        body: JSON.stringify({
+          name, name_en: $("addNameEn").value || name, name_tr: $("addNameTr").value || name,
+          desc: $("addDesc").value, desc_en: $("addDescEn").value, desc_tr: $("addDescTr").value,
+          price: parseFloat($("addPrice").value) || 0,
+          optionsEnabled: $("addOptions").value === "true",
+          isDrink: $("addDrink").value === "true"
+        })
+      });
+      if (addCtx.imageData && result?.item?.id) {
+        await api(`/api/admin/products/${addCtx.categoryId}/${result.item.id}/image`, {
+          method: "PUT", body: JSON.stringify({ filename: addCtx.imageName, data: addCtx.imageData })
+        });
+      }
+      toast("Produkt hinzugefuegt");
+      $("addModal").classList.add("hidden");
+      addCtx = null;
+      await loadData();
+    };
+
+    $("editModal").addEventListener("click", e => { if (e.target === $("editModal")) { $("editModal").classList.add("hidden"); editCtx = null; }});
+    $("addModal").addEventListener("click", e => { if (e.target === $("addModal")) { $("addModal").classList.add("hidden"); addCtx = null; }});
+
+    loadData();
+  </script>
+</body>
+</html>

@@ -50,7 +50,7 @@ const TICKET_FOOTER_LINES = [
 ];
 
 const app = express();
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: "10mb" }));
 
 // --- Simple file-backed store (no DB) ---
 let productsCache = null;
@@ -1287,6 +1287,156 @@ app.delete("/api/orders/:id", requireAdminApi, async (req, res) => {
   res.json({ ok: true });
 });
 
+// --- Admin Product Management API ---
+
+// Update a single product (name, price, desc, etc.)
+app.put("/api/admin/products/:categoryId/:productId", async (req, res) => {
+  try {
+    if (!productsCache) await loadProducts();
+    const { categoryId, productId } = req.params;
+    const updates = req.body;
+    const cat = productsCache.categories.find(c => c.id === categoryId);
+    if (!cat) return res.status(404).json({ error: "Category not found" });
+    const item = cat.items.find(i => i.id === productId);
+    if (!item) return res.status(404).json({ error: "Product not found" });
+
+    if (updates.name !== undefined) item.name = String(updates.name);
+    if (updates.name_en !== undefined) item.name_en = String(updates.name_en);
+    if (updates.name_tr !== undefined) item.name_tr = String(updates.name_tr);
+    if (updates.price !== undefined) item.price = Number(updates.price);
+    if (updates.desc !== undefined) item.desc = String(updates.desc);
+    if (updates.desc_en !== undefined) item.desc_en = String(updates.desc_en);
+    if (updates.desc_tr !== undefined) item.desc_tr = String(updates.desc_tr);
+
+    await fs.writeFile(PRODUCTS_FILE, JSON.stringify(productsCache, null, 2), "utf-8");
+    res.json({ ok: true, item });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Upload product image
+app.put("/api/admin/products/:categoryId/:productId/image", async (req, res) => {
+  try {
+    if (!productsCache) await loadProducts();
+    const { categoryId, productId } = req.params;
+    const { filename, data } = req.body; // data = base64
+    if (!filename || !data) return res.status(400).json({ error: "filename and data required" });
+
+    const cat = productsCache.categories.find(c => c.id === categoryId);
+    if (!cat) return res.status(404).json({ error: "Category not found" });
+    const item = cat.items.find(i => i.id === productId);
+    if (!item) return res.status(404).json({ error: "Product not found" });
+
+    // Sanitize filename
+    const safeName = filename.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const destDir = path.join(PUBLIC_DIR, "imagesforsark");
+    await fs.mkdir(destDir, { recursive: true });
+    const destPath = path.join(destDir, safeName);
+    await fs.writeFile(destPath, Buffer.from(data, "base64"));
+
+    item.image = `imagesforsark/${safeName}`;
+    await fs.writeFile(PRODUCTS_FILE, JSON.stringify(productsCache, null, 2), "utf-8");
+    res.json({ ok: true, image: item.image });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Upload category image
+app.put("/api/admin/categories/:categoryId/image", async (req, res) => {
+  try {
+    if (!productsCache) await loadProducts();
+    const { categoryId } = req.params;
+    const { filename, data } = req.body;
+    if (!filename || !data) return res.status(400).json({ error: "filename and data required" });
+
+    const cat = productsCache.categories.find(c => c.id === categoryId);
+    if (!cat) return res.status(404).json({ error: "Category not found" });
+
+    const safeName = filename.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const destDir = path.join(PUBLIC_DIR, "imagesforsark");
+    await fs.mkdir(destDir, { recursive: true });
+    await fs.writeFile(path.join(destDir, safeName), Buffer.from(data, "base64"));
+
+    cat.icon = `imagesforsark/${safeName}`;
+    await fs.writeFile(PRODUCTS_FILE, JSON.stringify(productsCache, null, 2), "utf-8");
+    res.json({ ok: true, icon: cat.icon });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Update category (title, etc.)
+app.put("/api/admin/categories/:categoryId", async (req, res) => {
+  try {
+    if (!productsCache) await loadProducts();
+    const { categoryId } = req.params;
+    const updates = req.body;
+    const cat = productsCache.categories.find(c => c.id === categoryId);
+    if (!cat) return res.status(404).json({ error: "Category not found" });
+
+    if (updates.title !== undefined) cat.title = String(updates.title);
+    if (updates.title_en !== undefined) cat.title_en = String(updates.title_en);
+    if (updates.title_tr !== undefined) cat.title_tr = String(updates.title_tr);
+
+    await fs.writeFile(PRODUCTS_FILE, JSON.stringify(productsCache, null, 2), "utf-8");
+    res.json({ ok: true, category: cat });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Add new product to category
+app.post("/api/admin/products/:categoryId", async (req, res) => {
+  try {
+    if (!productsCache) await loadProducts();
+    const { categoryId } = req.params;
+    const cat = productsCache.categories.find(c => c.id === categoryId);
+    if (!cat) return res.status(404).json({ error: "Category not found" });
+
+    const body = req.body;
+    const newItem = {
+      id: body.id || `${categoryId}_${nanoid(6)}`,
+      number: body.number || (cat.items.length > 0 ? Math.max(...cat.items.map(i => i.number || 0)) + 1 : 1),
+      name: body.name || "Neues Produkt",
+      name_en: body.name_en || body.name || "New Product",
+      name_tr: body.name_tr || body.name || "Yeni Ürün",
+      desc: body.desc || "",
+      desc_en: body.desc_en || "",
+      desc_tr: body.desc_tr || "",
+      price: Number(body.price) || 0,
+      image: body.image || "img/placeholder.png",
+      optionsEnabled: body.optionsEnabled ?? true
+    };
+    if (body.isDrink) newItem.isDrink = true;
+
+    cat.items.push(newItem);
+    await fs.writeFile(PRODUCTS_FILE, JSON.stringify(productsCache, null, 2), "utf-8");
+    res.json({ ok: true, item: newItem });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Delete product
+app.delete("/api/admin/products/:categoryId/:productId", async (req, res) => {
+  try {
+    if (!productsCache) await loadProducts();
+    const { categoryId, productId } = req.params;
+    const cat = productsCache.categories.find(c => c.id === categoryId);
+    if (!cat) return res.status(404).json({ error: "Category not found" });
+    const idx = cat.items.findIndex(i => i.id === productId);
+    if (idx === -1) return res.status(404).json({ error: "Product not found" });
+
+    cat.items.splice(idx, 1);
+    await fs.writeFile(PRODUCTS_FILE, JSON.stringify(productsCache, null, 2), "utf-8");
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // --- Page Routes ---
 
 app.get(["/", "/access", "/access.html"], (req, res) => {
@@ -1314,6 +1464,10 @@ app.get(["/admin", "/admin/", "/admin.html"], (req, res) => {
 app.get(["/preise", "/admin-prices", "/admin-prices.html"], (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   return res.sendFile(path.join(PUBLIC_DIR, "admin-prices.html"));
+});
+app.get(["/admin-products", "/admin-products.html", "/produkte"], (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  return res.sendFile(path.join(PUBLIC_DIR, "admin-products.html"));
 });
 app.get(["/completed", "/completed/", "/completed.html"], (req, res) => {
   res.setHeader("Cache-Control", "no-store");
