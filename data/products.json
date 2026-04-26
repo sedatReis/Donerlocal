@@ -92,7 +92,7 @@
           "desc_en": "Döner meat with salad, sauce & cheese in bread",
           "desc_tr": "Döner et, salata, sos ve peynir ile ekmekte",
           "price": 10.5,
-          "image": "img/doner-sark.png",
+          "image": "imagesforsark/doenerspezialkase.png",
           "optionsEnabled": true
         },
         {
@@ -179,7 +179,7 @@
           "desc_en": "Döner meat with salad, sauce & cheese in wrap",
           "desc_tr": "Döner et, salata, sos ve peynir ile dürümde",
           "price": 10.5,
-          "image": "img/durum-sark.png",
+          "image": "imagesforsark/durumspeziell.png",
           "optionsEnabled": true
         },
         {
@@ -290,7 +290,7 @@
           "desc_en": "Lahmacun with döner meat, salad & sauce",
           "desc_tr": "Lahmacun, döner et, salata ve sos ile",
           "price": 10.9,
-          "image": "img/lahmacun-doner.png",
+          "image": "imagesforsark/lahmacunmitdonerneu.png",
           "optionsEnabled": true
         },
         {
@@ -303,7 +303,7 @@
           "desc_en": "Lahmacun with döner meat, cheese, salad & sauce",
           "desc_tr": "Lahmacun, döner et, peynir, salata ve sos ile",
           "price": 11.9,
-          "image": "img/lahmacun-doner.png",
+          "image": "imagesforsark/Lahmacunspeziellneu.png",
           "optionsEnabled": true
         },
         {
@@ -956,7 +956,7 @@
       "title": "GETRÄNKE",
       "title_en": "DRINKS",
       "title_tr": "İÇECEKLER",
-      "icon": "img/mineralwasser.png",
+      "icon": "imagesforsark/pet05l.png",
       "items": [
         {
           "id": "drink_66",

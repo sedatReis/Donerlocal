@@ -645,11 +645,11 @@ function buildReceiptHeader(order, randomNum, { skipRestaurantName = false, smal
     );
   }
 
-  // Customer name with random number
+  // Customer name with random number (always big — same size on customer & kitchen bon)
   const customerDisplay = `${order.customerName.toUpperCase()} #${randomNum}`;
   chunks.push(
     Buffer.from([ESC, 0x45, 0x01]),
-    escPosTextSize(smallFont ? 1 : 2, smallFont ? 1 : 2),
+    escPosTextSize(2, 2),
     cp858Buffer(`${customerDisplay}\n`),
     Buffer.from([ESC, 0x45, 0x00]),
     escPosTextSize(1, 1),
