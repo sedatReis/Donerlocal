@@ -1,6 +1,5 @@
-/* Prevent all zoom (double-tap, pinch) on kiosk */
-*{touch-action:manipulation}
-html{-ms-touch-action:manipulation;touch-action:manipulation}
+/* Prevent double-tap zoom on interactive elements only (not scroll containers) */
+a,button,input,select,textarea,label,.btn,.kioskTile,.kioskCategoryBtn,.fullscreenChoice,.breadBtn,.sauceBtn,.checkboxGrid label{touch-action:manipulation}
 
 :root{
   --bg:#0b0c10;
