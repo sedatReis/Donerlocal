@@ -1301,9 +1301,9 @@
     "Jalapeño",
     "Chili Sauce",
     "Scharf",
-    "Nur Fleisch",
+    "Granatapfeldressing",
     "Olivenöldressing",
-    "Granatapfeldressing"
+    "Nur Fleisch"
   ],
   "defaultOptions_en": [
     "Sauce",
@@ -1316,9 +1316,9 @@
     "Jalapeño",
     "Chili Sauce",
     "Spicy",
-    "Meat only",
+    "Pomegranate dressing",
     "Olive oil dressing",
-    "Pomegranate dressing"
+    "Meat only"
   ],
   "defaultOptions_tr": [
     "Sos",
@@ -1331,8 +1331,8 @@
     "Jalapeño",
     "Acı Sos",
     "Acı",
-    "Sadece Et",
+    "Nar Sos",
     "Zeytinyağı Sos",
-    "Nar Sos"
+    "Sadece Et"
   ]
 }

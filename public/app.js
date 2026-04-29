@@ -361,7 +361,7 @@ const INGREDIENT_ICONS = {
   "Jalapeño": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M10 4c-1 1-1 2 0 3l2 3c2 4 1 8-1 11 3-1 6-5 6-10 0-3-1-5-3-6l-2-1z" fill="#4caf50" stroke="#2e7d32" stroke-width=".8"/><path d="M10 4c1-1 3-1 4 0" stroke="#2e7d32" stroke-width=".8" fill="none"/></svg>`,
   "Chili Sauce": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M9 3h6l1 2H8zM8 5h8l-1 17H9z" fill="#d32f2f" stroke="#b71c1c" stroke-width=".7"/><path d="M10 8h4M10 12h4M10 16h4" stroke="#ffcdd2" stroke-width=".6" fill="none"/></svg>`,
   "Scharf": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2c-2 3-3 5-2 8 1 4 0 7-2 10h2c3-2 5-6 4-10-.5-3 0-5 2-8z" fill="#ff5722" stroke="#d84315" stroke-width=".8"/><path d="M14 4c1 2 1 4 0 7-1 3-1 6 1 9" stroke="#ff8a65" stroke-width=".7" fill="none"/></svg>`,
-  "Nur Fleisch": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 12c0-3 2-6 5-7 2 0 4 1 5 3 2 0 4 2 4 5s-2 5-5 5H9c-3 0-5-3-5-6z" fill="#c8846c" stroke="#8b5e3c" stroke-width=".8"/><path d="M8 10c1-1 3-1 4 0M14 13c0 1-2 2-4 1" stroke="#8b5e3c" stroke-width=".6" fill="none"/></svg>`,
+  "Nur Fleisch": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 13c0-4 2-7 5-8 2 0 4 1 5 3 2 0 4 2 4 5s-2 5-5 6H9c-3-1-5-3-5-6z" fill="#c0392b" stroke="#922b21" stroke-width=".8"/><path d="M7 11c1-2 4-3 6-2s4 2 5 4" fill="#e74c3c" stroke="none"/><path d="M9 14c1 0 3-.5 4-1" stroke="#a93226" stroke-width=".7" fill="none" stroke-linecap="round"/><path d="M8 11c2-1 5-1 7 0" stroke="#f5b7b1" stroke-width=".5" fill="none" opacity=".6"/><circle cx="11" cy="10" r=".6" fill="#f5b7b1" opacity=".5"/><circle cx="15" cy="12" r=".5" fill="#f5b7b1" opacity=".4"/></svg>`,
   "Olivenöldressing": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M10 3h4l1 2H9z" fill="#a0c060" stroke="#6d8c3a" stroke-width=".6"/><path d="M9 5h6l-.5 8c-.3 3-1.5 5-2.5 6-1-1-2.2-3-2.5-6z" fill="#c8d84c" stroke="#8ba830" stroke-width=".7"/><ellipse cx="12" cy="9" rx="2" ry="1.5" fill="#a8c030" opacity=".6"/><circle cx="11" cy="12" r=".8" fill="#8ba830"/><circle cx="13" cy="11" r=".6" fill="#8ba830"/><path d="M16 2c1 1 2 3 1 5" stroke="#6d8c3a" stroke-width=".8" fill="none" stroke-linecap="round"/><ellipse cx="17.5" cy="2" rx="1.5" ry="2" fill="#7cb342" opacity=".7"/></svg>`,
   "Granatapfeldressing": `<svg viewBox="0 0 24 24" width="22" height="22"><path d="M10 3h4l1 2H9z" fill="#c0607a" stroke="#8b3050" stroke-width=".6"/><path d="M9 5h6l-.5 8c-.3 3-1.5 5-2.5 6-1-1-2.2-3-2.5-6z" fill="#d4536a" stroke="#a03050" stroke-width=".7"/><circle cx="11" cy="8" r="1" fill="#e88098"/><circle cx="13" cy="9" r=".8" fill="#e88098"/><circle cx="12" cy="11" r=".9" fill="#e88098"/><circle cx="10.5" cy="10.5" r=".6" fill="#e88098"/><circle cx="13.5" cy="7.5" r=".7" fill="#e88098"/><path d="M12 2V1M11 1.5h2" stroke="#6d8c3a" stroke-width=".8" fill="none" stroke-linecap="round"/></svg>`
 };
@@ -812,6 +812,7 @@ function openProduct(product, category, editIndex) {
   state.selectedExtras = [];
   state.donerboxBase = null;
   state.donerboxExtraFee = 0;
+  state.tellerSide = null; // "pommes", "reis", or "ohne"
   state.breadWanted = null;
   state.sauceWanted = null;
   state.currySauceWanted = null;
@@ -852,6 +853,7 @@ function openProduct(product, category, editIndex) {
     }
     if (editItem.donerboxBase) state.donerboxBase = editItem.donerboxBase;
     state.donerboxExtraFee = editItem.donerboxExtraFee || 0;
+    if (editItem.tellerSide) state.tellerSide = editItem.tellerSide;
     if (editItem.breadWanted != null) state.breadWanted = editItem.breadWanted;
     if (editItem.sauceWanted != null) state.sauceWanted = editItem.sauceWanted;
     if (editItem.currySauceWanted != null) state.currySauceWanted = editItem.currySauceWanted;
@@ -938,6 +940,52 @@ function openProduct(product, category, editIndex) {
   const isSuppe = SUPPEN_IDS.has(product.id);
   const isDonerbox = category?.id === "donerbox" && (product.id === "donerbox_19" || product.id === "donerbox_20");
   const isSalatbox = category?.id === "donerbox" && (product.id === "donerbox_21" || product.id === "donerbox_22");
+
+  // Teller side choice: Pommes / Reis / Ohne — only for products WITHOUT side in name
+  if (isTeller) {
+    const nameLower = product.name.toLowerCase();
+    const nameHasPommes = nameLower.includes("pommes");
+    const nameHasReis = nameLower.includes("reis");
+    const needsSideSelector = !nameHasPommes && !nameHasReis;
+
+    // Auto-set tellerSide from product name
+    if (nameHasPommes && !state.tellerSide) state.tellerSide = "pommes";
+    if (nameHasReis && !state.tellerSide) state.tellerSide = "reis";
+
+    if (needsSideSelector) {
+      const sideSection = document.createElement("div");
+      sideSection.style.cssText = "margin-bottom:18px;padding:12px 16px;border-radius:14px;background:rgba(244,80,34,.06);border:2px solid rgba(244,80,34,.18);";
+      const sideOptions = [
+        { key: "pommes", label: "Pommes", icon: `<svg viewBox="0 0 28 28" width="24" height="24"><rect x="6" y="14" width="16" height="10" rx="2" fill="#d32f2f"/><rect x="9" y="5" width="2.8" height="13" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/><rect x="13" y="4" width="2.8" height="14" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/><rect x="17" y="6" width="2.8" height="12" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/></svg>` },
+        { key: "reis", label: "Reis", icon: `<svg viewBox="0 0 28 28" width="24" height="24"><ellipse cx="14" cy="18" rx="10" ry="6" fill="#f5f0e0" stroke="#c8a060" stroke-width=".8"/><path d="M8 16c2-4 4-6 6-6s4 2 6 6" fill="#fff8e8" stroke="#c8a060" stroke-width=".6"/><circle cx="11" cy="15" r=".8" fill="#c8a060"/><circle cx="15" cy="14" r=".6" fill="#c8a060"/><circle cx="13" cy="17" r=".7" fill="#c8a060"/></svg>` },
+        { key: "ohne", label: "Ohne Beilage", icon: `<svg viewBox="0 0 28 28" width="24" height="24"><circle cx="14" cy="14" r="10" fill="none" stroke="#999" stroke-width="1.5"/><line x1="6" y1="6" x2="22" y2="22" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/></svg>` }
+      ];
+      sideSection.innerHTML = `<div style="font-weight:700;font-size:16px;color:#2b170b;margin-bottom:10px">Beilage wählen</div>
+        <div class="tellerSideGrid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;"></div>`;
+      const sideGrid = sideSection.querySelector(".tellerSideGrid");
+      for (const opt of sideOptions) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "tellerSideBtn";
+        const isActive = state.tellerSide === opt.key;
+        btn.style.cssText = `display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border-radius:12px;border:2px solid ${isActive ? '#f45022' : 'rgba(112,77,45,.15)'};background:${isActive ? 'rgba(244,80,34,.12)' : 'rgba(255,255,255,.7)'};cursor:pointer;font-weight:700;font-size:14px;color:#2b170b;transition:all .2s`;
+        btn.innerHTML = `${opt.icon}<span>${opt.label}</span>`;
+        btn.addEventListener("click", () => {
+          state.tellerSide = opt.key;
+          for (const b of sideGrid.querySelectorAll(".tellerSideBtn")) {
+            b.style.borderColor = "rgba(112,77,45,.15)";
+            b.style.background = "rgba(255,255,255,.7)";
+          }
+          btn.style.borderColor = "#f45022";
+          btn.style.background = "rgba(244,80,34,.12)";
+          updateTellerCrossSell();
+          updateModalSubtotal();
+        });
+        sideGrid.appendChild(btn);
+      }
+      area.appendChild(sideSection);
+    }
+  }
 
   // Bread question for Tellergerichte, Suppen & Salatbox
   if (isTeller || isSuppe || isSalatbox) {
@@ -1077,7 +1125,7 @@ function openProduct(product, category, editIndex) {
     grid.className = "checkboxGrid";
     const translatedOpts = getTranslatedOptions();
 
-    const DONERBOX_HIDE = new Set(["Sauce", "Olivenöldressing", "Granatapfeldressing"]);
+    const DONERBOX_HIDE = new Set(["Sauce", "Olivenöldressing", "Granatapfeldressing", "Nur Fleisch"]);
     for (let i = 0; i < state.options.length; i++) {
       const option = state.options[i];
       // Skip Sauce and dressings for Dönerbox
@@ -1228,6 +1276,7 @@ function openProduct(product, category, editIndex) {
       optGrid.className = "checkboxGrid";
       for (let i = SALAT_STANDARD_COUNT; i < state.options.length; i++) {
         const option = state.options[i];
+        if (option === "Nur Fleisch") continue;
         const optionLabel = translatedOpts[i] || option;
         const label = document.createElement("label");
         label.className = "chk";
@@ -1399,7 +1448,8 @@ function openProduct(product, category, editIndex) {
 
       const optGrid = document.createElement("div");
       optGrid.className = "checkboxGrid";
-      const hideNurFleisch = product.id === "lahmacun_15";
+      const NUR_FLEISCH_IDS = new Set(["doner_03","doner_04","doner_06","durum_10","durum_12","lahmacun_16","lahmacun_18"]);
+      const hideNurFleisch = !NUR_FLEISCH_IDS.has(product.id);
       for (let i = STANDARD_COUNT; i < state.options.length; i++) {
         const option = state.options[i];
         if (option === "Nur Fleisch" && hideNurFleisch) continue;
@@ -1468,6 +1518,18 @@ function openProduct(product, category, editIndex) {
     area.appendChild(sauceSection);
   }
 
+  // Teller cross-sell: if Pommes selected → offer Reis (+2€), if Reis → offer Pommes (+2€)
+  if (isTeller) {
+    const crossContainer = document.createElement("div");
+    crossContainer.id = "tellerCrossSell";
+    area.appendChild(crossContainer);
+    window._tellerCrossSellContainer = crossContainer;
+
+    // For products with side in name, show cross-sell immediately
+    // For products with selector, updateTellerCrossSell is called on selector change
+    if (state.tellerSide) updateTellerCrossSell();
+  }
+
   // Note field
   const noteSection = document.createElement("div");
   noteSection.style.cssText = "margin-top:16px;";
@@ -1506,7 +1568,9 @@ function renderExtrasInModal(area) {
   const grid = document.createElement("div");
   grid.className = "extrasGrid";
 
-  for (const extra of state.extras) {
+  const isTellerProduct = TELLER_IDS.has(state.selectedProduct?.id);
+  const filteredExtras = isTellerProduct ? state.extras.filter(e => e.id !== "extra_60") : state.extras;
+  for (const extra of filteredExtras) {
     const card = document.createElement("label");
     card.className = "extraCard";
     const isSelected = state.selectedExtras.some(e => e.id === extra.id);
@@ -1531,6 +1595,49 @@ function renderExtrasInModal(area) {
     grid.appendChild(card);
   }
   area.appendChild(grid);
+}
+
+function updateTellerCrossSell() {
+  const container = window._tellerCrossSellContainer;
+  if (!container) return;
+  container.innerHTML = "";
+  // Remove old cross-sell extras from selectedExtras
+  state.selectedExtras = state.selectedExtras.filter(e => e.id !== "teller_extra_reis" && e.id !== "teller_extra_pommes");
+
+  if (state.tellerSide === "pommes") {
+    renderCrossSellCard(container, "teller_extra_reis", "Reis", 2.0,
+      `<svg viewBox="0 0 28 28" width="26" height="26"><ellipse cx="14" cy="18" rx="10" ry="6" fill="#f5f0e0" stroke="#c8a060" stroke-width=".8"/><path d="M8 16c2-4 4-6 6-6s4 2 6 6" fill="#fff8e8" stroke="#c8a060" stroke-width=".6"/><circle cx="11" cy="15" r=".8" fill="#c8a060"/><circle cx="15" cy="14" r=".6" fill="#c8a060"/><circle cx="13" cy="17" r=".7" fill="#c8a060"/></svg>`,
+      "Zusätzlich Reis?");
+  } else if (state.tellerSide === "reis") {
+    renderCrossSellCard(container, "teller_extra_pommes", "Pommes", 2.0,
+      `<svg viewBox="0 0 28 28" width="26" height="26"><rect x="6" y="14" width="16" height="10" rx="2" fill="#d32f2f"/><rect x="9" y="5" width="2.8" height="13" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/><rect x="13" y="4" width="2.8" height="14" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/><rect x="17" y="6" width="2.8" height="12" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/></svg>`,
+      "Zusätzlich Pommes?");
+  }
+  updateModalSubtotal();
+}
+
+function renderCrossSellCard(container, crossId, crossLabel, crossPrice, crossIcon, title) {
+  const crossSection = document.createElement("div");
+  crossSection.style.cssText = "margin-top:14px;margin-bottom:10px;";
+  crossSection.innerHTML = `<div style="font-weight:700;font-size:16px;color:#2b170b;margin-bottom:10px">${title}</div>`;
+  const crossCard = document.createElement("label");
+  crossCard.style.cssText = `display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;border:2px solid rgba(112,77,45,.15);background:rgba(255,255,255,.7);cursor:pointer;transition:all .2s;`;
+  crossCard.innerHTML = `<input type="checkbox" style="width:22px;height:22px;accent-color:#f45022" /><div style="flex-shrink:0">${crossIcon}</div><div><div style="font-weight:700;font-size:16px">${crossLabel}</div><div style="font-size:14px;color:#735f45;font-weight:600">+${euro(crossPrice)}</div></div>`;
+  const cb = crossCard.querySelector("input");
+  cb.addEventListener("change", () => {
+    if (cb.checked) {
+      state.selectedExtras.push({ id: crossId, name: crossLabel, price: crossPrice });
+      crossCard.style.borderColor = "#f45022";
+      crossCard.style.background = "rgba(244,80,34,.08)";
+    } else {
+      state.selectedExtras = state.selectedExtras.filter(e => e.id !== crossId);
+      crossCard.style.borderColor = "rgba(112,77,45,.15)";
+      crossCard.style.background = "rgba(255,255,255,.7)";
+    }
+    updateModalSubtotal();
+  });
+  crossSection.appendChild(crossCard);
+  container.appendChild(crossSection);
 }
 
 function closeOptions() {
@@ -1568,6 +1675,15 @@ function proceedToExtras() {
   if (isDonerbox && !state.donerboxBase) {
     showAppNotice(t("riceOrFries"), "error");
     return;
+  }
+
+  // Validate Teller side selection (only for products without side in name)
+  if (TELLER_IDS.has(state.selectedProduct?.id)) {
+    const tNameLower = state.selectedProduct.name.toLowerCase();
+    if (!tNameLower.includes("pommes") && !tNameLower.includes("reis") && !state.tellerSide) {
+      showAppNotice("Bitte Beilage wählen (Pommes / Reis / Ohne)", "error");
+      return;
+    }
   }
 
   // If product has optionsEnabled or is curry, extras are already in the modal → go straight to finalize
@@ -1635,7 +1751,8 @@ function finalizeAddToCart() {
   const curryKey = state.currySauceWanted != null ? (state.currySauceWanted ? "CURRY" : "KEINE_CURRY") : "";
   const sizeKey = state.selectedSize ? state.selectedSize.key : "";
   const piecesKey = state.extraPieces > 0 ? `PIECES_${state.extraPieces}` : "";
-  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, sauceKey, curryKey, note, sizeKey, piecesKey].join("::");
+  const tellerSideKey = state.tellerSide || "";
+  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, sauceKey, curryKey, note, sizeKey, piecesKey, tellerSideKey].join("::");
   const extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
   const donerboxFee = state.donerboxExtraFee || 0;
   const piecesTotal = state.extraPieces * state.extraPiecesPrice;
@@ -1670,7 +1787,8 @@ function finalizeAddToCart() {
     selectedSize: state.selectedSize ? { key: state.selectedSize.key, label: state.selectedSize.label, price: state.selectedSize.price } : null,
     extraPieces: state.extraPieces || 0,
     extraPiecesPrice: state.extraPiecesPrice || 0,
-    extraPiecesLabel: state.extraPiecesLabel || ""
+    extraPiecesLabel: state.extraPiecesLabel || "",
+    tellerSide: state.tellerSide || null
   };
 
   if (state.editingCartIndex >= 0) {
@@ -1734,9 +1852,15 @@ function renderCart() {
     for (const b of checkoutBtns) b.disabled = true;
     for (const b of clearBtns) b.disabled = true;
     if (mobileDock) mobileDock.classList.add("is-empty");
+    const summaryEl = document.querySelector(".kioskSummary");
+    if (summaryEl) summaryEl.classList.remove("has-items");
     renderKioskQuickMeta();
     return;
   }
+
+  // Cart has items — pulse the sidebar
+  const summaryEl = document.querySelector(".kioskSummary");
+  if (summaryEl) summaryEl.classList.add("has-items");
 
   let total = 0;
   for (const item of state.cart) {

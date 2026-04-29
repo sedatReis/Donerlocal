@@ -720,6 +720,10 @@ function renderItemFull(chunks, item) {
     const baseLabel = item.donerboxBase === "reis" ? "M. REIS" : item.donerboxBase === "pommes" ? "M. POMMES" : "OHNE BEIL.";
     displayName += ` ${baseLabel}`;
   }
+  if (item.tellerSide && !item.name.toLowerCase().includes("pommes") && !item.name.toLowerCase().includes("reis")) {
+    const sideLabel = item.tellerSide === "pommes" ? "M. POMMES" : item.tellerSide === "reis" ? "M. REIS" : "OHNE POMMES & REIS";
+    displayName += ` ${sideLabel}`;
+  }
   const nameText = `${qty}x ${displayName}`;
   const nameLines = wordWrap(nameText, 32);
   chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(1, 1));
@@ -824,6 +828,10 @@ function renderItemKitchen(chunks, item, itemNum) {
   if (item.donerboxBase) {
     const baseLabel = item.donerboxBase === "reis" ? "M. REIS" : item.donerboxBase === "pommes" ? "M. POMMES" : "OHNE BEIL.";
     kitchenDisplayName += ` ${baseLabel}`;
+  }
+  if (item.tellerSide && !item.name.toLowerCase().includes("pommes") && !item.name.toLowerCase().includes("reis")) {
+    const sideLabel = item.tellerSide === "pommes" ? "M. POMMES" : item.tellerSide === "reis" ? "M. REIS" : "OHNE POMMES & REIS";
+    kitchenDisplayName += ` ${sideLabel}`;
   }
   const nameText = `${qty}x ${kitchenDisplayName}`;
   const nameLines = wordWrap(nameText, 16);
