@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <title>QR-Code Kassa Test</title>
+  <style>
+    body { font-family: monospace; padding: 40px 20px; text-align: center; background: #fafafa; }
+    h2 { margin-bottom: 24px; }
+    img { display: block; margin: 0 auto; }
+    pre { text-align: left; background: #f0f0f0; padding: 16px; margin: 24px auto; max-width: 460px;
+          overflow: auto; max-height: 300px; white-space: pre-wrap; word-break: break-all;
+          border-radius: 8px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h2>QR-Code Kassa</h2>
+  <img id="qr" alt="QR Code" />
+  <pre id="json"></pre>
+  <script>
+    var payload = localStorage.getItem("qr_payload");
+    if (payload) {
+      document.getElementById("json").textContent = payload;
+      document.getElementById("qr").src = "/api/qr?data=" + encodeURIComponent(payload);
+    } else {
+      document.getElementById("json").textContent = "Kein Payload gefunden.";
+    }
+  </script>
+</body>
+</html>

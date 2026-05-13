@@ -1752,7 +1752,8 @@ function finalizeAddToCart() {
   const sizeKey = state.selectedSize ? state.selectedSize.key : "";
   const piecesKey = state.extraPieces > 0 ? `PIECES_${state.extraPieces}` : "";
   const tellerSideKey = state.tellerSide || "";
-  const key = [product.id, state.selectedCategory?.id || "", keyParts, extrasKey, donerboxBaseKey, breadKey, sauceKey, curryKey, note, sizeKey, piecesKey, tellerSideKey].join("::");
+  const optionalKey = optionalSelected.length > 0 ? optionalSelected.sort().join("|") : "";
+  const key = [product.id, state.selectedCategory?.id || "", keyParts, optionalKey, extrasKey, donerboxBaseKey, breadKey, sauceKey, curryKey, note, sizeKey, piecesKey, tellerSideKey].join("::");
   const extrasTotal = extras.reduce((sum, e) => sum + e.price, 0);
   const donerboxFee = state.donerboxExtraFee || 0;
   const piecesTotal = state.extraPieces * state.extraPiecesPrice;
@@ -1784,6 +1785,7 @@ function finalizeAddToCart() {
     currySauceWanted: state.currySauceWanted,
     note: note || null,
     isDrink: product.isDrink || false,
+    image: product.image || state.selectedCategory?.icon || null,
     selectedSize: state.selectedSize ? { key: state.selectedSize.key, label: state.selectedSize.label, price: state.selectedSize.price } : null,
     extraPieces: state.extraPieces || 0,
     extraPiecesPrice: state.extraPiecesPrice || 0,
@@ -1871,21 +1873,24 @@ function renderCart() {
     const hasExtras = Array.isArray(item.extras) && item.extras.length > 0;
     const extrasSubtotal = hasExtras ? item.extras.reduce((s, e) => s + e.price, 0) : 0;
     card.innerHTML = `
-      <div class="cartItem__top">
-        <div>
-          <div class="cartItem__name">${item.name}</div>
+      <div class="cartItem__row">
+        ${item.image ? `<img class="cartItem__img" src="/${item.image}" alt="" onerror="this.style.display='none';" />` : ""}
+        <div class="cartItem__body">
+          <div class="cartItem__top">
+            <div class="cartItem__name">${item.name}</div>
+            <div class="cartItem__price"><strong>${euro(item.price * item.qty)}</strong></div>
+          </div>
           ${meta ? `<div class="cartItem__opts">${meta}</div>` : ""}
           ${hasExtras ? `<div class="cartItem__priceBreakdown">${euro(item.basePrice || item.price)} + ${euro(extrasSubtotal)} Extras</div>` : ""}
+          ${item.note ? `<div class="cartItem__note">"${item.note}"</div>` : ""}
+          <div class="cartItem__actions">
+            <button class="btn" data-act="minus">−</button>
+            <div class="cartItem__qty">${item.qty}</div>
+            <button class="btn" data-act="plus">+</button>
+            <button class="btn" data-act="edit" style="margin-left:auto;border-color:rgba(79,140,255,.35)">${t("edit")}</button>
+            <button class="btn" data-act="remove" style="border-color:rgba(255,90,95,.35)">${t("remove")}</button>
+          </div>
         </div>
-        <div><strong>${euro(item.price * item.qty)}</strong></div>
-      </div>
-      ${item.note ? `<div class="cartItem__note">"${item.note}"</div>` : ""}
-      <div class="cartItem__actions">
-        <button class="btn" data-act="minus">−</button>
-        <div class="cartItem__qty">${item.qty}</div>
-        <button class="btn" data-act="plus">+</button>
-        <button class="btn" data-act="edit" style="margin-left:auto;border-color:rgba(79,140,255,.35)">${t("edit")}</button>
-        <button class="btn" data-act="remove" style="border-color:rgba(255,90,95,.35)">${t("remove")}</button>
       </div>
     `;
     card.querySelector('[data-act="minus"]').addEventListener("click", () => { item.qty = Math.max(1, item.qty - 1); saveCart(); renderCart(); });
@@ -1915,6 +1920,7 @@ function renderCart() {
       row.className = "kioskSummaryItem";
       row.innerHTML = `
         <div class="kioskSummaryItem__head">
+          ${item.image ? `<img class="kioskSummaryItem__img" src="/${item.image}" alt="" onerror="this.remove();" />` : ""}
           <div class="kioskSummaryItem__qty">${item.qty}x</div>
           <div class="kioskSummaryItem__name">${item.name}</div>
           <div class="kioskSummaryItem__price">${euro(item.price * item.qty)}</div>

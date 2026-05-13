@@ -299,7 +299,8 @@ a{color:inherit}
 .drawer__title{font-weight:900}
 .drawer__body{
   padding:12px 14px;
-  overflow:auto;
+  overflow-y:auto;
+  overflow-x:hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   flex:1;
@@ -314,12 +315,17 @@ a{color:inherit}
   background: rgba(255,255,255,.02);
   margin-bottom:10px;
 }
-.cartItem__top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.cartItem__name{font-weight:800}
-.cartItem__opts{color:var(--muted);font-size:12px;margin-top:6px}
-.cartItem__priceBreakdown{color:var(--muted);font-size:11px;margin-top:4px;font-style:italic}
-.cartItem__actions{display:flex;gap:8px;align-items:center;margin-top:10px}
-.cartItem__qty{font-weight:900;min-width:22px;text-align:center}
+.cartItem__row{display:flex;gap:10px;align-items:flex-start;overflow:hidden}
+.cartItem__img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.cartItem__body{flex:1;min-width:0}
+.cartItem__top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px}
+.cartItem__name{font-weight:800;overflow:hidden;text-overflow:ellipsis}
+.cartItem__price{white-space:nowrap;font-size:14px}
+.cartItem__opts{color:var(--muted);font-size:11px;margin-top:3px}
+.cartItem__priceBreakdown{color:var(--muted);font-size:11px;margin-top:2px;font-style:italic}
+.cartItem__actions{display:flex;gap:5px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.cartItem__actions .btn{padding:5px 10px;font-size:13px;min-width:0}
+.cartItem__qty{font-weight:900;min-width:20px;text-align:center;font-size:14px}
 
 .input{
   width:100%;
@@ -1461,9 +1467,12 @@ body.page--kiosk .kioskSummaryItem{
 
 body.page--kiosk .kioskSummaryItem__head{
   display:grid;
-  grid-template-columns:auto 1fr auto;
-  align-items:start;
+  grid-template-columns:auto auto 1fr auto;
+  align-items:center;
   gap:8px;
+}
+body.page--kiosk .kioskSummaryItem__img{
+  width:36px;height:36px;border-radius:6px;object-fit:cover;
 }
 
 body.page--kiosk .kioskSummaryItem__qty{

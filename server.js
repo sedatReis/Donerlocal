@@ -7,6 +7,7 @@ import { spawn } from "child_process";
 import os from "os";
 import zlib from "zlib";
 import { nanoid } from "nanoid";
+import QRCode from "qrcode";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -592,6 +593,106 @@ function spawnPrintJobProcess({ command, args, ticketPayload, printerName, exitL
   });
 }
 
+// --- PLU-Mapping & QR-Code Payload ---
+
+const PLU_MAP = {
+  products: {
+    suppe_01: "1", suppe_01a: "3", suppe_02: "2",
+    salat_41: "6", salat_42: "7",
+    doner_03: "11", doner_04: "12", doner_05: "13", doner_06: "14",
+    doner_07: "18", doner_08: "15", doner_09: "15",
+    durum_10: "51", durum_11: "52", durum_12: "53", durum_13: "54",
+    donerbox_19: "31", donerbox_20: "32", donerbox_21: "41", donerbox_22: "42",
+    pommes_55: "151", pommes_56: "152",
+    lahmacun_14: "110", lahmacun_15: "111", lahmacun_16: "112",
+    lahmacun_17: "114", lahmacun_18: "113",
+    kofte_25: "81", kofte_26: "82", kofte_27: "83", kofte_28: "83",
+    kofte_28a: "84", kofte_28c: "84", kofte_28b: "85",
+    curry_29: "102", curry_30: "105", curry_31: "103", curry_32: "104",
+    chicken_33: "93", chicken_34: "92", chicken_35: "91",
+    chicken_36: "92", chicken_37: "91", chicken_38: "94", chicken_39: "94",
+    nuggets_57: "98", nuggets_58: "97",
+    iskender_43: "61", iskender_44: "62",
+    grill_45: "71", fitness_40: "65",
+    veg_47: "131", veg_48a: "132", veg_48b: "141", veg_49: "142",
+    veg_50: "143", veg_51: "143", veg_51b: "143", veg_52: "144",
+    veg_53: "126", veg_54: "128",
+    sonst_76: "203", sonst_77: "157", sonst_78: "176", sonst_79: "175",
+    sonst_80: "183", sonst_81: "380", sonst_82: "172",
+    sonstiges_PRD3Id: "192",
+    drink_66: "212", drink_68: "211", drink_69: "231", drink_70: "241",
+    drink_71: "251", drink_72: "211", drink_73: "212", drink_74: "211", drink_75: "221"
+  },
+  extras: {
+    extra_59: "181", extra_60: "182",
+    extra_61_ketchup: "161", extra_61_mayo: "162", extra_61_curry: "163",
+    extra_62: "165", extra_63: "166", extra_64: "171", extra_65: "172",
+    donerbox_extra_salat: "50",
+    teller_extra_pommes: "180", teller_extra_reis: "185",
+    extra_kofte: "184", extra_falafel: "186"
+  }
+};
+
+function buildQrPayload(items) {
+  const entries = [];
+  function addOrIncrement(plu, amount) {
+    const p = String(plu);
+    const existing = entries.find(e => e.plu === p);
+    if (existing) { existing.amount = String(Number(existing.amount) + amount); }
+    else { entries.push({ plu: p, amount: String(amount) }); }
+  }
+  for (const item of items) {
+    const productPlu = PLU_MAP.products[item.productId];
+    if (productPlu) addOrIncrement(productPlu, item.qty || 1);
+    for (const extra of (item.extras || [])) {
+      const extraPlu = PLU_MAP.extras[extra.id];
+      if (extraPlu) addOrIncrement(extraPlu, item.qty || 1);
+    }
+    if (item.donerboxExtraFee > 0) addOrIncrement("50", item.qty || 1);
+    if (item.extraPieces > 0 && item.extraPiecesLabel) {
+      const piecePlu = item.extraPiecesLabel.includes("Köfte") ? "184" : "186";
+      addOrIncrement(piecePlu, (item.extraPieces || 0) * (item.qty || 1));
+    }
+  }
+  return JSON.stringify(entries);
+}
+
+async function buildQrEscPos(data) {
+  const png = await QRCode.toBuffer(data, { width: 200, margin: 1, errorCorrectionLevel: "M" });
+  // Parse PNG to get raw pixel data
+  // Use ESC/POS native QR command instead (GS ( k)
+  const GS = 0x1d;
+  const dataBytes = Buffer.from(data, "utf8");
+  const chunks = [];
+
+  // Center align
+  chunks.push(Buffer.from([0x1b, 0x61, 0x01]));
+
+  // GS ( k — QR Code: set model (Model 2)
+  chunks.push(Buffer.from([GS, 0x28, 0x6b, 0x04, 0x00, 0x31, 0x41, 0x32, 0x00]));
+
+  // GS ( k — QR Code: set size (module size = 4 dots)
+  chunks.push(Buffer.from([GS, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x43, 0x04]));
+
+  // GS ( k — QR Code: set error correction (M = 49)
+  chunks.push(Buffer.from([GS, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x45, 0x31]));
+
+  // GS ( k — QR Code: store data
+  const storeLen = dataBytes.length + 3;
+  const pL = storeLen & 0xff;
+  const pH = (storeLen >> 8) & 0xff;
+  chunks.push(Buffer.from([GS, 0x28, 0x6b, pL, pH, 0x31, 0x50, 0x30]));
+  chunks.push(dataBytes);
+
+  // GS ( k — QR Code: print
+  chunks.push(Buffer.from([GS, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x51, 0x30]));
+
+  // Reset to left align
+  chunks.push(Buffer.from([0x1b, 0x61, 0x00]));
+
+  return Buffer.concat(chunks);
+}
+
 // --- Order Receipt (Bon) Builder ---
 
 function formatPrice(price) {
@@ -917,7 +1018,7 @@ function renderItemKitchen(chunks, item, itemNum) {
 }
 
 // BON 1: Full customer receipt (everything + "Bitte Bon nicht wegschmeißen")
-function buildCustomerReceipt(order, randomNum) {
+async function buildCustomerReceipt(order, randomNum) {
   const ESC = 0x1b;
   const GS = 0x1d;
   const chunks = buildReceiptHeader(order, randomNum, { smallFont: true });
@@ -961,6 +1062,15 @@ function buildCustomerReceipt(order, randomNum) {
     cp858Buffer(`GESAMT: ${formatPrice(total)}\n`),
     Buffer.from([ESC, 0x45, 0x00]), escPosTextSize(1, 1)
   );
+
+  // QR-Code for Kasse
+  const qrPayload = buildQrPayload(order.items);
+  if (qrPayload !== "[]") {
+    chunks.push(cp858Buffer("\n"));
+    const qrBuf = await buildQrEscPos(qrPayload);
+    chunks.push(qrBuf);
+    chunks.push(cp858Buffer("\n"));
+  }
 
   // Footer
   chunks.push(Buffer.from([ESC, 0x61, 0x01]), cp858Buffer("\n"), cp858Buffer("GUTEN APPETIT!\n"));
@@ -1049,7 +1159,7 @@ async function printOrderReceipt(order) {
 
   // Generate same random number for both receipts
   const randomNum = Math.floor(Math.random() * 50) + 1;
-  const customerPayload = buildCustomerReceipt(order, randomNum);
+  const customerPayload = await buildCustomerReceipt(order, randomNum);
   const kitchenPayload = buildKitchenReceipt(order, randomNum);
 
   // Both receipts from the same printer (combined into one print job)
@@ -1442,6 +1552,19 @@ app.delete("/api/admin/products/:categoryId/:productId", async (req, res) => {
     res.json({ ok: true });
   } catch (e) {
     res.status(500).json({ error: e.message });
+  }
+});
+
+// --- QR-Code API ---
+app.get("/api/qr", async (req, res) => {
+  const data = req.query.data;
+  if (!data) return res.status(400).send("Missing data parameter");
+  try {
+    const png = await QRCode.toBuffer(data, { width: 300, margin: 2 });
+    res.setHeader("Content-Type", "image/png");
+    res.send(png);
+  } catch (err) {
+    res.status(500).send("QR generation failed: " + err.message);
   }
 });
 
