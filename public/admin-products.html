@@ -261,6 +261,7 @@
       <div class="ap-field"><label>Beschreibung (EN)</label><input id="editDescEn" /></div>
       <div class="ap-field"><label>Beschreibung (TR)</label><input id="editDescTr" /></div>
       <div class="ap-field"><label>Preis (EUR)</label><input id="editPrice" type="number" step="0.1" min="0" /></div>
+      <div class="ap-field"><label>PLU-ID (fuer QR-Code)</label><input id="editPlu" placeholder="z.B. 172" /></div>
       <div class="ap-modal-btns">
         <button id="editCancelBtn" class="ap-btn ap-btn--edit">Abbrechen</button>
         <button id="editSaveBtn" class="ap-btn ap-btn--save">Speichern</button>
@@ -284,6 +285,7 @@
       <div class="ap-field"><label>Beschreibung (EN)</label><input id="addDescEn" /></div>
       <div class="ap-field"><label>Beschreibung (TR)</label><input id="addDescTr" /></div>
       <div class="ap-field"><label>Preis (EUR)</label><input id="addPrice" type="number" step="0.1" min="0" /></div>
+      <div class="ap-field"><label>PLU-ID (fuer QR-Code)</label><input id="addPlu" placeholder="z.B. 172" /></div>
       <div class="ap-field">
         <label>Zutaten-Auswahl?</label>
         <select id="addOptions"><option value="true">Ja</option><option value="false">Nein</option></select>
@@ -364,7 +366,7 @@
             <div class="ap-item__info">
               <div class="ap-item__name">${item.name}</div>
               <div class="ap-item__desc">${item.desc || "\u2014"}</div>
-              <div class="ap-item__id">${item.id}</div>
+              <div class="ap-item__id">${item.id}${item.plu ? ' | PLU: ' + item.plu : ''}</div>
             </div>
             <div class="ap-item__actions">
               <div class="ap-item__price">
@@ -466,6 +468,7 @@
       $("editDescEn").value = item.desc_en || "";
       $("editDescTr").value = item.desc_tr || "";
       $("editPrice").value = Number(item.price).toFixed(2);
+      $("editPlu").value = item.plu || "";
       $("editModal").classList.remove("hidden");
     }
 
@@ -488,7 +491,8 @@
         body: JSON.stringify({
           name: $("editName").value, name_en: $("editNameEn").value, name_tr: $("editNameTr").value,
           desc: $("editDesc").value, desc_en: $("editDescEn").value, desc_tr: $("editDescTr").value,
-          price: parseFloat($("editPrice").value)
+          price: parseFloat($("editPrice").value),
+          plu: $("editPlu").value.trim() || null
         })
       });
       if (editCtx.newImageData) {
@@ -507,7 +511,7 @@
       addCtx = { categoryId: catId, imageData: null, imageName: null };
       $("addName").value = ""; $("addNameEn").value = ""; $("addNameTr").value = "";
       $("addDesc").value = ""; $("addDescEn").value = ""; $("addDescTr").value = "";
-      $("addPrice").value = ""; $("addOptions").value = "true"; $("addDrink").value = "false";
+      $("addPrice").value = ""; $("addPlu").value = ""; $("addOptions").value = "true"; $("addDrink").value = "false";
       $("addImgPreview").classList.add("hidden");
       $("addModal").classList.remove("hidden");
     }
@@ -534,6 +538,7 @@
           name, name_en: $("addNameEn").value || name, name_tr: $("addNameTr").value || name,
           desc: $("addDesc").value, desc_en: $("addDescEn").value, desc_tr: $("addDescTr").value,
           price: parseFloat($("addPrice").value) || 0,
+          plu: $("addPlu").value.trim() || null,
           optionsEnabled: $("addOptions").value === "true",
           isDrink: $("addDrink").value === "true"
         })

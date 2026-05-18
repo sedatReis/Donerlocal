@@ -1188,12 +1188,14 @@
             {
               "key": "100ml",
               "label": "100 ml",
-              "price": 1.5
+              "price": 1.5,
+              "plu": "172"
             },
             {
               "key": "300ml",
               "label": "300 ml",
-              "price": 3.5
+              "price": 3.5,
+              "plu": "173"
             }
           ]
         },

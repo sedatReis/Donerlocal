@@ -714,7 +714,7 @@ function renderMenu() {
           ${translatedDesc ? `<div class="kioskTile__desc">${translatedDesc}</div>` : ""}
         </div>
         <div class="kioskTile__footer">
-          <div class="kioskTile__price">${euro(item.price)}</div>
+          <div class="kioskTile__price">${item.hasSizeChoice ? (t("chooseSize") || "Größe wählen") : euro(item.price)}</div>
           <button type="button" class="btn btn--primary kioskTile__cta">${item.optionsEnabled ? t("select") : t("add")}</button>
         </div>
       `;
@@ -1786,7 +1786,7 @@ function finalizeAddToCart() {
     note: note || null,
     isDrink: product.isDrink || false,
     image: product.image || state.selectedCategory?.icon || null,
-    selectedSize: state.selectedSize ? { key: state.selectedSize.key, label: state.selectedSize.label, price: state.selectedSize.price } : null,
+    selectedSize: state.selectedSize ? { key: state.selectedSize.key, label: state.selectedSize.label, price: state.selectedSize.price, plu: state.selectedSize.plu || null } : null,
     extraPieces: state.extraPieces || 0,
     extraPiecesPrice: state.extraPiecesPrice || 0,
     extraPiecesLabel: state.extraPiecesLabel || "",

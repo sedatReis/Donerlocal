@@ -633,6 +633,17 @@ const PLU_MAP = {
   }
 };
 
+function findProductPlu(productId) {
+  // Check products.json plu field first, then fallback to hardcoded PLU_MAP
+  if (productsCache) {
+    for (const cat of productsCache.categories) {
+      const item = cat.items.find(i => i.id === productId);
+      if (item?.plu) return item.plu;
+    }
+  }
+  return PLU_MAP.products[productId] || null;
+}
+
 function buildQrPayload(items) {
   const entries = [];
   function addOrIncrement(plu, amount) {
@@ -642,7 +653,9 @@ function buildQrPayload(items) {
     else { entries.push({ plu: p, amount: String(amount) }); }
   }
   for (const item of items) {
-    const productPlu = PLU_MAP.products[item.productId];
+    // Use size-specific PLU if available (e.g. sauce 100ml=172, 300ml=173)
+    const sizePlu = item.selectedSize?.plu;
+    const productPlu = sizePlu || findProductPlu(item.productId);
     if (productPlu) addOrIncrement(productPlu, item.qty || 1);
     for (const extra of (item.extras || [])) {
       const extraPlu = PLU_MAP.extras[extra.id];
@@ -691,6 +704,31 @@ async function buildQrEscPos(data) {
   chunks.push(Buffer.from([0x1b, 0x61, 0x00]));
 
   return Buffer.concat(chunks);
+}
+
+// --- Ingredient abbreviation for receipts ---
+const INGREDIENT_ABBREVS = {
+  "BLAUKRAUT": "BL.KRAUT",
+  "GRÜNER SALAT": "GR.SALAT",
+  "GRUENER SALAT": "GR.SALAT",
+  "KRAUTSALAT": "KR.SALAT",
+  "WEISSKRAUT": "W.KRAUT",
+  "GRANATAPFELDRESSING": "GRAN.DR.",
+  "OLIVENÖLDRESSING": "OLIV.DR.",
+  "CHILI SAUCE": "CHILI S.",
+  "CURRYSAUCE": "CURRY S.",
+  "NUR FLEISCH": "NUR FL.",
+  "JALAPEÑO": "JALAP.",
+  "JALAPENO": "JALAP.",
+  "ZWIEBEL": "ZWIEB.",
+  "PEPERONI": "PEPERO.",
+};
+
+function abbreviateIngredient(name, maxLen) {
+  if (name.length <= maxLen) return name;
+  if (INGREDIENT_ABBREVS[name]) return INGREDIENT_ABBREVS[name];
+  // Generic: truncate and add dot
+  return name.slice(0, maxLen - 1) + ".";
 }
 
 // --- Order Receipt (Bon) Builder ---
@@ -863,17 +901,18 @@ function renderItemFull(chunks, item) {
   // Options/ingredients (skip Dönerbox base options already in name)
   const fullDonerboxBaseOpts = ["Reis", "Pommes", "Ohne Reis & Pommes"];
   if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
-    const ohneText = `   >> MIT ALLEM OHNE ${item.allOptionsExcept.map(o => o.toUpperCase()).join(", ")}`;
-    const ohneLines = wordWrap(ohneText, 32);
     chunks.push(Buffer.from([ESC, 0x45, 0x01]));
-    for (const line of ohneLines) chunks.push(cp858Buffer(`${line}\n`));
+    for (const ohne of item.allOptionsExcept) {
+      const abbr = abbreviateIngredient(ohne.toUpperCase(), 24); // 32 - "   OHNE " prefix
+      chunks.push(cp858Buffer(`   OHNE ${abbr}\n`));
+    }
     chunks.push(Buffer.from([ESC, 0x45, 0x00]));
   } else if (item.allOptions) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT ALLEM\n`), Buffer.from([ESC, 0x45, 0x00]));
   } else if (Array.isArray(item.options) && item.options.length > 0) {
     for (const opt of item.options) {
       if (item.donerboxBase && fullDonerboxBaseOpts.includes(opt)) continue;
-      const optLines = wordWrap(`   - ${opt.toUpperCase()}`, 32);
+      const optLines = wordWrap(`   + ${opt.toUpperCase()}`, 32);
       for (const line of optLines) chunks.push(cp858Buffer(`${line}\n`));
     }
   }
@@ -969,10 +1008,11 @@ function renderItemKitchen(chunks, item, itemNum) {
   // Options/ingredients (skip base options like Reis/Pommes/Ohne that are already in the name)
   const donerboxBaseOptions = ["Reis", "Pommes", "Ohne Reis & Pommes"];
   if (item.allOptionsExcept && item.allOptionsExcept.length > 0) {
-    const ohneText = `   >> MIT ALLEM OHNE ${item.allOptionsExcept.map(o => o.toUpperCase()).join(", ")}`;
-    const ohneLines = wordWrap(ohneText, 16);
     chunks.push(Buffer.from([ESC, 0x45, 0x01]));
-    for (const line of ohneLines) chunks.push(cp858Buffer(`${line}\n`));
+    for (const ohne of item.allOptionsExcept) {
+      const abbr = abbreviateIngredient(ohne.toUpperCase(), 8); // 16 - "   OHNE " prefix (double-size text)
+      chunks.push(cp858Buffer(`   OHNE ${abbr}\n`));
+    }
     chunks.push(Buffer.from([ESC, 0x45, 0x00]));
   } else if (item.allOptions) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   >> MIT ALLEM\n`), Buffer.from([ESC, 0x45, 0x00]));
@@ -980,7 +1020,7 @@ function renderItemKitchen(chunks, item, itemNum) {
     for (const opt of item.options) {
       // Skip Dönerbox base options from the ingredient list (already in name)
       if (item.donerboxBase && donerboxBaseOptions.includes(opt)) continue;
-      const optLines = wordWrap(`   - ${opt.toUpperCase()}`, 16);
+      const optLines = wordWrap(`   + ${opt.toUpperCase()}`, 16);
       for (const line of optLines) chunks.push(cp858Buffer(`${line}\n`));
     }
   }
@@ -1425,6 +1465,10 @@ app.put("/api/admin/products/:categoryId/:productId", async (req, res) => {
     if (updates.desc !== undefined) item.desc = String(updates.desc);
     if (updates.desc_en !== undefined) item.desc_en = String(updates.desc_en);
     if (updates.desc_tr !== undefined) item.desc_tr = String(updates.desc_tr);
+    if (updates.plu !== undefined) {
+      if (updates.plu) item.plu = String(updates.plu);
+      else delete item.plu;
+    }
 
     await fs.writeFile(PRODUCTS_FILE, JSON.stringify(productsCache, null, 2), "utf-8");
     res.json({ ok: true, item });
@@ -1528,6 +1572,7 @@ app.post("/api/admin/products/:categoryId", async (req, res) => {
       optionsEnabled: body.optionsEnabled ?? true
     };
     if (body.isDrink) newItem.isDrink = true;
+    if (body.plu) newItem.plu = String(body.plu);
 
     cat.items.push(newItem);
     await fs.writeFile(PRODUCTS_FILE, JSON.stringify(productsCache, null, 2), "utf-8");
