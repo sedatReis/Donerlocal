@@ -2070,7 +2070,8 @@ async function sendOrder() {
       isDrink: item.isDrink || false,
       extraPieces: item.extraPieces || 0,
       extraPiecesPrice: item.extraPiecesPrice || 0,
-      extraPiecesLabel: item.extraPiecesLabel || ""
+      extraPiecesLabel: item.extraPiecesLabel || "",
+      tellerSide: item.tellerSide || null
     }))
   };
 
