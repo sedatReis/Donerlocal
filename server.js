@@ -648,9 +648,9 @@ function buildQrPayload(items) {
   const entries = [];
   function addOrIncrement(plu, amount) {
     const p = String(plu);
-    const existing = entries.find(e => e.plu === p);
-    if (existing) { existing.amount = String(Number(existing.amount) + amount); }
-    else { entries.push({ plu: p, amount: String(amount) }); }
+    const existing = entries.find(e => e.p === p);
+    if (existing) { existing.a = String(Number(existing.a) + amount); }
+    else { entries.push({ p, a: String(amount) }); }
   }
   for (const item of items) {
     // Use size-specific PLU if available (e.g. sauce 100ml=172, 300ml=173)
