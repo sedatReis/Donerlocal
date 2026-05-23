@@ -1605,11 +1605,11 @@ function updateTellerCrossSell() {
   state.selectedExtras = state.selectedExtras.filter(e => e.id !== "teller_extra_reis" && e.id !== "teller_extra_pommes");
 
   if (state.tellerSide === "pommes") {
-    renderCrossSellCard(container, "teller_extra_reis", "Reis", 2.0,
+    renderCrossSellCard(container, "teller_extra_reis", "Extra Reis", 2.0,
       `<svg viewBox="0 0 28 28" width="26" height="26"><ellipse cx="14" cy="18" rx="10" ry="6" fill="#f5f0e0" stroke="#c8a060" stroke-width=".8"/><path d="M8 16c2-4 4-6 6-6s4 2 6 6" fill="#fff8e8" stroke="#c8a060" stroke-width=".6"/><circle cx="11" cy="15" r=".8" fill="#c8a060"/><circle cx="15" cy="14" r=".6" fill="#c8a060"/><circle cx="13" cy="17" r=".7" fill="#c8a060"/></svg>`,
       "Zusätzlich Reis?");
   } else if (state.tellerSide === "reis") {
-    renderCrossSellCard(container, "teller_extra_pommes", "Pommes", 2.0,
+    renderCrossSellCard(container, "teller_extra_pommes", "Extra Pommes", 2.0,
       `<svg viewBox="0 0 28 28" width="26" height="26"><rect x="6" y="14" width="16" height="10" rx="2" fill="#d32f2f"/><rect x="9" y="5" width="2.8" height="13" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/><rect x="13" y="4" width="2.8" height="14" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/><rect x="17" y="6" width="2.8" height="12" rx="1" fill="#fdd835" stroke="#c8a415" stroke-width=".4"/></svg>`,
       "Zusätzlich Pommes?");
   }

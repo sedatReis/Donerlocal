@@ -26,6 +26,7 @@ const PUBLIC_DIR = path.join(__dirname, "public");
 const DATA_DIR = path.join(__dirname, "data");
 const PRODUCTS_FILE = path.join(DATA_DIR, "products.json");
 const ORDERS_FILE = path.join(DATA_DIR, "orders.json");
+const ORDER_LOG_FILE = path.join(DATA_DIR, "order-log.json");
 const ADMIN_USER = process.env.DONER_ADMIN_USER || process.env.ADMIN_USER || "admin";
 const ADMIN_PASSWORD_SALT = process.env.DONER_ADMIN_PASSWORD_SALT
   || process.env.ADMIN_PASSWORD_SALT
@@ -68,6 +69,35 @@ function queueWriteOrders() {
     console.error("Failed writing orders.json:", e);
   });
   return writeOrdersInFlight;
+}
+
+// --- Persistentes Bestell-Protokoll ---
+async function appendOrderLog(order) {
+  try {
+    let log = [];
+    try {
+      const raw = await fs.readFile(ORDER_LOG_FILE, "utf-8");
+      log = JSON.parse(raw);
+    } catch { /* Datei existiert noch nicht */ }
+    const total = order.items.reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
+    log.push({
+      id: order.id,
+      timestamp: new Date(order.createdAt).toISOString(),
+      customerName: order.customerName,
+      paymentMethod: order.paymentMethod,
+      dineOption: order.dineOption,
+      total,
+      items: order.items.map(i => ({
+        name: i.name, qty: i.qty, price: i.price,
+        options: i.options || [], extras: (i.extras || []).map(e => e.name),
+        selectedSize: i.selectedSize?.label || null,
+        tellerSide: i.tellerSide || null
+      }))
+    });
+    await fs.writeFile(ORDER_LOG_FILE, JSON.stringify(log, null, 2), "utf-8");
+  } catch (e) {
+    console.error("Failed writing order-log.json:", e);
+  }
 }
 
 async function loadProducts() {
@@ -1374,6 +1404,7 @@ app.post("/api/orders", async (req, res) => {
 
   orders.push(order);
   await queueWriteOrders();
+  appendOrderLog(order);
 
   // Print 2 receipts (customer + staff)
   const printResult = await printOrderReceipt(order);
@@ -1651,7 +1682,7 @@ app.get(["/completed", "/completed/", "/completed.html"], (req, res) => {
 });
 
 // Static assets (css/js/img)
-app.use(express.static(PUBLIC_DIR, { maxAge: 0 }));
+app.use(express.static(PUBLIC_DIR, { maxAge: "1d" }));
 
 await loadProducts();
 await loadOrders();

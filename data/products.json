@@ -1290,6 +1290,31 @@
       "name_en": "with döner sauce (no garlic)",
       "name_tr": "Döner sosu ile (sarımsaklı)",
       "price": 1.5
+    },
+    {
+      "id": "pfand_dose",
+      "number": 1501,
+      "name": "Pfand Dose",
+      "name_en": "Deposit Can",
+      "name_tr": "Depozito Kutu",
+      "price": 0.25,
+      "plu": "1501"
+    },
+    {
+      "id": "teller_extra_pommes",
+      "number": 66,
+      "name": "Extra Pommes für Teller",
+      "name_en": "Extra Fries for Plate",
+      "name_tr": "Tabak için Ekstra Patates",
+      "price": 2.0
+    },
+    {
+      "id": "teller_extra_reis",
+      "number": 66,
+      "name": "Extra Reis für Teller",
+      "name_en": "Extra Rice for Plate",
+      "name_tr": "Tabak için Ekstra Pilav",
+      "price": 2.0
     }
   ],
   "defaultOptions": [
