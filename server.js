@@ -674,6 +674,15 @@ function findProductPlu(productId) {
   return PLU_MAP.products[productId] || null;
 }
 
+function findExtraPlu(extraId) {
+  // Check products.json extras plu field first, then fallback to hardcoded PLU_MAP
+  if (productsCache && productsCache.extras) {
+    const extra = productsCache.extras.find(e => e.id === extraId);
+    if (extra?.plu) return extra.plu;
+  }
+  return PLU_MAP.extras[extraId] || null;
+}
+
 function hasPfand(productId) {
   if (!productsCache) return false;
   for (const cat of productsCache.categories) {
@@ -697,7 +706,7 @@ function buildQrPayload(items) {
     const productPlu = sizePlu || findProductPlu(item.productId);
     if (productPlu) addOrIncrement(productPlu, item.qty || 1);
     for (const extra of (item.extras || [])) {
-      const extraPlu = PLU_MAP.extras[extra.id];
+      const extraPlu = findExtraPlu(extra.id);
       if (extraPlu) addOrIncrement(extraPlu, item.qty || 1);
     }
     if (item.donerboxExtraFee > 0) addOrIncrement("50", item.qty || 1);
@@ -871,7 +880,7 @@ function buildReceiptHeader(order, randomNum, { skipRestaurantName = false, smal
     chunks.push(
       Buffer.from([ESC, 0x45, 0x01]),
       escPosTextSize(smallFont ? 1 : 2, smallFont ? 1 : 2),
-      cp858Buffer("Batch Nr: ___\n"),
+      cp858Buffer("Call / Batch Nr: ___\n"),
       Buffer.from([ESC, 0x45, 0x00]),
       escPosTextSize(1, 1)
     );
@@ -1695,7 +1704,7 @@ app.get(["/completed", "/completed/", "/completed.html"], (req, res) => {
 });
 
 // Static assets (css/js/img)
-app.use(express.static(PUBLIC_DIR, { maxAge: "1d" }));
+app.use(express.static(PUBLIC_DIR, { maxAge: "30d" }));
 
 await loadProducts();
 await loadOrders();

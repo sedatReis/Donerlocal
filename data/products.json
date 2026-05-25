@@ -211,43 +211,6 @@
       ]
     },
     {
-      "id": "pommes",
-      "title": "POMMES",
-      "title_en": "FRIES",
-      "title_tr": "PATATES",
-      "icon": "imagesforsark/Pommescategory.png",
-      "items": [
-        {
-          "id": "pommes_55",
-          "number": 55,
-          "name": "Pommes Frites Klein",
-          "name_en": "French Fries Small",
-          "name_tr": "Patates Kızartması Küçük",
-          "desc": "",
-          "desc_en": "",
-          "desc_tr": "",
-          "price": 4.9,
-          "image": "imagesforsark/KleinerPommes.png",
-          "optionsEnabled": false,
-          "hasSauceChoice": true
-        },
-        {
-          "id": "pommes_56",
-          "number": 56,
-          "name": "Pommes Frites Gross",
-          "name_en": "French Fries Large",
-          "name_tr": "Patates Kızartması Büyük",
-          "desc": "",
-          "desc_en": "",
-          "desc_tr": "",
-          "price": 6.5,
-          "image": "img/pommes-sark.png",
-          "optionsEnabled": false,
-          "hasSauceChoice": true
-        }
-      ]
-    },
-    {
       "id": "lahmacun",
       "title": "LAHMACUN",
       "title_en": "LAHMACUN",
@@ -257,9 +220,9 @@
         {
           "id": "lahmacun_14",
           "number": 14,
-          "name": "Lahmacun ohne Salat & Sauce",
-          "name_en": "Lahmacun without Salad & Sauce",
-          "name_tr": "Lahmacun Salatasız ve Sossuz",
+          "name": "Lahmacun Leer",
+          "name_en": "Lahmacun Plain",
+          "name_tr": "Lahmacun Sade",
           "desc": "Dünner Teigfladen, belegt mit gewürztem Hackfleisch, Gemüse & Gewürzen",
           "desc_en": "Thin flatbread with seasoned minced meat, vegetables & spices",
           "desc_tr": "İnce hamur, baharatlı kıyma, sebze ve baharatlarla",
@@ -270,9 +233,9 @@
         {
           "id": "lahmacun_15",
           "number": 15,
-          "name": "Lahmacun mit Salat & Sauce",
-          "name_en": "Lahmacun with Salad & Sauce",
-          "name_tr": "Lahmacun Salata ve Sos ile",
+          "name": "Lahmacun Vegi",
+          "name_en": "Lahmacun Vegi",
+          "name_tr": "Lahmacun Vegi",
           "desc": "Dünner Teigfladen, belegt mit gewürztem Hackfleisch, Gemüse & Gewürzen",
           "desc_en": "Thin flatbread with seasoned minced meat, vegetables & spices",
           "desc_tr": "İnce hamur, baharatlı kıyma, sebze ve baharatlarla",
@@ -383,6 +346,63 @@
       ]
     },
     {
+      "id": "iskender",
+      "title": "ISKENDER DÖNER",
+      "title_en": "ISKENDER DÖNER",
+      "title_tr": "İSKENDER DÖNER",
+      "icon": "img/iskender-box.png",
+      "items": [
+        {
+          "id": "iskender_43",
+          "number": 43,
+          "name": "Iskender Box",
+          "name_en": "Iskender Box",
+          "name_tr": "İskender Kutu",
+          "desc": "Dönerfleisch auf geröstetem Brot mit einer Joghurt- & Tomaten-Oregano Sauce",
+          "desc_en": "Döner meat on toasted bread with yogurt & tomato-oregano sauce",
+          "desc_tr": "Kızarmış ekmek üzerine döner et, yoğurt ve domates-kekik sosu",
+          "price": 11.9,
+          "image": "img/iskender-box.png",
+          "optionsEnabled": false
+        },
+        {
+          "id": "iskender_44",
+          "number": 44,
+          "name": "Iskender Teller",
+          "name_en": "Iskender Plate",
+          "name_tr": "İskender Tabak",
+          "desc": "Dönerfleisch auf geröstetem Brot mit einer Joghurt- & Tomaten-Oregano Sauce",
+          "desc_en": "Döner meat on toasted bread with yogurt & tomato-oregano sauce",
+          "desc_tr": "Kızarmış ekmek üzerine döner et, yoğurt ve domates-kekik sosu",
+          "price": 18.9,
+          "image": "img/iskender-teller.png",
+          "optionsEnabled": false
+        }
+      ]
+    },
+    {
+      "id": "grillteller",
+      "title": "GRILLTELLER",
+      "title_en": "MIXED GRILL PLATE",
+      "title_tr": "IZGARA TABAK",
+      "icon": "img/grillteller-sark.png",
+      "items": [
+        {
+          "id": "grill_45",
+          "number": 45,
+          "name": "Gemischter Grillteller",
+          "name_en": "Mixed Grill Plate",
+          "name_tr": "Karışık Izgara Tabağı",
+          "desc": "Köfte, Hühnerfleisch & Dönerfleisch mit Salat, Sauce, Grillgemüse, Pommes oder Reis & Brot",
+          "desc_en": "Meatballs, chicken & döner meat with salad, sauce, grilled vegetables, fries or rice & bread",
+          "desc_tr": "Köfte, tavuk ve döner et, salata, sos, ızgara sebze, patates veya pilav ve ekmek",
+          "price": 24.9,
+          "image": "img/grillteller-sark.png",
+          "optionsEnabled": true
+        }
+      ]
+    },
+    {
       "id": "izgara",
       "title": "IZGARA KÖFTE",
       "title_en": "GRILLED MEATBALLS",
@@ -479,104 +499,6 @@
           "price": 9.5,
           "image": "img/kofte-brot.png",
           "optionsEnabled": true
-        }
-      ]
-    },
-    {
-      "id": "currywurst",
-      "title": "CURRYWURST",
-      "title_en": "CURRYWURST",
-      "title_tr": "CURRYWURST",
-      "icon": "imagesforsark/Currywurstcategory.png",
-      "items": [
-        {
-          "id": "curry_29",
-          "number": 29,
-          "name": "Currywurst",
-          "name_en": "Currywurst",
-          "name_tr": "Currywurst",
-          "desc": "Regionalrindfleisch & Brot",
-          "desc_en": "Regional beef sausage & bread",
-          "desc_tr": "Bölgesel dana eti sosis ve ekmek",
-          "price": 7.5,
-          "image": "imagesforsark/currywurstneu2.png",
-          "optionsEnabled": false
-        },
-        {
-          "id": "curry_30",
-          "number": 30,
-          "name": "Currywurst im Bag",
-          "name_en": "Currywurst in Bag",
-          "name_tr": "Currywurst Poşette",
-          "desc": "Regionalrindfleisch & Brot",
-          "desc_en": "Regional beef sausage & bread",
-          "desc_tr": "Bölgesel dana eti sosis ve ekmek",
-          "price": 7.9,
-          "image": "img/currywurst-bag.png",
-          "optionsEnabled": false
-        },
-        {
-          "id": "curry_31",
-          "number": 31,
-          "name": "Currywurst Box",
-          "name_en": "Currywurst Box",
-          "name_tr": "Currywurst Kutu",
-          "desc": "Regionalrindfleisch mit Pommes & Currysauce (ohne Brot)",
-          "desc_en": "Regional beef sausage with fries & curry sauce (no bread)",
-          "desc_tr": "Bölgesel dana eti, patates ve köri sosu (ekmeksiz)",
-          "price": 9.9,
-          "image": "img/currywurst-box.png",
-          "optionsEnabled": false
-        },
-        {
-          "id": "curry_32",
-          "number": 32,
-          "name": "Currywurst Teller",
-          "name_en": "Currywurst Plate",
-          "name_tr": "Currywurst Tabak",
-          "desc": "Grosse Portion Regionalrindfleisch mit Pommes, Currysauce & Brot",
-          "desc_en": "Large portion regional beef sausage with fries, curry sauce & bread",
-          "desc_tr": "Büyük porsiyon bölgesel dana eti, patates, köri sosu ve ekmek",
-          "price": 12.5,
-          "image": "img/currywurst-teller.png",
-          "optionsEnabled": false
-        }
-      ]
-    },
-    {
-      "id": "chickennuggets",
-      "title": "CHICKEN NUGGETS",
-      "title_en": "CHICKEN NUGGETS",
-      "title_tr": "TAVUK NUGGETS",
-      "icon": "imagesforsark/chickennuggetscategory.png",
-      "items": [
-        {
-          "id": "nuggets_57",
-          "number": 57,
-          "name": "Chicken Nuggets 1 Stk.",
-          "name_en": "Chicken Nuggets 1 Pc.",
-          "name_tr": "Tavuk Nugget 1 Adet",
-          "desc": "",
-          "desc_en": "",
-          "desc_tr": "",
-          "price": 1,
-          "image": "img/chicken-nugget-1stk.png",
-          "optionsEnabled": false,
-          "hasSauceChoice": true
-        },
-        {
-          "id": "nuggets_58",
-          "number": 58,
-          "name": "Chicken Nuggets mit Pommes",
-          "name_en": "Chicken Nuggets with Fries",
-          "name_tr": "Tavuk Nugget Patates ile",
-          "desc": "",
-          "desc_en": "",
-          "desc_tr": "",
-          "price": 10.9,
-          "image": "img/chicken-nuggets-pommes.png",
-          "optionsEnabled": false,
-          "hasSauceChoice": true
         }
       ]
     },
@@ -681,116 +603,100 @@
       ]
     },
     {
-      "id": "fitness",
-      "title": "FITNESS BOWL",
-      "title_en": "FITNESS BOWL",
-      "title_tr": "FITNESS KASE",
-      "icon": "imagesforsark/fitnessbowlcategory.png",
+      "id": "chickennuggets",
+      "title": "CHICKEN NUGGETS",
+      "title_en": "CHICKEN NUGGETS",
+      "title_tr": "TAVUK NUGGETS",
+      "icon": "imagesforsark/chickennuggetscategory.png",
       "items": [
         {
-          "id": "fitness_40",
-          "number": 40,
-          "name": "Fitness Bowl",
-          "name_en": "Fitness Bowl",
-          "name_tr": "Fitness Kase",
-          "desc": "Gemischter Salat mit Hühnerfleischstücken, Sauce & Grillgemüse",
-          "desc_en": "Mixed salad with chicken pieces, sauce & grilled vegetables",
-          "desc_tr": "Karışık salata, tavuk parçaları, sos ve ızgara sebze",
-          "price": 14.5,
-          "image": "img/fitness-bowl.png",
-          "optionsEnabled": true
+          "id": "nuggets_57",
+          "number": 57,
+          "name": "Chicken Nuggets 1 Stk.",
+          "name_en": "Chicken Nuggets 1 Pc.",
+          "name_tr": "Tavuk Nugget 1 Adet",
+          "desc": "",
+          "desc_en": "",
+          "desc_tr": "",
+          "price": 1,
+          "image": "img/chicken-nugget-1stk.png",
+          "optionsEnabled": false,
+          "hasSauceChoice": true
+        },
+        {
+          "id": "nuggets_58",
+          "number": 58,
+          "name": "Chicken Nuggets mit Pommes",
+          "name_en": "Chicken Nuggets with Fries",
+          "name_tr": "Tavuk Nugget Patates ile",
+          "desc": "",
+          "desc_en": "",
+          "desc_tr": "",
+          "price": 10.9,
+          "image": "img/chicken-nuggets-pommes.png",
+          "optionsEnabled": false,
+          "hasSauceChoice": true
         }
       ]
     },
     {
-      "id": "salat",
-      "title": "SALAT",
-      "title_en": "SALAD",
-      "title_tr": "SALATA",
-      "icon": "img/salat-sark.png",
+      "id": "currywurst",
+      "title": "CURRYWURST",
+      "title_en": "CURRYWURST",
+      "title_tr": "CURRYWURST",
+      "icon": "imagesforsark/Currywurstcategory.png",
       "items": [
         {
-          "id": "salat_41",
-          "number": 41,
-          "name": "Kleiner Salat",
-          "name_en": "Small Salad",
-          "name_tr": "Küçük Salata",
-          "desc": "Gemischter Salatteller, Sauce & Olivenöldressing",
-          "desc_en": "Mixed salad plate, sauce & olive oil dressing",
-          "desc_tr": "Karışık salata tabağı, sos ve zeytinyağı sosu",
-          "price": 4.9,
-          "image": "imagesforsark/Salatklein.png",
+          "id": "curry_29",
+          "number": 29,
+          "name": "Currywurst",
+          "name_en": "Currywurst",
+          "name_tr": "Currywurst",
+          "desc": "Regionalrindfleisch & Brot",
+          "desc_en": "Regional beef sausage & bread",
+          "desc_tr": "Bölgesel dana eti sosis ve ekmek",
+          "price": 7.5,
+          "image": "imagesforsark/currywurstneu2.png",
           "optionsEnabled": false
         },
         {
-          "id": "salat_42",
-          "number": 42,
-          "name": "Grosser Salat",
-          "name_en": "Large Salad",
-          "name_tr": "Büyük Salata",
-          "desc": "Gemischter Salatteller, Sauce & Olivenöldressing",
-          "desc_en": "Mixed salad plate, sauce & olive oil dressing",
-          "desc_tr": "Karışık salata tabağı, sos ve zeytinyağı sosu",
-          "price": 6.5,
-          "image": "img/salat-sark.png",
-          "optionsEnabled": false
-        }
-      ]
-    },
-    {
-      "id": "iskender",
-      "title": "ISKENDER DÖNER",
-      "title_en": "ISKENDER DÖNER",
-      "title_tr": "İSKENDER DÖNER",
-      "icon": "img/iskender-box.png",
-      "items": [
-        {
-          "id": "iskender_43",
-          "number": 43,
-          "name": "Iskender Box",
-          "name_en": "Iskender Box",
-          "name_tr": "İskender Kutu",
-          "desc": "Dönerfleisch auf geröstetem Brot mit einer Joghurt- & Tomaten-Oregano Sauce",
-          "desc_en": "Döner meat on toasted bread with yogurt & tomato-oregano sauce",
-          "desc_tr": "Kızarmış ekmek üzerine döner et, yoğurt ve domates-kekik sosu",
-          "price": 11.9,
-          "image": "img/iskender-box.png",
+          "id": "curry_30",
+          "number": 30,
+          "name": "Currywurst im Bag",
+          "name_en": "Currywurst in Bag",
+          "name_tr": "Currywurst Poşette",
+          "desc": "Regionalrindfleisch & Brot",
+          "desc_en": "Regional beef sausage & bread",
+          "desc_tr": "Bölgesel dana eti sosis ve ekmek",
+          "price": 7.9,
+          "image": "img/currywurst-bag.png",
           "optionsEnabled": false
         },
         {
-          "id": "iskender_44",
-          "number": 44,
-          "name": "Iskender Teller",
-          "name_en": "Iskender Plate",
-          "name_tr": "İskender Tabak",
-          "desc": "Dönerfleisch auf geröstetem Brot mit einer Joghurt- & Tomaten-Oregano Sauce",
-          "desc_en": "Döner meat on toasted bread with yogurt & tomato-oregano sauce",
-          "desc_tr": "Kızarmış ekmek üzerine döner et, yoğurt ve domates-kekik sosu",
-          "price": 18.9,
-          "image": "img/iskender-teller.png",
+          "id": "curry_31",
+          "number": 31,
+          "name": "Currywurst Box",
+          "name_en": "Currywurst Box",
+          "name_tr": "Currywurst Kutu",
+          "desc": "Regionalrindfleisch mit Pommes & Currysauce (ohne Brot)",
+          "desc_en": "Regional beef sausage with fries & curry sauce (no bread)",
+          "desc_tr": "Bölgesel dana eti, patates ve köri sosu (ekmeksiz)",
+          "price": 9.9,
+          "image": "img/currywurst-box.png",
           "optionsEnabled": false
-        }
-      ]
-    },
-    {
-      "id": "grillteller",
-      "title": "GRILLTELLER",
-      "title_en": "MIXED GRILL PLATE",
-      "title_tr": "IZGARA TABAK",
-      "icon": "img/grillteller-sark.png",
-      "items": [
+        },
         {
-          "id": "grill_45",
-          "number": 45,
-          "name": "Gemischter Grillteller",
-          "name_en": "Mixed Grill Plate",
-          "name_tr": "Karışık Izgara Tabağı",
-          "desc": "Köfte, Hühnerfleisch & Dönerfleisch mit Salat, Sauce, Grillgemüse, Pommes oder Reis & Brot",
-          "desc_en": "Meatballs, chicken & döner meat with salad, sauce, grilled vegetables, fries or rice & bread",
-          "desc_tr": "Köfte, tavuk ve döner et, salata, sos, ızgara sebze, patates veya pilav ve ekmek",
-          "price": 24.9,
-          "image": "img/grillteller-sark.png",
-          "optionsEnabled": true
+          "id": "curry_32",
+          "number": 32,
+          "name": "Currywurst Teller",
+          "name_en": "Currywurst Plate",
+          "name_tr": "Currywurst Tabak",
+          "desc": "Grosse Portion Regionalrindfleisch mit Pommes, Currysauce & Brot",
+          "desc_en": "Large portion regional beef sausage with fries, curry sauce & bread",
+          "desc_tr": "Büyük porsiyon bölgesel dana eti, patates, köri sosu ve ekmek",
+          "price": 12.5,
+          "image": "img/currywurst-teller.png",
+          "optionsEnabled": false
         }
       ]
     },
@@ -799,7 +705,7 @@
       "title": "VEGI DÖNER",
       "title_en": "VEGI DÖNER",
       "title_tr": "VEGI DÖNER",
-      "icon": "imagesforsark/vegetarischcategory.png",
+      "icon": "imagesforsark/Veggidonerkategorie.png",
       "items": [
         {
           "id": "veg_47",
@@ -917,6 +823,28 @@
       ]
     },
     {
+      "id": "fitness",
+      "title": "FITNESS BOWL",
+      "title_en": "FITNESS BOWL",
+      "title_tr": "FITNESS KASE",
+      "icon": "imagesforsark/fitnessbowlcategory.png",
+      "items": [
+        {
+          "id": "fitness_40",
+          "number": 40,
+          "name": "Fitness Bowl",
+          "name_en": "Fitness Bowl",
+          "name_tr": "Fitness Kase",
+          "desc": "Gemischter Salat mit Hühnerfleischstücken, Sauce & Grillgemüse",
+          "desc_en": "Mixed salad with chicken pieces, sauce & grilled vegetables",
+          "desc_tr": "Karışık salata, tavuk parçaları, sos ve ızgara sebze",
+          "price": 14.5,
+          "image": "img/fitness-bowl.png",
+          "optionsEnabled": true
+        }
+      ]
+    },
+    {
       "id": "lambada",
       "title": "LAMBADA",
       "title_en": "LAMBADA",
@@ -948,6 +876,78 @@
           "price": 9.9,
           "image": "img/lambada-teller.png",
           "optionsEnabled": true
+        }
+      ]
+    },
+    {
+      "id": "salat",
+      "title": "SALAT",
+      "title_en": "SALAD",
+      "title_tr": "SALATA",
+      "icon": "img/salat-sark.png",
+      "items": [
+        {
+          "id": "salat_41",
+          "number": 41,
+          "name": "Kleiner Salat",
+          "name_en": "Small Salad",
+          "name_tr": "Küçük Salata",
+          "desc": "Gemischter Salatteller, Sauce & Olivenöldressing",
+          "desc_en": "Mixed salad plate, sauce & olive oil dressing",
+          "desc_tr": "Karışık salata tabağı, sos ve zeytinyağı sosu",
+          "price": 4.9,
+          "image": "imagesforsark/Salatklein.png",
+          "optionsEnabled": false
+        },
+        {
+          "id": "salat_42",
+          "number": 42,
+          "name": "Grosser Salat",
+          "name_en": "Large Salad",
+          "name_tr": "Büyük Salata",
+          "desc": "Gemischter Salatteller, Sauce & Olivenöldressing",
+          "desc_en": "Mixed salad plate, sauce & olive oil dressing",
+          "desc_tr": "Karışık salata tabağı, sos ve zeytinyağı sosu",
+          "price": 6.5,
+          "image": "img/salat-sark.png",
+          "optionsEnabled": false
+        }
+      ]
+    },
+    {
+      "id": "pommes",
+      "title": "POMMES",
+      "title_en": "FRIES",
+      "title_tr": "PATATES",
+      "icon": "imagesforsark/Pommescategory.png",
+      "items": [
+        {
+          "id": "pommes_55",
+          "number": 55,
+          "name": "Pommes Frites Klein",
+          "name_en": "French Fries Small",
+          "name_tr": "Patates Kızartması Küçük",
+          "desc": "",
+          "desc_en": "",
+          "desc_tr": "",
+          "price": 4.9,
+          "image": "imagesforsark/KleinerPommes.png",
+          "optionsEnabled": false,
+          "hasSauceChoice": true
+        },
+        {
+          "id": "pommes_56",
+          "number": 56,
+          "name": "Pommes Frites Gross",
+          "name_en": "French Fries Large",
+          "name_tr": "Patates Kızartması Büyük",
+          "desc": "",
+          "desc_en": "",
+          "desc_tr": "",
+          "price": 6.5,
+          "image": "img/pommes-sark.png",
+          "optionsEnabled": false,
+          "hasSauceChoice": true
         }
       ]
     },
@@ -1104,20 +1104,84 @@
           "desc_tr": "",
           "price": 3.9,
           "image": "img/baklava-sark.png",
-          "optionsEnabled": false
+          "optionsEnabled": false,
+          "hasSizeChoice": true,
+          "sizes": [
+            {
+              "key": "2stueck",
+              "label": "2 Stück",
+              "price": 3.9,
+              "plu": "203"
+            },
+            {
+              "key": "4stueck",
+              "label": "4 Stück",
+              "price": 5.9,
+              "plu": "201"
+            },
+            {
+              "key": "490g",
+              "label": "490 g",
+              "price": 14.9,
+              "plu": "204"
+            }
+          ]
         },
         {
           "id": "sonst_77",
           "number": 77,
-          "name": "Chili Sauce 445g",
-          "name_en": "Chili Sauce 445g",
-          "name_tr": "Acı Sos 445g",
+          "name": "Chili Sauce",
+          "name_en": "Chili Sauce",
+          "name_tr": "Acı Sos",
           "desc": "",
           "desc_en": "",
           "desc_tr": "",
           "price": 8.9,
           "image": "img/chili-sauce.png",
-          "optionsEnabled": false
+          "optionsEnabled": false,
+          "hasSizeChoice": true,
+          "sizes": [
+            {
+              "key": "730ml",
+              "label": "730 ml",
+              "price": 10.9,
+              "plu": "156"
+            },
+            {
+              "key": "455ml",
+              "label": "455 ml",
+              "price": 8.9,
+              "plu": "157"
+            }
+          ]
+        },
+        {
+          "id": "sonst_chillimayo",
+          "number": 84,
+          "name": "Chilli Mayo",
+          "name_en": "Chilli Mayo",
+          "name_tr": "Chilli Mayo",
+          "desc": "",
+          "desc_en": "",
+          "desc_tr": "",
+          "price": 8.9,
+          "image": "imagesforsark/chillimayo.png",
+          "optionsEnabled": false,
+          "hasSizeChoice": true,
+          "sizes": [
+            {
+              "key": "730ml",
+              "label": "730 ml",
+              "price": 10.9,
+              "plu": "156"
+            },
+            {
+              "key": "455ml",
+              "label": "455 ml",
+              "price": 8.9,
+              "plu": "157"
+            }
+          ]
         },
         {
           "id": "sonst_78",
@@ -1192,8 +1256,8 @@
               "plu": "172"
             },
             {
-              "key": "300ml",
-              "label": "300 ml",
+              "key": "250ml",
+              "label": "250 ml",
               "price": 3.5,
               "plu": "173"
             }
@@ -1211,6 +1275,20 @@
           "price": 2.5,
           "image": "imagesforsark/4001686006061_Goldb-ren-Halal-100g_front.png",
           "optionsEnabled": false
+        },
+        {
+          "id": "sonst_corny",
+          "number": 85,
+          "name": "Corny Schokolade",
+          "name_en": "Corny Chocolate",
+          "name_tr": "Corny Çikolata",
+          "desc": "",
+          "desc_en": "",
+          "desc_tr": "",
+          "price": 1.5,
+          "image": "imagesforsark/cornyschokolade.png",
+          "optionsEnabled": false,
+          "plu": "191"
         }
       ]
     }
@@ -1222,7 +1300,8 @@
       "name": "mit Grillgemüse",
       "name_en": "with grilled vegetables",
       "name_tr": "Izgara sebze ile",
-      "price": 2.5
+      "price": 2.5,
+      "plu": "181"
     },
     {
       "id": "extra_60",
@@ -1230,7 +1309,8 @@
       "name": "mit Pom",
       "name_en": "with fries",
       "name_tr": "Patates ile",
-      "price": 1
+      "price": 1,
+      "plu": "182"
     },
     {
       "id": "extra_61_ketchup",
@@ -1239,7 +1319,8 @@
       "name_en": "Ketchup",
       "name_tr": "Ketçap",
       "price": 0.4,
-      "sauceGroup": true
+      "sauceGroup": true,
+      "plu": "161"
     },
     {
       "id": "extra_61_mayo",
@@ -1248,7 +1329,8 @@
       "name_en": "Mayonnaise",
       "name_tr": "Mayonez",
       "price": 0.4,
-      "sauceGroup": true
+      "sauceGroup": true,
+      "plu": "162"
     },
     {
       "id": "extra_61_curry",
@@ -1257,7 +1339,8 @@
       "name_en": "Curry sauce",
       "name_tr": "Köri sosu",
       "price": 0.4,
-      "sauceGroup": true
+      "sauceGroup": true,
+      "plu": "163"
     },
     {
       "id": "extra_62",
@@ -1265,7 +1348,8 @@
       "name": "Dönerbrot Gross",
       "name_en": "Döner bread large",
       "name_tr": "Döner ekmeği büyük",
-      "price": 1
+      "price": 1,
+      "plu": "165"
     },
     {
       "id": "extra_63",
@@ -1273,7 +1357,8 @@
       "name": "Dönerbrot Klein",
       "name_en": "Döner bread small",
       "name_tr": "Döner ekmeği küçük",
-      "price": 0.8
+      "price": 0.8,
+      "plu": "166"
     },
     {
       "id": "extra_64",
@@ -1281,15 +1366,17 @@
       "name": "mit Käse",
       "name_en": "with cheese",
       "name_tr": "Peynir ile",
-      "price": 1
+      "price": 1,
+      "plu": "171"
     },
     {
       "id": "extra_65",
       "number": 65,
-      "name": "mit Dönersauce (ohne Knoblauch)",
-      "name_en": "with döner sauce (no garlic)",
-      "name_tr": "Döner sosu ile (sarımsaklı)",
-      "price": 1.5
+      "name": "on top Dönersauce",
+      "name_en": "on top döner sauce",
+      "name_tr": "üstüne Döner sosu",
+      "price": 0.5,
+      "plu": "164"
     },
     {
       "id": "pfand_dose",
@@ -1306,7 +1393,7 @@
       "name": "Extra Pommes für Teller",
       "name_en": "Extra Fries for Plate",
       "name_tr": "Tabak için Ekstra Patates",
-      "price": 2.0
+      "price": 2
     },
     {
       "id": "teller_extra_reis",
@@ -1314,7 +1401,7 @@
       "name": "Extra Reis für Teller",
       "name_en": "Extra Rice for Plate",
       "name_tr": "Tabak için Ekstra Pilav",
-      "price": 2.0
+      "price": 2
     }
   ],
   "defaultOptions": [
