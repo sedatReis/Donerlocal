@@ -870,13 +870,15 @@ function openProduct(product, category, editIndex) {
   // Drinks: skip all modals, add directly to cart
   if (product.isDrink && state.editingCartIndex < 0) {
     const translatedProductName = itemName(product);
+    const pfandExtras = product.hasPfand ? [{id: "pfand_dose", name: "Pfand", price: 0.25}] : [];
+    const pfandTotal = pfandExtras.reduce((s, e) => s + e.price, 0);
     const key = [product.id, category?.id || "", "", "", "", "", ""].join("::");
     const newItem = {
       key, productId: product.id, name: product.name, displayName: translatedProductName,
-      price: product.price, basePrice: product.price,
+      price: product.price + pfandTotal, basePrice: product.price,
       categoryId: category?.id ?? null, categoryTitle: category?.title ?? null,
       allOptions: false, allOptionsExcept: null,
-      options: [], extras: [], qty: 1,
+      options: [], extras: pfandExtras, qty: 1,
       donerboxBase: null, donerboxExtraFee: 0,
       breadWanted: null, note: null, isDrink: true
     };

@@ -659,7 +659,8 @@ const PLU_MAP = {
     extra_62: "165", extra_63: "166", extra_64: "171", extra_65: "172",
     donerbox_extra_salat: "50",
     teller_extra_pommes: "180", teller_extra_reis: "185",
-    extra_kofte: "184", extra_falafel: "186"
+    extra_kofte: "184", extra_falafel: "186",
+    pfand_dose: "1501"
   }
 };
 
@@ -687,7 +688,7 @@ function hasPfand(productId) {
   if (!productsCache) return false;
   for (const cat of productsCache.categories) {
     const item = cat.items.find(i => i.id === productId);
-    if (item && item.desc && item.desc.toLowerCase().includes("pfand")) return true;
+    if (item && item.hasPfand) return true;
   }
   return false;
 }
@@ -714,8 +715,9 @@ function buildQrPayload(items) {
       const piecePlu = item.extraPiecesLabel.includes("Köfte") ? "184" : "186";
       addOrIncrement(piecePlu, (item.extraPieces || 0) * (item.qty || 1));
     }
-    // Automatisch Pfand (PLU 1501) hinzufügen bei Getränken mit Pfand
-    if (hasPfand(item.productId)) {
+    // Pfand wird vom Frontend als Extra (pfand_dose) mitgeschickt
+    // Fallback: falls kein pfand_dose Extra vorhanden, aber Produkt hat Pfand
+    if (hasPfand(item.productId) && !(item.extras || []).some(e => e.id === "pfand_dose")) {
       addOrIncrement("1501", item.qty || 1);
     }
   }

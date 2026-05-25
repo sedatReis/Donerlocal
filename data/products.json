@@ -964,13 +964,14 @@
           "name": "Mineralwasser 0,5L",
           "name_en": "Mineral Water 0.5L",
           "name_tr": "Maden Suyu 0,5L",
-          "desc": "inkl. 0,25€ Pfand",
-          "desc_en": "incl. 0.25€ deposit",
-          "desc_tr": "0,25€ depozito dahil",
-          "price": 3.25,
+          "desc": "+ 0,25€ Pfand",
+          "desc_en": "+ 0.25€ deposit",
+          "desc_tr": "+ 0,25€ depozito",
+          "price": 3.0,
           "image": "imagesforsark/romerquellemineral.png",
           "optionsEnabled": false,
-          "isDrink": true
+          "isDrink": true,
+          "hasPfand": true
         },
         {
           "id": "drink_68",
@@ -978,13 +979,14 @@
           "name": "Dose Limo",
           "name_en": "Canned Soda",
           "name_tr": "Kutu İçecek",
-          "desc": "inkl. 0,25€ Pfand",
-          "desc_en": "incl. 0.25€ deposit",
-          "desc_tr": "0,25€ depozito dahil",
-          "price": 3.25,
+          "desc": "+ 0,25€ Pfand",
+          "desc_en": "+ 0.25€ deposit",
+          "desc_tr": "+ 0,25€ depozito",
+          "price": 3.0,
           "image": "imagesforsark/dosegetrankeneu.png",
           "optionsEnabled": false,
-          "isDrink": true
+          "isDrink": true,
+          "hasPfand": true
         },
         {
           "id": "drink_69",
@@ -992,13 +994,14 @@
           "name": "Pet Flaschen 0,5L",
           "name_en": "PET Bottle 0.5L",
           "name_tr": "Pet Şişe 0,5L",
-          "desc": "inkl. 0,25€ Pfand",
-          "desc_en": "incl. 0.25€ deposit",
-          "desc_tr": "0,25€ depozito dahil",
-          "price": 3.95,
+          "desc": "+ 0,25€ Pfand",
+          "desc_en": "+ 0.25€ deposit",
+          "desc_tr": "+ 0,25€ depozito",
+          "price": 3.7,
           "image": "imagesforsark/pet05l.png",
           "optionsEnabled": false,
-          "isDrink": true
+          "isDrink": true,
+          "hasPfand": true
         },
         {
           "id": "drink_70",
@@ -1006,13 +1009,14 @@
           "name": "Red Bull 0,25L",
           "name_en": "Red Bull 0.25L",
           "name_tr": "Red Bull 0,25L",
-          "desc": "inkl. 0,25€ Pfand",
-          "desc_en": "incl. 0.25€ deposit",
-          "desc_tr": "0,25€ depozito dahil",
-          "price": 4.15,
+          "desc": "+ 0,25€ Pfand",
+          "desc_en": "+ 0.25€ deposit",
+          "desc_tr": "+ 0,25€ depozito",
+          "price": 3.9,
           "image": "img/redbull-sark.png",
           "optionsEnabled": false,
-          "isDrink": true
+          "isDrink": true,
+          "hasPfand": true
         },
         {
           "id": "drink_71",
@@ -1048,13 +1052,14 @@
           "name": "Christaline Wasser",
           "name_en": "Christaline Water",
           "name_tr": "Christaline Su",
-          "desc": "inkl. 0,25€ Pfand",
-          "desc_en": "incl. 0.25€ deposit",
-          "desc_tr": "0,25€ depozito dahil",
-          "price": 3.25,
+          "desc": "+ 0,25€ Pfand",
+          "desc_en": "+ 0.25€ deposit",
+          "desc_tr": "+ 0,25€ depozito",
+          "price": 3.0,
           "image": "imagesforsark/christalinewasser.png",
           "optionsEnabled": false,
-          "isDrink": true
+          "isDrink": true,
+          "hasPfand": true
         },
         {
           "id": "drink_74",
