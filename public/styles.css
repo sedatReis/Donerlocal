@@ -1954,6 +1954,17 @@ body.page--kiosk .appNotice--error{
   margin-top:8px;
 }
 
+.fullscreenOverlay__kassaHint{
+  font-size:18px;
+  font-weight:700;
+  color:#ffcc00;
+  margin-top:16px;
+  padding:12px 20px;
+  border:2px solid rgba(255,204,0,.4);
+  border-radius:10px;
+  background:rgba(255,204,0,.08);
+}
+
 /* Ingredient icon in checkbox */
 body.page--kiosk .chk svg{
   flex-shrink:0;

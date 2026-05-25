@@ -25,6 +25,7 @@ const TRANSLATIONS = {
     payCard: "Karte",
     thankYou: "Danke für deine Bestellung!",
     receiptPrinting: "Dein Bon wird gedruckt...",
+    kassaHint: "Bitte gehe zur Kassa und nenne deinen Namen zum Bezahlen.",
     totalLabel: "Gesamt:",
     categories: "Kategorien",
     products: "Produkte",
@@ -116,6 +117,7 @@ const TRANSLATIONS = {
     payCard: "Card",
     thankYou: "Thank you for your order!",
     receiptPrinting: "Your receipt is being printed...",
+    kassaHint: "Please go to the register and say your name to pay.",
     totalLabel: "Total:",
     categories: "Categories",
     products: "Products",
@@ -207,6 +209,7 @@ const TRANSLATIONS = {
     payCard: "Kart",
     thankYou: "Siparişiniz için teşekkürler!",
     receiptPrinting: "Fişiniz yazdırılıyor...",
+    kassaHint: "Lütfen kasaya gidin ve ödeme için adınızı söyleyin.",
     totalLabel: "Toplam:",
     categories: "Kategoriler",
     products: "Ürünler",
@@ -2139,7 +2142,7 @@ function showThankYouScreen() {
     localStorage.removeItem("carBrand");
     localStorage.removeItem("carColor");
     redirectToAccess();
-  }, 5000);
+  }, 10000);
 }
 
 init();
