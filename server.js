@@ -674,6 +674,15 @@ function findProductPlu(productId) {
   return PLU_MAP.products[productId] || null;
 }
 
+function hasPfand(productId) {
+  if (!productsCache) return false;
+  for (const cat of productsCache.categories) {
+    const item = cat.items.find(i => i.id === productId);
+    if (item && item.desc && item.desc.toLowerCase().includes("pfand")) return true;
+  }
+  return false;
+}
+
 function buildQrPayload(items) {
   const entries = [];
   function addOrIncrement(plu, amount) {
@@ -695,6 +704,10 @@ function buildQrPayload(items) {
     if (item.extraPieces > 0 && item.extraPiecesLabel) {
       const piecePlu = item.extraPiecesLabel.includes("Köfte") ? "184" : "186";
       addOrIncrement(piecePlu, (item.extraPieces || 0) * (item.qty || 1));
+    }
+    // Automatisch Pfand (PLU 1501) hinzufügen bei Getränken mit Pfand
+    if (hasPfand(item.productId)) {
+      addOrIncrement("1501", item.qty || 1);
     }
   }
   return JSON.stringify(entries);
