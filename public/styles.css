@@ -157,6 +157,47 @@ a{color:inherit}
   }
 }
 
+.cart-flash{
+  animation: cartFlashBlink .8s ease-in-out infinite !important;
+}
+.badge-flash{
+  animation: badgeFlashBlink .8s ease-in-out infinite !important;
+}
+@keyframes cartFlashBlink{
+  0%{
+    background: inherit;
+    box-shadow: none;
+    transform: scale(1);
+  }
+  50%{
+    background: #ffd54f;
+    box-shadow: 0 0 24px 10px rgba(255,199,73,.9), 0 0 50px rgba(255,214,126,.6);
+    transform: scale(1.1);
+  }
+  100%{
+    background: inherit;
+    box-shadow: none;
+    transform: scale(1);
+  }
+}
+@keyframes badgeFlashBlink{
+  0%{
+    background: rgba(79,140,255,.18);
+    box-shadow: none;
+    transform: scale(1);
+  }
+  50%{
+    background: #ffd54f;
+    box-shadow: 0 0 18px 6px rgba(255,199,73,.85);
+    transform: scale(1.25);
+  }
+  100%{
+    background: rgba(79,140,255,.18);
+    box-shadow: none;
+    transform: scale(1);
+  }
+}
+
 .row{display:flex;gap:10px;align-items:center}
 .row--wrap{flex-wrap:wrap}
 .row--end{justify-content:flex-end}

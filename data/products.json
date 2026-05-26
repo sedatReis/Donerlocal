@@ -6,7 +6,7 @@
       "title": "SUPPEN",
       "title_en": "SOUPS",
       "title_tr": "ÇORBALAR",
-      "icon": "img/linsensuppe.png",
+      "icon": "img/linsensuppe.webp",
       "items": [
         {
           "id": "suppe_01",
@@ -18,7 +18,7 @@
           "desc_en": "homemade, with bread",
           "desc_tr": "ev yapımı, ekmek ile",
           "price": 7.5,
-          "image": "img/linsensuppe.png",
+          "image": "img/linsensuppe.webp",
           "optionsEnabled": false
         },
         {
@@ -31,7 +31,7 @@
           "desc_en": "homemade",
           "desc_tr": "ev yapımı",
           "price": 6.5,
-          "image": "img/linsensuppe.png",
+          "image": "img/linsensuppe.webp",
           "optionsEnabled": false
         },
         {
@@ -44,7 +44,7 @@
           "desc_en": "homemade, with bread",
           "desc_tr": "ev yapımı, ekmek ile",
           "price": 8.9,
-          "image": "img/tagessuppe.png",
+          "image": "img/tagessuppe.webp",
           "optionsEnabled": false
         }
       ]
@@ -54,7 +54,7 @@
       "title": "DÖNER (Putenfleisch)",
       "title_en": "DÖNER (Turkey meat)",
       "title_tr": "DÖNER (Hindi eti)",
-      "icon": "img/doner-sark.png",
+      "icon": "img/doner-sark.webp",
       "items": [
         {
           "id": "doner_03",
@@ -66,7 +66,7 @@
           "desc_en": "Döner meat with salad & sauce in bread",
           "desc_tr": "Döner et, salata ve sos ile ekmekte",
           "price": 7.9,
-          "image": "imagesforsark/kleinerDoner.png",
+          "image": "imagesforsark/kleinerDoner.webp",
           "optionsEnabled": true
         },
         {
@@ -79,7 +79,7 @@
           "desc_en": "Döner meat with salad, sauce in bread",
           "desc_tr": "Döner et, salata, sos ile ekmekte",
           "price": 9.5,
-          "image": "img/doner-sark.png",
+          "image": "img/doner-sark.webp",
           "optionsEnabled": true
         },
         {
@@ -92,7 +92,7 @@
           "desc_en": "Döner meat with salad, sauce & cheese in bread",
           "desc_tr": "Döner et, salata, sos ve peynir ile ekmekte",
           "price": 10.5,
-          "image": "imagesforsark/doenerspezialkase.png",
+          "image": "imagesforsark/doenerspezialkase.webp",
           "optionsEnabled": true
         },
         {
@@ -105,7 +105,7 @@
           "desc_en": "Extra döner meat with salad & sauce in bread",
           "desc_tr": "Ekstra döner et, salata ve sos ile ekmekte",
           "price": 11.5,
-          "image": "img/doner-sark.png",
+          "image": "img/doner-sark.webp",
           "optionsEnabled": true
         },
         {
@@ -118,7 +118,7 @@
           "desc_en": "Extra döner meat with grilled vegetables, grilled meatballs, salad & sauce in bread",
           "desc_tr": "Ekstra döner et, ızgara sebze, ızgara köfte, salata ve sos ile ekmekte",
           "price": 18.9,
-          "image": "imagesforsark/kraftdonerneu.png",
+          "image": "imagesforsark/kraftdonerneu.webp",
           "optionsEnabled": true
         },
         {
@@ -131,7 +131,7 @@
           "desc_en": "Döner meat with salad, sauce, bread & fries",
           "desc_tr": "Döner et, salata, sos, ekmek ve patates kızartması",
           "price": 15.9,
-          "image": "img/doner-teller-pommes.png",
+          "image": "img/doner-teller-pommes.webp",
           "optionsEnabled": true
         },
         {
@@ -144,7 +144,7 @@
           "desc_en": "Döner meat with salad, sauce, bread & rice",
           "desc_tr": "Döner et, salata, sos, ekmek ve pilav",
           "price": 15.9,
-          "image": "img/doner-teller-reis.png",
+          "image": "img/doner-teller-reis.webp",
           "optionsEnabled": true
         }
       ]
@@ -154,7 +154,7 @@
       "title": "DÜRÜM (Wrap/Rolle)",
       "title_en": "DÜRÜM (Wrap)",
       "title_tr": "DÜRÜM (Dürüm)",
-      "icon": "img/durum-sark.png",
+      "icon": "img/durum-sark.webp",
       "items": [
         {
           "id": "durum_10",
@@ -166,7 +166,7 @@
           "desc_en": "Döner meat with salad & sauce in wrap",
           "desc_tr": "Döner et, salata ve sos ile dürümde",
           "price": 9.5,
-          "image": "img/durum-sark.png",
+          "image": "img/durum-sark.webp",
           "optionsEnabled": true
         },
         {
@@ -179,7 +179,7 @@
           "desc_en": "Döner meat with salad, sauce & cheese in wrap",
           "desc_tr": "Döner et, salata, sos ve peynir ile dürümde",
           "price": 10.5,
-          "image": "imagesforsark/durumspeziell.png",
+          "image": "imagesforsark/durumspeziell.webp",
           "optionsEnabled": true
         },
         {
@@ -192,7 +192,7 @@
           "desc_en": "Extra döner meat with salad & sauce in wrap",
           "desc_tr": "Ekstra döner et, salata ve sos ile dürümde",
           "price": 11.5,
-          "image": "img/durum-sark.png",
+          "image": "img/durum-sark.webp",
           "optionsEnabled": true
         },
         {
@@ -205,7 +205,7 @@
           "desc_en": "Extra döner meat with grilled vegetables, grilled meatballs, salad & sauce in wrap",
           "desc_tr": "Ekstra döner et, ızgara sebze, ızgara köfte, salata ve sos ile dürümde",
           "price": 18.9,
-          "image": "imagesforsark/kraftdurumneu.png",
+          "image": "imagesforsark/kraftdurumneu.webp",
           "optionsEnabled": true
         }
       ]
@@ -215,7 +215,7 @@
       "title": "LAHMACUN",
       "title_en": "LAHMACUN",
       "title_tr": "LAHMACUN",
-      "icon": "img/lahmacun-ohne.png",
+      "icon": "img/lahmacun-ohne.webp",
       "items": [
         {
           "id": "lahmacun_14",
@@ -227,7 +227,7 @@
           "desc_en": "Thin flatbread with seasoned minced meat, vegetables & spices",
           "desc_tr": "İnce hamur, baharatlı kıyma, sebze ve baharatlarla",
           "price": 5.5,
-          "image": "img/lahmacun-ohne.png",
+          "image": "img/lahmacun-ohne.webp",
           "optionsEnabled": false
         },
         {
@@ -240,7 +240,7 @@
           "desc_en": "Thin flatbread with seasoned minced meat, vegetables & spices",
           "desc_tr": "İnce hamur, baharatlı kıyma, sebze ve baharatlarla",
           "price": 7.9,
-          "image": "img/lahmacun-salat.png",
+          "image": "img/lahmacun-salat.webp",
           "optionsEnabled": true
         },
         {
@@ -253,7 +253,7 @@
           "desc_en": "Lahmacun with döner meat, salad & sauce",
           "desc_tr": "Lahmacun, döner et, salata ve sos ile",
           "price": 10.9,
-          "image": "imagesforsark/lahmacunmitdonerneu.png",
+          "image": "imagesforsark/lahmacunmitdonerneu.webp",
           "optionsEnabled": true
         },
         {
@@ -266,7 +266,7 @@
           "desc_en": "Lahmacun with döner meat, cheese, salad & sauce",
           "desc_tr": "Lahmacun, döner et, peynir, salata ve sos ile",
           "price": 11.9,
-          "image": "imagesforsark/Lahmacunspeziellneu.png",
+          "image": "imagesforsark/Lahmacunspeziellneu.webp",
           "optionsEnabled": true
         },
         {
@@ -279,7 +279,7 @@
           "desc_en": "Lahmacun with extra döner meat, salad & sauce",
           "desc_tr": "Lahmacun, bol döner et, salata ve sos ile",
           "price": 13.9,
-          "image": "img/lahmacun-doner.png",
+          "image": "img/lahmacun-doner.webp",
           "optionsEnabled": true
         }
       ]
@@ -289,7 +289,7 @@
       "title": "DÖNER BOX",
       "title_en": "DÖNER BOX",
       "title_tr": "DÖNER KUTU",
-      "icon": "img/donerbox-sark.png",
+      "icon": "img/donerbox-sark.webp",
       "items": [
         {
           "id": "donerbox_19",
@@ -301,7 +301,7 @@
           "desc_en": "Döner meat with sauce (with fries or rice?)",
           "desc_tr": "Döner et, sos ile (patates veya pilav?)",
           "price": 9.5,
-          "image": "imagesforsark/Doenerboxklein.png",
+          "image": "imagesforsark/Doenerboxklein.webp",
           "optionsEnabled": true
         },
         {
@@ -314,7 +314,7 @@
           "desc_en": "Döner meat with sauce & fries (with fries or rice?)",
           "desc_tr": "Döner et, sos ve patates (patates veya pilav?)",
           "price": 10.9,
-          "image": "img/donerbox-sark.png",
+          "image": "img/donerbox-sark.webp",
           "optionsEnabled": true
         },
         {
@@ -327,7 +327,7 @@
           "desc_en": "Döner meat with sauce & salad",
           "desc_tr": "Döner et, sos ve salata ile",
           "price": 9.5,
-          "image": "imagesforsark/Salatboxklein.png",
+          "image": "imagesforsark/Salatboxklein.webp",
           "optionsEnabled": true
         },
         {
@@ -340,7 +340,7 @@
           "desc_en": "Döner meat with sauce & salad",
           "desc_tr": "Döner et, sos ve salata ile",
           "price": 10.9,
-          "image": "img/salatbox-sark.png",
+          "image": "img/salatbox-sark.webp",
           "optionsEnabled": true
         }
       ]
@@ -350,7 +350,7 @@
       "title": "ISKENDER DÖNER",
       "title_en": "ISKENDER DÖNER",
       "title_tr": "İSKENDER DÖNER",
-      "icon": "img/iskender-box.png",
+      "icon": "img/iskender-box.webp",
       "items": [
         {
           "id": "iskender_43",
@@ -362,7 +362,7 @@
           "desc_en": "Döner meat on toasted bread with yogurt & tomato-oregano sauce",
           "desc_tr": "Kızarmış ekmek üzerine döner et, yoğurt ve domates-kekik sosu",
           "price": 11.9,
-          "image": "img/iskender-box.png",
+          "image": "img/iskender-box.webp",
           "optionsEnabled": false
         },
         {
@@ -375,7 +375,7 @@
           "desc_en": "Döner meat on toasted bread with yogurt & tomato-oregano sauce",
           "desc_tr": "Kızarmış ekmek üzerine döner et, yoğurt ve domates-kekik sosu",
           "price": 18.9,
-          "image": "img/iskender-teller.png",
+          "image": "img/iskender-teller.webp",
           "optionsEnabled": false
         }
       ]
@@ -385,7 +385,7 @@
       "title": "GRILLTELLER",
       "title_en": "MIXED GRILL PLATE",
       "title_tr": "IZGARA TABAK",
-      "icon": "img/grillteller-sark.png",
+      "icon": "img/grillteller-sark.webp",
       "items": [
         {
           "id": "grill_45",
@@ -397,7 +397,7 @@
           "desc_en": "Meatballs, chicken & döner meat with salad, sauce, grilled vegetables, fries or rice & bread",
           "desc_tr": "Köfte, tavuk ve döner et, salata, sos, ızgara sebze, patates veya pilav ve ekmek",
           "price": 24.9,
-          "image": "img/grillteller-sark.png",
+          "image": "img/grillteller-sark.webp",
           "optionsEnabled": true
         }
       ]
@@ -407,7 +407,7 @@
       "title": "IZGARA KÖFTE",
       "title_en": "GRILLED MEATBALLS",
       "title_tr": "IZGARA KÖFTE",
-      "icon": "img/kofte-brot.png",
+      "icon": "img/kofte-brot.webp",
       "items": [
         {
           "id": "kofte_25",
@@ -419,7 +419,7 @@
           "desc_en": "Homemade meatballs with salad, sauce & grilled vegetables",
           "desc_tr": "Ev yapımı köfte, salata, sos ve ızgara sebze ile",
           "price": 11.5,
-          "image": "img/kofte-brot.png",
+          "image": "img/kofte-brot.webp",
           "optionsEnabled": true
         },
         {
@@ -432,7 +432,7 @@
           "desc_en": "Meatballs with salad, sauce & grilled vegetables in wrap",
           "desc_tr": "Köfte, salata, sos ve ızgara sebze ile dürümde",
           "price": 11.5,
-          "image": "img/kofte-durum.png",
+          "image": "img/kofte-durum.webp",
           "optionsEnabled": true
         },
         {
@@ -445,7 +445,7 @@
           "desc_en": "Meatballs with salad, sauce, grilled vegetables, fries & bread",
           "desc_tr": "Köfte, salata, sos, ızgara sebze, patates ve ekmek",
           "price": 19.9,
-          "image": "img/kofte-teller-pommes.png",
+          "image": "img/kofte-teller-pommes.webp",
           "optionsEnabled": true
         },
         {
@@ -458,7 +458,7 @@
           "desc_en": "Meatballs with salad, sauce, grilled vegetables, rice & bread",
           "desc_tr": "Köfte, salata, sos, ızgara sebze, pilav ve ekmek",
           "price": 19.9,
-          "image": "img/kofte-teller-reis.png",
+          "image": "img/kofte-teller-reis.webp",
           "optionsEnabled": true
         },
         {
@@ -471,7 +471,7 @@
           "desc_en": "Small portion meatballs with fries",
           "desc_tr": "Küçük porsiyon köfte, patates ile",
           "price": 17.9,
-          "image": "img/kofte-teller-pommes.png",
+          "image": "img/kofte-teller-pommes.webp",
           "optionsEnabled": true
         },
         {
@@ -484,7 +484,7 @@
           "desc_en": "Small portion meatballs with rice",
           "desc_tr": "Küçük porsiyon köfte, pilav ile",
           "price": 17.9,
-          "image": "img/kofte-teller-reis.png",
+          "image": "img/kofte-teller-reis.webp",
           "optionsEnabled": true
         },
         {
@@ -497,7 +497,7 @@
           "desc_en": "Small portion meatballs in bread",
           "desc_tr": "Küçük porsiyon köfte ekmekte",
           "price": 9.5,
-          "image": "img/kofte-brot.png",
+          "image": "img/kofte-brot.webp",
           "optionsEnabled": true
         }
       ]
@@ -507,7 +507,7 @@
       "title": "CHICKEN (Fajitas gegrillt)",
       "title_en": "CHICKEN (Grilled fajitas)",
       "title_tr": "TAVUK (Izgara fajita)",
-      "icon": "imagesforsark/chickencategory.png",
+      "icon": "imagesforsark/chickencategory.webp",
       "items": [
         {
           "id": "chicken_33",
@@ -519,7 +519,7 @@
           "desc_en": "Chicken fajitas with salad, sauce & grilled vegetables",
           "desc_tr": "Tavuk fajita, salata, sos ve ızgara sebze ile",
           "price": 11.9,
-          "image": "img/chicken-fajitas-durum.png",
+          "image": "img/chicken-fajitas-durum.webp",
           "optionsEnabled": true
         },
         {
@@ -532,7 +532,7 @@
           "desc_en": "Chicken with fries, sauce & grilled vegetables",
           "desc_tr": "Tavuk, patates, sos ve ızgara sebze ile",
           "price": 11.9,
-          "image": "img/chicken-box-pommes.png",
+          "image": "img/chicken-box-pommes.webp",
           "optionsEnabled": true
         },
         {
@@ -545,7 +545,7 @@
           "desc_en": "Chicken with fries, sauce & grilled vegetables",
           "desc_tr": "Tavuk, patates, sos ve ızgara sebze ile",
           "price": 13.5,
-          "image": "img/chicken-box-pommes.png",
+          "image": "img/chicken-box-pommes.webp",
           "optionsEnabled": true
         },
         {
@@ -558,7 +558,7 @@
           "desc_en": "Chicken with rice, sauce & grilled vegetables",
           "desc_tr": "Tavuk, pilav, sos ve ızgara sebze ile",
           "price": 11.9,
-          "image": "img/chicken-box-reis.png",
+          "image": "img/chicken-box-reis.webp",
           "optionsEnabled": true
         },
         {
@@ -571,7 +571,7 @@
           "desc_en": "Chicken with rice, sauce & grilled vegetables",
           "desc_tr": "Tavuk, pilav, sos ve ızgara sebze ile",
           "price": 13.5,
-          "image": "img/chicken-box-reis.png",
+          "image": "img/chicken-box-reis.webp",
           "optionsEnabled": true
         },
         {
@@ -584,7 +584,7 @@
           "desc_en": "Chicken fajitas with salad, sauce, grilled vegetables, fries & bread",
           "desc_tr": "Tavuk fajita, salata, sos, ızgara sebze, patates ve ekmek",
           "price": 19.9,
-          "image": "img/chicken-teller-pommes.png",
+          "image": "img/chicken-teller-pommes.webp",
           "optionsEnabled": true
         },
         {
@@ -597,7 +597,7 @@
           "desc_en": "Chicken fajitas with salad, sauce, grilled vegetables, rice & bread",
           "desc_tr": "Tavuk fajita, salata, sos, ızgara sebze, pilav ve ekmek",
           "price": 19.9,
-          "image": "img/chicken-teller-reis.png",
+          "image": "img/chicken-teller-reis.webp",
           "optionsEnabled": true
         }
       ]
@@ -607,7 +607,7 @@
       "title": "CHICKEN NUGGETS",
       "title_en": "CHICKEN NUGGETS",
       "title_tr": "TAVUK NUGGETS",
-      "icon": "imagesforsark/chickennuggetscategory.png",
+      "icon": "imagesforsark/chickennuggetscategory.webp",
       "items": [
         {
           "id": "nuggets_57",
@@ -619,7 +619,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 1,
-          "image": "img/chicken-nugget-1stk.png",
+          "image": "img/chicken-nugget-1stk.webp",
           "optionsEnabled": false,
           "hasSauceChoice": true
         },
@@ -633,7 +633,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 10.9,
-          "image": "img/chicken-nuggets-pommes.png",
+          "image": "img/chicken-nuggets-pommes.webp",
           "optionsEnabled": false,
           "hasSauceChoice": true
         }
@@ -644,7 +644,7 @@
       "title": "CURRYWURST",
       "title_en": "CURRYWURST",
       "title_tr": "CURRYWURST",
-      "icon": "imagesforsark/Currywurstcategory.png",
+      "icon": "imagesforsark/Currywurstcategory.webp",
       "items": [
         {
           "id": "curry_29",
@@ -656,7 +656,7 @@
           "desc_en": "Regional beef sausage & bread",
           "desc_tr": "Bölgesel dana eti sosis ve ekmek",
           "price": 7.5,
-          "image": "imagesforsark/currywurstneu2.png",
+          "image": "imagesforsark/currywurstneu2.webp",
           "optionsEnabled": false
         },
         {
@@ -669,7 +669,7 @@
           "desc_en": "Regional beef sausage & bread",
           "desc_tr": "Bölgesel dana eti sosis ve ekmek",
           "price": 7.9,
-          "image": "img/currywurst-bag.png",
+          "image": "img/currywurst-bag.webp",
           "optionsEnabled": false
         },
         {
@@ -682,7 +682,7 @@
           "desc_en": "Regional beef sausage with fries & curry sauce (no bread)",
           "desc_tr": "Bölgesel dana eti, patates ve köri sosu (ekmeksiz)",
           "price": 9.9,
-          "image": "img/currywurst-box.png",
+          "image": "img/currywurst-box.webp",
           "optionsEnabled": false
         },
         {
@@ -695,7 +695,7 @@
           "desc_en": "Large portion regional beef sausage with fries, curry sauce & bread",
           "desc_tr": "Büyük porsiyon bölgesel dana eti, patates, köri sosu ve ekmek",
           "price": 12.5,
-          "image": "img/currywurst-teller.png",
+          "image": "img/currywurst-teller.webp",
           "optionsEnabled": false
         }
       ]
@@ -705,7 +705,7 @@
       "title": "VEGI DÖNER",
       "title_en": "VEGI DÖNER",
       "title_tr": "VEGI DÖNER",
-      "icon": "imagesforsark/Veggidonerkategorie.png",
+      "icon": "imagesforsark/Veggidonerkategorie.webp",
       "items": [
         {
           "id": "veg_47",
@@ -717,7 +717,7 @@
           "desc_en": "with cheese, salad & sauce in bread",
           "desc_tr": "peynir, salata ve sos ile ekmekte",
           "price": 7.5,
-          "image": "img/veg-doner.png",
+          "image": "img/veg-doner.webp",
           "optionsEnabled": true
         },
         {
@@ -730,7 +730,7 @@
           "desc_en": "with cheese, salad & sauce in wrap",
           "desc_tr": "peynir, salata ve sos ile dürümde",
           "price": 7.5,
-          "image": "img/veg-durum.png",
+          "image": "img/veg-durum.webp",
           "optionsEnabled": true
         }
       ]
@@ -740,7 +740,7 @@
       "title": "FALAFEL",
       "title_en": "FALAFEL",
       "title_tr": "FALAFEL",
-      "icon": "imagesforsark/falafelcategory.png",
+      "icon": "imagesforsark/falafelcategory.webp",
       "items": [
         {
           "id": "veg_48b",
@@ -752,7 +752,7 @@
           "desc_en": "Fried chickpea balls with salad & sauce in bread",
           "desc_tr": "Kızarmış nohut köftesi, salata ve sos ile ekmekte",
           "price": 9.5,
-          "image": "img/falafel-brot.png",
+          "image": "img/falafel-brot.webp",
           "optionsEnabled": true
         },
         {
@@ -765,7 +765,7 @@
           "desc_en": "Fried chickpea balls with salad & sauce in wrap",
           "desc_tr": "Kızarmış nohut köftesi, salata ve sos ile dürümde",
           "price": 9.5,
-          "image": "img/falafel-durum.png",
+          "image": "img/falafel-durum.webp",
           "optionsEnabled": true
         },
         {
@@ -778,7 +778,7 @@
           "desc_en": "Fried chickpea balls with salad & sauce",
           "desc_tr": "Kızarmış nohut köftesi, salata ve sos ile",
           "price": 9.5,
-          "image": "imagesforsark/falafelboxneu2.png",
+          "image": "imagesforsark/falafelboxneu2.webp",
           "optionsEnabled": true
         },
         {
@@ -791,7 +791,7 @@
           "desc_en": "Fried chickpea balls with fries & sauce",
           "desc_tr": "Kızarmış nohut köftesi, patates ve sos ile",
           "price": 9.5,
-          "image": "imagesforsark/falafelboxpommesneu2.png",
+          "image": "imagesforsark/falafelboxpommesneu2.webp",
           "optionsEnabled": true
         },
         {
@@ -804,7 +804,7 @@
           "desc_en": "Fried chickpea balls with rice & sauce",
           "desc_tr": "Kızarmış nohut köftesi, pilav ve sos ile",
           "price": 9.5,
-          "image": "imagesforsark/Falafelboxmitreis.png",
+          "image": "imagesforsark/Falafelboxmitreis.webp",
           "optionsEnabled": true
         },
         {
@@ -817,7 +817,7 @@
           "desc_en": "Fried chickpea balls, sauce, fries or rice & bread",
           "desc_tr": "Kızarmış nohut köftesi, sos, patates veya pilav ve ekmek",
           "price": 16.5,
-          "image": "img/falafel-teller.png",
+          "image": "img/falafel-teller.webp",
           "optionsEnabled": true
         }
       ]
@@ -827,7 +827,7 @@
       "title": "FITNESS BOWL",
       "title_en": "FITNESS BOWL",
       "title_tr": "FITNESS KASE",
-      "icon": "imagesforsark/fitnessbowlcategory.png",
+      "icon": "imagesforsark/fitnessbowlcategory.webp",
       "items": [
         {
           "id": "fitness_40",
@@ -839,7 +839,7 @@
           "desc_en": "Mixed salad with chicken pieces, sauce & grilled vegetables",
           "desc_tr": "Karışık salata, tavuk parçaları, sos ve ızgara sebze",
           "price": 14.5,
-          "image": "img/fitness-bowl.png",
+          "image": "img/fitness-bowl.webp",
           "optionsEnabled": true
         }
       ]
@@ -849,7 +849,7 @@
       "title": "LAMBADA",
       "title_en": "LAMBADA",
       "title_tr": "LAMBADA",
-      "icon": "imagesforsark/lambadacategory.png",
+      "icon": "imagesforsark/lambadacategory.webp",
       "items": [
         {
           "id": "veg_53",
@@ -861,7 +861,7 @@
           "desc_en": "Rice with sauce & grilled vegetables",
           "desc_tr": "Pilav, sos ve ızgara sebze ile",
           "price": 8.9,
-          "image": "img/lambada-box.png",
+          "image": "img/lambada-box.webp",
           "optionsEnabled": true
         },
         {
@@ -874,7 +874,7 @@
           "desc_en": "Rice with sauce & grilled vegetables",
           "desc_tr": "Pilav, sos ve ızgara sebze ile",
           "price": 9.9,
-          "image": "img/lambada-teller.png",
+          "image": "img/lambada-teller.webp",
           "optionsEnabled": true
         }
       ]
@@ -884,7 +884,7 @@
       "title": "SALAT",
       "title_en": "SALAD",
       "title_tr": "SALATA",
-      "icon": "img/salat-sark.png",
+      "icon": "img/salat-sark.webp",
       "items": [
         {
           "id": "salat_41",
@@ -896,7 +896,7 @@
           "desc_en": "Mixed salad plate, sauce & olive oil dressing",
           "desc_tr": "Karışık salata tabağı, sos ve zeytinyağı sosu",
           "price": 4.9,
-          "image": "imagesforsark/Salatklein.png",
+          "image": "imagesforsark/Salatklein.webp",
           "optionsEnabled": false
         },
         {
@@ -909,7 +909,7 @@
           "desc_en": "Mixed salad plate, sauce & olive oil dressing",
           "desc_tr": "Karışık salata tabağı, sos ve zeytinyağı sosu",
           "price": 6.5,
-          "image": "img/salat-sark.png",
+          "image": "img/salat-sark.webp",
           "optionsEnabled": false
         }
       ]
@@ -919,7 +919,7 @@
       "title": "POMMES",
       "title_en": "FRIES",
       "title_tr": "PATATES",
-      "icon": "imagesforsark/Pommescategory.png",
+      "icon": "imagesforsark/Pommescategory.webp",
       "items": [
         {
           "id": "pommes_55",
@@ -931,7 +931,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 4.9,
-          "image": "imagesforsark/KleinerPommes.png",
+          "image": "imagesforsark/KleinerPommes.webp",
           "optionsEnabled": false,
           "hasSauceChoice": true
         },
@@ -945,7 +945,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 6.5,
-          "image": "img/pommes-sark.png",
+          "image": "img/pommes-sark.webp",
           "optionsEnabled": false,
           "hasSauceChoice": true
         }
@@ -956,7 +956,7 @@
       "title": "GETRÄNKE",
       "title_en": "DRINKS",
       "title_tr": "İÇECEKLER",
-      "icon": "imagesforsark/pet05l.png",
+      "icon": "imagesforsark/pet05l.webp",
       "items": [
         {
           "id": "drink_66",
@@ -968,7 +968,7 @@
           "desc_en": "+ 0.25€ deposit",
           "desc_tr": "+ 0,25€ depozito",
           "price": 3.0,
-          "image": "imagesforsark/romerquellemineral.png",
+          "image": "imagesforsark/romerquellemineral.webp",
           "optionsEnabled": false,
           "isDrink": true,
           "hasPfand": true
@@ -983,7 +983,7 @@
           "desc_en": "+ 0.25€ deposit",
           "desc_tr": "+ 0,25€ depozito",
           "price": 3.0,
-          "image": "imagesforsark/dosegetrankeneu.png",
+          "image": "imagesforsark/dosegetrankeneu.webp",
           "optionsEnabled": false,
           "isDrink": true,
           "hasPfand": true
@@ -998,7 +998,7 @@
           "desc_en": "+ 0.25€ deposit",
           "desc_tr": "+ 0,25€ depozito",
           "price": 3.7,
-          "image": "imagesforsark/pet05l.png",
+          "image": "imagesforsark/pet05l.webp",
           "optionsEnabled": false,
           "isDrink": true,
           "hasPfand": true
@@ -1013,7 +1013,7 @@
           "desc_en": "+ 0.25€ deposit",
           "desc_tr": "+ 0,25€ depozito",
           "price": 3.9,
-          "image": "img/redbull-sark.png",
+          "image": "img/redbull-sark.webp",
           "optionsEnabled": false,
           "isDrink": true,
           "hasPfand": true
@@ -1028,7 +1028,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 3,
-          "image": "imagesforsark/dolusprudelwasser.png",
+          "image": "imagesforsark/dolusprudelwasser.webp",
           "optionsEnabled": false,
           "isDrink": true
         },
@@ -1042,7 +1042,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 3,
-          "image": "imagesforsark/salgamsuyu.png",
+          "image": "imagesforsark/salgamsuyu.webp",
           "optionsEnabled": false,
           "isDrink": true
         },
@@ -1056,7 +1056,7 @@
           "desc_en": "+ 0.25€ deposit",
           "desc_tr": "+ 0,25€ depozito",
           "price": 3.0,
-          "image": "imagesforsark/christalinewasser.png",
+          "image": "imagesforsark/christalinewasser.webp",
           "optionsEnabled": false,
           "isDrink": true,
           "hasPfand": true
@@ -1071,7 +1071,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 3,
-          "image": "imagesforsark/fantaexotic.png",
+          "image": "imagesforsark/fantaexotic.webp",
           "optionsEnabled": false,
           "isDrink": true
         },
@@ -1085,7 +1085,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 2.8,
-          "image": "imagesforsark/haydiayran.png",
+          "image": "imagesforsark/haydiayran.webp",
           "optionsEnabled": false,
           "isDrink": true
         }
@@ -1096,7 +1096,7 @@
       "title": "SONSTIGES",
       "title_en": "OTHER",
       "title_tr": "DİĞER",
-      "icon": "img/baklava-sark.png",
+      "icon": "img/baklava-sark.webp",
       "items": [
         {
           "id": "sonst_76",
@@ -1108,7 +1108,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 3.9,
-          "image": "img/baklava-sark.png",
+          "image": "img/baklava-sark.webp",
           "optionsEnabled": false,
           "hasSizeChoice": true,
           "sizes": [
@@ -1142,7 +1142,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 8.9,
-          "image": "img/chili-sauce.png",
+          "image": "img/chili-sauce.webp",
           "optionsEnabled": false,
           "hasSizeChoice": true,
           "sizes": [
@@ -1170,7 +1170,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 8.9,
-          "image": "imagesforsark/chillimayo.png",
+          "image": "imagesforsark/chillimayo.webp",
           "optionsEnabled": false,
           "hasSizeChoice": true,
           "sizes": [
@@ -1198,7 +1198,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 5,
-          "image": "img/paprika-flocken.png",
+          "image": "img/paprika-flocken.webp",
           "optionsEnabled": false
         },
         {
@@ -1211,7 +1211,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 1,
-          "image": "img/paprika-mini.png",
+          "image": "img/paprika-mini.webp",
           "optionsEnabled": false
         },
         {
@@ -1224,7 +1224,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 3.8,
-          "image": "img/reis-portion.png",
+          "image": "img/reis-portion.webp",
           "optionsEnabled": false
         },
         {
@@ -1237,7 +1237,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 4.5,
-          "image": "img/doner-fleisch.png",
+          "image": "img/doner-fleisch.webp",
           "optionsEnabled": false
         },
         {
@@ -1250,7 +1250,7 @@
           "desc_en": "homemade",
           "desc_tr": "ev yapımı",
           "price": 1.5,
-          "image": "imagesforsark/hausgemachterdoenersauce.png",
+          "image": "imagesforsark/hausgemachterdoenersauce.webp",
           "optionsEnabled": false,
           "hasSizeChoice": true,
           "sizes": [
@@ -1278,7 +1278,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 2.5,
-          "image": "imagesforsark/4001686006061_Goldb-ren-Halal-100g_front.png",
+          "image": "imagesforsark/4001686006061_Goldb-ren-Halal-100g_front.webp",
           "optionsEnabled": false
         },
         {
@@ -1291,7 +1291,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 1.5,
-          "image": "imagesforsark/cornyschokolade.png",
+          "image": "imagesforsark/cornyschokolade.webp",
           "optionsEnabled": false,
           "plu": "191"
         }
