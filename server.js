@@ -816,7 +816,7 @@ function wordWrap(text, maxChars) {
 }
 
 // Shared: render header (name, dine option, car, payment, batch)
-function buildReceiptHeader(order, randomNum, { skipRestaurantName = false, smallFont = false } = {}) {
+function buildReceiptHeader(order, randomNum, { skipRestaurantName = false, smallFont = false, skipOrderInfo = false, skipDineBox = false } = {}) {
   const ESC = 0x1b;
   const chunks = [];
 
@@ -834,68 +834,77 @@ function buildReceiptHeader(order, randomNum, { skipRestaurantName = false, smal
       cp858Buffer("SARK KEBAB\n"),
       Buffer.from([ESC, 0x45, 0x00]),
       escPosTextSize(1, 1),
+      Buffer.from([ESC, 0x45, 0x01]),
+      cp858Buffer("*** SB BESTELLUNG ***\n"),
+      Buffer.from([ESC, 0x45, 0x00]),
       cp858Buffer("\n")
     );
   }
 
-  // Customer name with random number (always big — same size on customer & kitchen bon)
-  const customerDisplay = `${order.customerName.toUpperCase()} #${randomNum}`;
+  // Customer name (normal size) + random number (big, separate line)
   chunks.push(
     Buffer.from([ESC, 0x45, 0x01]),
+    escPosTextSize(1, 1),
+    cp858Buffer(`${order.customerName.toUpperCase()}\n`),
     escPosTextSize(2, 2),
-    cp858Buffer(`${customerDisplay}\n`),
+    cp858Buffer(`#${randomNum}\n`),
     Buffer.from([ESC, 0x45, 0x00]),
     escPosTextSize(1, 1),
     cp858Buffer("\n")
   );
 
-  // Dine option
-  let dineLabel = "HIER ESSEN";
-  if (order.dineOption === "mitnehmen") dineLabel = "*** MITNEHMEN ***";
-  else if (order.dineOption === "imauto") dineLabel = "*** IM AUTO ***";
+  // Dine option box (skip for customer bon — inserted after notice instead)
+  if (!skipDineBox) {
+    let dineLabel = "HIER ESSEN";
+    if (order.dineOption === "mitnehmen") dineLabel = "*** MITNEHMEN ***";
+    else if (order.dineOption === "imauto") dineLabel = "*** IM AUTO ***";
 
-  chunks.push(
-    cp858Buffer("================================\n"),
-    Buffer.from([ESC, 0x45, 0x01]),
-    escPosTextSize(smallFont ? 2 : 3, smallFont ? 2 : 3),
-    cp858Buffer(`${dineLabel}\n`)
-  );
-
-  // Car details
-  if (order.dineOption === "imauto" && (order.carBrand || order.carColor)) {
     chunks.push(
-      escPosTextSize(smallFont ? 1 : 2, smallFont ? 1 : 2),
-      cp858Buffer(`${(order.carBrand || "").toUpperCase()} ${(order.carColor || "").toUpperCase()}\n`)
+      cp858Buffer("================================\n"),
+      Buffer.from([ESC, 0x45, 0x01]),
+      escPosTextSize(smallFont ? 2 : 3, smallFont ? 2 : 3),
+      cp858Buffer(`${dineLabel}\n`)
     );
-  }
 
-  chunks.push(
-    escPosTextSize(smallFont ? 1 : 2, smallFont ? 1 : 2),
-    cp858Buffer(`Zahlung: ${order.paymentMethod === "karte" ? "KARTE" : "BAR"}\n`),
-    Buffer.from([ESC, 0x45, 0x00]),
-    escPosTextSize(1, 1),
-    cp858Buffer("================================\n")
-  );
+    // Car details
+    if (order.dineOption === "imauto" && (order.carBrand || order.carColor)) {
+      chunks.push(
+        escPosTextSize(smallFont ? 1 : 2, smallFont ? 1 : 2),
+        cp858Buffer(`${(order.carBrand || "").toUpperCase()} ${(order.carColor || "").toUpperCase()}\n`)
+      );
+    }
 
-  // Batch Nr for "hier essen"
-  if (order.dineOption === "hieressen") {
     chunks.push(
       Buffer.from([ESC, 0x45, 0x01]),
-      escPosTextSize(smallFont ? 1 : 2, smallFont ? 1 : 2),
-      cp858Buffer("Call / Batch Nr: ___\n"),
+      escPosTextSize(1, 1),
+      cp858Buffer(`Zahlung: ${order.paymentMethod === "karte" ? "KARTE" : "BAR"}\n`),
       Buffer.from([ESC, 0x45, 0x00]),
-      escPosTextSize(1, 1)
+      escPosTextSize(1, 1),
+      cp858Buffer("================================\n")
     );
+
+    // Batch Nr for "hier essen"
+    if (order.dineOption === "hieressen") {
+      chunks.push(
+        Buffer.from([ESC, 0x45, 0x01]),
+        escPosTextSize(smallFont ? 1 : 2, smallFont ? 1 : 2),
+        cp858Buffer("Call / Batch Nr: ___\n"),
+        Buffer.from([ESC, 0x45, 0x00]),
+        escPosTextSize(1, 1)
+      );
+    }
   }
 
   chunks.push(cp858Buffer("\n"));
 
-  // Order ID and date
-  chunks.push(
-    cp858Buffer(`Bestellung #${order.id}\n`),
-    cp858Buffer(`${formatDateTime(order.createdAt)}\n`),
-    cp858Buffer("--------------------------------\n")
-  );
+  // Order ID and date (skip for customer bon — printed in body instead)
+  if (!skipOrderInfo) {
+    chunks.push(
+      cp858Buffer(`Bestellung #${order.id}\n`),
+      cp858Buffer(`${formatDateTime(order.createdAt)}\n`),
+      cp858Buffer("--------------------------------\n")
+    );
+  }
 
   return chunks;
 }
@@ -918,13 +927,20 @@ function renderItemFull(chunks, item) {
     displayName += ` ${sideLabel}`;
   }
   const nameText = `${qty}x ${displayName}`;
-  const nameLines = wordWrap(nameText, 32);
+  const priceText = formatPrice(lineTotal);
   chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(1, 1));
-  for (const line of nameLines) chunks.push(cp858Buffer(`${line}\n`));
+  if (nameText.length + priceText.length + 1 <= 32) {
+    // Name and price fit on one line
+    const padding = 32 - nameText.length - priceText.length;
+    chunks.push(cp858Buffer(`${nameText}${" ".repeat(padding)}${priceText}\n`));
+  } else {
+    // Name wraps, price right-aligned on next line
+    const nameLines = wordWrap(nameText, 32);
+    for (const line of nameLines) chunks.push(cp858Buffer(`${line}\n`));
+    const pricePad = 32 - priceText.length;
+    chunks.push(cp858Buffer(`${" ".repeat(pricePad)}${priceText}\n`));
+  }
   chunks.push(Buffer.from([ESC, 0x45, 0x00]));
-
-  // Price
-  chunks.push(escPosTextSize(1, 1), cp858Buffer(`   ${formatPrice(lineTotal)}\n`));
 
   // Size choice (e.g. 100ml / 300ml)
   if (item.selectedSize && item.selectedSize.label) {
@@ -1000,7 +1016,7 @@ function renderItemFull(chunks, item) {
     chunks.push(Buffer.from([ESC, 0x45, 0x01]), cp858Buffer(`   * ${item.note}\n`), Buffer.from([ESC, 0x45, 0x00]));
   }
 
-  chunks.push(cp858Buffer("\n"));
+  chunks.push(cp858Buffer("--------------------------------\n"));
   return lineTotal;
 }
 
@@ -1115,14 +1131,62 @@ function renderItemKitchen(chunks, item, itemNum) {
 async function buildCustomerReceipt(order, randomNum) {
   const ESC = 0x1b;
   const GS = 0x1d;
-  const chunks = buildReceiptHeader(order, randomNum, { smallFont: true });
+  const chunks = buildReceiptHeader(order, randomNum, { smallFont: true, skipOrderInfo: true, skipDineBox: true });
 
-  // "Bitte Bon nicht wegschmeißen" notice
+  // (i) DIES IST KEINE RECHNUNG — before dine box per mockup
   chunks.push(
     Buffer.from([ESC, 0x61, 0x01]), // center
     Buffer.from([ESC, 0x45, 0x01]),
     escPosTextSize(1, 1),
-    cp858Buffer("** BITTE BON NICHT WEGSCHMEISSEN **\n"),
+    cp858Buffer("(i) DIES IST KEINE RECHNUNG\n"),
+    Buffer.from([ESC, 0x45, 0x00]),
+    cp858Buffer("Ihre Rechnung / Ihr Kassenbeleg\n"),
+    cp858Buffer("erhalten Sie bei der\n"),
+    cp858Buffer("Warenuebergabe an der Kassa.\n"),
+    cp858Buffer("\n")
+  );
+
+  // Dine option box (manually inserted after notice)
+  let dineLabel = "HIER ESSEN";
+  if (order.dineOption === "mitnehmen") dineLabel = "*** MITNEHMEN ***";
+  else if (order.dineOption === "imauto") dineLabel = "*** IM AUTO ***";
+
+  chunks.push(
+    cp858Buffer("================================\n"),
+    Buffer.from([ESC, 0x45, 0x01]),
+    escPosTextSize(2, 2),
+    cp858Buffer(`${dineLabel}\n`)
+  );
+
+  if (order.dineOption === "imauto" && (order.carBrand || order.carColor)) {
+    chunks.push(
+      escPosTextSize(1, 1),
+      cp858Buffer(`${(order.carBrand || "").toUpperCase()} ${(order.carColor || "").toUpperCase()}\n`)
+    );
+  }
+
+  chunks.push(
+    Buffer.from([ESC, 0x45, 0x01]),
+    escPosTextSize(1, 1),
+    cp858Buffer(`Zahlung: ${order.paymentMethod === "karte" ? "KARTE" : "BAR"}\n`),
+    Buffer.from([ESC, 0x45, 0x00]),
+    escPosTextSize(1, 1),
+    cp858Buffer("================================\n"),
+    cp858Buffer("\n")
+  );
+
+  // Date
+  chunks.push(
+    Buffer.from([ESC, 0x61, 0x01]), // center
+    cp858Buffer("Bestellt am:\n"),
+    cp858Buffer(`${formatDateTime(order.createdAt)}\n`),
+    cp858Buffer("\n")
+  );
+
+  // Section header
+  chunks.push(
+    Buffer.from([ESC, 0x45, 0x01]),
+    cp858Buffer("-- DEINE AUSWAHL --\n"),
     Buffer.from([ESC, 0x45, 0x00]),
     cp858Buffer("\n")
   );
@@ -1131,44 +1195,45 @@ async function buildCustomerReceipt(order, randomNum) {
   chunks.push(Buffer.from([ESC, 0x61, 0x00]));
 
   let total = 0;
-  const foodItems = order.items.filter(i => !i.isDrink);
-  const drinkItems = order.items.filter(i => i.isDrink);
+  for (const item of order.items) total += renderItemFull(chunks, item);
 
-  if (foodItems.length > 0) {
-    chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(1, 1), cp858Buffer("--- ESSEN ---\n"), Buffer.from([ESC, 0x45, 0x00]));
-    for (const item of foodItems) total += renderItemFull(chunks, item);
-  }
-
-  if (drinkItems.length > 0) {
-    chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(1, 1), cp858Buffer("--- GETRANKE ---\n"), Buffer.from([ESC, 0x45, 0x00]));
-    for (const item of drinkItems) total += renderItemFull(chunks, item);
-  }
-
-  if (foodItems.length === 0 && drinkItems.length === 0) {
-    for (const item of order.items) total += renderItemFull(chunks, item);
-  }
-
-  // Total (small font for customer bon)
+  // Total in === box
   chunks.push(
-    Buffer.from([ESC, 0x61, 0x00]), cp858Buffer("--------------------------------\n"),
-    Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(1, 1),
-    Buffer.from([ESC, 0x61, 0x02]),
-    cp858Buffer(`GESAMT: ${formatPrice(total)}\n`),
-    Buffer.from([ESC, 0x45, 0x00]), escPosTextSize(1, 1)
+    Buffer.from([ESC, 0x61, 0x00]), // left align for GESAMT line
+    cp858Buffer("================================\n"),
+    Buffer.from([ESC, 0x45, 0x01]),
+    escPosTextSize(1, 1)
+  );
+  const gesamtLeft = "GESAMT:";
+  const gesamtRight = formatPrice(total);
+  const gesamtPad = 32 - gesamtLeft.length - gesamtRight.length;
+  chunks.push(
+    cp858Buffer(`${gesamtLeft}${" ".repeat(Math.max(1, gesamtPad))}${gesamtRight}\n`),
+    Buffer.from([ESC, 0x45, 0x00]),
+    escPosTextSize(1, 1),
+    cp858Buffer("================================\n")
   );
 
   // QR-Code for Kasse
   const qrPayload = buildQrPayload(order.items);
   if (qrPayload !== "[]") {
-    chunks.push(cp858Buffer("\n"));
+    chunks.push(Buffer.from([ESC, 0x61, 0x01]), cp858Buffer("\n"));
     const qrBuf = await buildQrEscPos(qrPayload);
     chunks.push(qrBuf);
     chunks.push(cp858Buffer("\n"));
   }
 
   // Footer
-  chunks.push(Buffer.from([ESC, 0x61, 0x01]), cp858Buffer("\n"), cp858Buffer("GUTEN APPETIT!\n"));
-  for (const line of TICKET_FOOTER_LINES) chunks.push(cp858Buffer(`${line}\n`));
+  chunks.push(
+    Buffer.from([ESC, 0x61, 0x01]), // center
+    cp858Buffer("\n"),
+    cp858Buffer("Vielen Dank fuer deine\n"),
+    Buffer.from([ESC, 0x45, 0x01]),
+    cp858Buffer("Bestellung!\n"),
+    cp858Buffer("GUTEN APPETIT!\n"),
+    Buffer.from([ESC, 0x45, 0x00]),
+    cp858Buffer("-- Sark Kebab --\n")
+  );
 
   // Feed and cut
   chunks.push(cp858Buffer("\n\n\n"), Buffer.from([GS, 0x56, 0x00]));

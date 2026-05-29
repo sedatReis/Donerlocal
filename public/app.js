@@ -1586,7 +1586,12 @@ function renderExtrasInModal(area) {
   grid.className = "extrasGrid";
 
   const isTellerProduct = TELLER_IDS.has(state.selectedProduct?.id);
-  const filteredExtras = isTellerProduct ? state.extras.filter(e => e.id !== "extra_60") : state.extras;
+  const HIDDEN_EXTRAS = new Set(["pfand_dose", "teller_extra_pommes", "teller_extra_reis"]);
+  const filteredExtras = state.extras.filter(e => {
+    if (HIDDEN_EXTRAS.has(e.id)) return false;
+    if (isTellerProduct && e.id === "extra_60") return false;
+    return true;
+  });
   for (const extra of filteredExtras) {
     const card = document.createElement("label");
     card.className = "extraCard";
@@ -1726,12 +1731,6 @@ function finalizeAddToCart() {
   state.cart = sanitizeCart(state.cart);
 
   const STANDARD_COUNT = 6;
-  const options = [...state.selectedOptions].sort((a, b) => {
-    // "Sauce" always first
-    if (a === "Sauce") return -1;
-    if (b === "Sauce") return 1;
-    return a.localeCompare(b);
-  });
   const extras = state.selectedExtras.map(e => ({ id: e.id, name: e.name, price: e.price }));
   const extrasKey = extras.map(e => e.id).sort().join(",");
   const donerboxBaseKey = state.donerboxBase || "";
@@ -1746,6 +1745,14 @@ function finalizeAddToCart() {
 
   // Separate optional ingredients (index >= STANDARD_COUNT) that were selected
   const optionalSelected = state.options.slice(STANDARD_COUNT).filter(o => state.selectedOptions.has(o));
+
+  // options = only standard ingredients (optional ones are in optionalSelected)
+  const optionalSet = new Set(optionalSelected);
+  const options = [...state.selectedOptions].filter(o => !optionalSet.has(o)).sort((a, b) => {
+    if (a === "Sauce") return -1;
+    if (b === "Sauce") return 1;
+    return a.localeCompare(b);
+  });
 
   const isDonerboxProduct = state.selectedCategory?.id === "donerbox" && (product.id === "donerbox_19" || product.id === "donerbox_20");
   const isSalatboxProduct = state.selectedCategory?.id === "donerbox" && (product.id === "donerbox_21" || product.id === "donerbox_22");

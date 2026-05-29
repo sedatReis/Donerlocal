@@ -205,7 +205,7 @@
           "desc_en": "Extra döner meat with grilled vegetables, grilled meatballs, salad & sauce in wrap",
           "desc_tr": "Ekstra döner et, ızgara sebze, ızgara köfte, salata ve sos ile dürümde",
           "price": 18.9,
-          "image": "imagesforsark/kraftdurumneu.webp",
+          "image": "imagesforsark/kraftdürüm.webp",
           "optionsEnabled": true
         }
       ]
@@ -967,7 +967,7 @@
           "desc": "+ 0,25€ Pfand",
           "desc_en": "+ 0.25€ deposit",
           "desc_tr": "+ 0,25€ depozito",
-          "price": 3.0,
+          "price": 3,
           "image": "imagesforsark/romerquellemineral.webp",
           "optionsEnabled": false,
           "isDrink": true,
@@ -982,7 +982,7 @@
           "desc": "+ 0,25€ Pfand",
           "desc_en": "+ 0.25€ deposit",
           "desc_tr": "+ 0,25€ depozito",
-          "price": 3.0,
+          "price": 3,
           "image": "imagesforsark/dosegetrankeneu.webp",
           "optionsEnabled": false,
           "isDrink": true,
@@ -1055,7 +1055,7 @@
           "desc": "+ 0,25€ Pfand",
           "desc_en": "+ 0.25€ deposit",
           "desc_tr": "+ 0,25€ depozito",
-          "price": 3.0,
+          "price": 3,
           "image": "imagesforsark/christalinewasser.webp",
           "optionsEnabled": false,
           "isDrink": true,
@@ -1291,7 +1291,7 @@
           "desc_en": "",
           "desc_tr": "",
           "price": 1.5,
-          "image": "imagesforsark/cornyschokolade.webp",
+          "image": "imagesforsark/cornyschoko.webp",
           "optionsEnabled": false,
           "plu": "191"
         }
