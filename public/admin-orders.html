@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Letzte Bestellungen</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+      background:#f5f3f0;
+      color:#2b170b;
+      min-height:100vh;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    /* ── Header ── */
+    .ap-header{
+      position:sticky;top:0;z-index:50;
+      background:linear-gradient(135deg,#f45022 0%,#ff6b3d 100%);
+      padding:20px 28px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 4px 20px rgba(244,80,34,.25);
+    }
+    .ap-header__brand h1{font-size:24px;font-weight:900;color:#fff;letter-spacing:-.3px}
+    .ap-header__brand p{font-size:14px;color:rgba(255,255,255,.8);margin-top:2px}
+    .ap-header__nav{display:flex;gap:10px}
+    .ap-header__link{
+      padding:10px 20px;border-radius:12px;
+      background:rgba(255,255,255,.18);color:#fff;
+      font-weight:700;font-size:14px;text-decoration:none;
+      border:2px solid rgba(255,255,255,.25);
+      backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+      transition:all .15s;cursor:pointer;
+    }
+    .ap-header__link:hover{background:rgba(255,255,255,.3);border-color:rgba(255,255,255,.4)}
+
+    /* ── Grid ── */
+    .ao-grid{
+      max-width:1100px;margin:0 auto;
+      padding:24px 20px 80px;
+      display:grid;gap:12px;
+    }
+
+    /* ── Order Card ── */
+    .ao-card{
+      background:#fff;border-radius:20px;
+      box-shadow:0 2px 16px rgba(0,0,0,.05);
+      padding:20px 24px;
+      transition:box-shadow .2s;
+    }
+    .ao-card:hover{box-shadow:0 4px 24px rgba(0,0,0,.1)}
+
+    .ao-card__header{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .ao-card__name{font-size:18px;font-weight:800;color:#2b170b}
+    .ao-card__num{
+      background:linear-gradient(135deg,#f45022,#ff6b3d);
+      color:#fff;font-weight:800;font-size:13px;
+      padding:4px 10px;border-radius:8px;
+    }
+    .ao-card__time{font-size:13px;color:#999;margin-left:auto}
+    .ao-card__meta{font-size:13px;color:#999;margin-bottom:8px}
+
+    .ao-card__items{
+      font-size:14px;color:#735f45;
+      margin-bottom:12px;line-height:1.5;
+    }
+
+    .ao-card__footer{
+      display:flex;align-items:center;justify-content:space-between;
+      flex-wrap:wrap;gap:10px;
+      padding-top:12px;
+      border-top:2px solid #f0ebe6;
+    }
+    .ao-card__total{font-size:20px;font-weight:900;color:#2b170b}
+
+    .ao-card__actions{display:flex;gap:8px;flex-wrap:wrap}
+
+    /* ── Buttons ── */
+    .ap-btn{
+      padding:10px 18px;border:none;border-radius:12px;
+      font-size:14px;font-weight:700;cursor:pointer;
+      transition:all .15s;white-space:nowrap;
+      display:inline-flex;align-items:center;gap:6px;
+    }
+    .ap-btn--print{background:#f5f3f0;color:#735f45;border:2px solid #e8e4df}
+    .ap-btn--print:hover{background:#ebe7e2;border-color:#d5cfc7}
+    .ap-btn--print:disabled{opacity:.5;cursor:not-allowed}
+    .ap-btn--both{
+      background:linear-gradient(135deg,#f45022,#ff6b3d);
+      color:#fff;border:none;
+      box-shadow:0 4px 12px rgba(244,80,34,.2);
+    }
+    .ap-btn--both:hover{filter:brightness(1.06);box-shadow:0 6px 16px rgba(244,80,34,.3)}
+    .ap-btn--both:disabled{opacity:.5;cursor:not-allowed;filter:none}
+
+    .ao-empty{
+      text-align:center;padding:60px 20px;
+      color:#999;font-size:16px;font-weight:600;
+    }
+
+    /* ── Toast ── */
+    .ap-toast{
+      position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+      background:#2b170b;color:#fff;
+      padding:14px 28px;border-radius:14px;
+      font-weight:700;font-size:15px;z-index:2000;
+      opacity:0;transition:all .3s;pointer-events:none;
+      box-shadow:0 8px 24px rgba(0,0,0,.2);
+    }
+    .ap-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    @media (min-width:768px){
+      .ao-grid{padding:32px 40px 80px}
+      .ao-card{padding:24px 28px}
+    }
+  </style>
+</head>
+<body>
+  <header class="ap-header">
+    <div class="ap-header__brand">
+      <h1>Letzte Bestellungen</h1>
+      <p>Bestellhistorie mit Nachdruck-Funktion</p>
+    </div>
+    <nav class="ap-header__nav">
+      <a class="ap-header__link" href="/produkte">Produkte</a>
+      <a class="ap-header__link" href="/admin.html">Admin-Panel</a>
+      <button id="refreshBtn" class="ap-header__link">Aktualisieren</button>
+    </nav>
+  </header>
+
+  <div class="ao-grid" id="orderList">
+    <p class="ao-empty">Lade Bestellungen...</p>
+  </div>
+
+  <div id="toast" class="ap-toast"></div>
+
+  <script src="/admin-orders.js?v=2"></script>
+</body>
+</html>

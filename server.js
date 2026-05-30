@@ -86,10 +86,14 @@ async function appendOrderLog(order) {
       customerName: order.customerName,
       paymentMethod: order.paymentMethod,
       dineOption: order.dineOption,
+      randomNum: order.randomNum || null,
+      carBrand: order.carBrand || null,
+      carColor: order.carColor || null,
       total,
       items: order.items.map(i => ({
         name: i.name, qty: i.qty, price: i.price,
-        options: i.options || [], extras: (i.extras || []).map(e => e.name),
+        options: i.options || [],
+        extras: (i.extras || []).map(e => ({ name: e.name, price: e.price || 0 })),
         selectedSize: i.selectedSize?.label || null,
         tellerSide: i.tellerSide || null
       }))
@@ -1316,8 +1320,8 @@ async function printOrderReceipt(order) {
     };
   }
 
-  // Generate same random number for both receipts
-  const randomNum = Math.floor(Math.random() * 50) + 1;
+  // Use pre-generated number if available, otherwise generate one
+  const randomNum = order.randomNum || Math.floor(Math.random() * 50) + 1;
   const customerPayload = await buildCustomerReceipt(order, randomNum);
   const kitchenPayload = buildKitchenReceipt(order, randomNum);
 
@@ -1491,6 +1495,9 @@ app.post("/api/orders", async (req, res) => {
     expiresAt: createdAt + ORDER_TTL_MS
   };
 
+  // Generate order number before logging & printing so both use the same value
+  order.randomNum = Math.floor(Math.random() * 50) + 1;
+
   orders.push(order);
   await queueWriteOrders();
   appendOrderLog(order);
@@ -1563,6 +1570,88 @@ app.delete("/api/orders/:id", requireAdminApi, async (req, res) => {
 
   await queueWriteOrders();
   res.json({ ok: true });
+});
+
+// --- Order Log & Reprint ---
+
+app.get("/api/admin/order-log", async (req, res) => {
+  try {
+    let log = [];
+    try {
+      const raw = await fs.readFile(ORDER_LOG_FILE, "utf-8");
+      log = JSON.parse(raw);
+    } catch { /* file may not exist yet */ }
+    const latest = log.slice(-50).reverse();
+    res.json({ orders: latest });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/api/admin/reprint/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const type = String(req.body?.type || "both").trim();
+    if (!["customer", "kitchen", "both"].includes(type)) {
+      return res.status(400).json({ error: "type must be customer, kitchen, or both" });
+    }
+
+    let log = [];
+    try {
+      const raw = await fs.readFile(ORDER_LOG_FILE, "utf-8");
+      log = JSON.parse(raw);
+    } catch { /* file may not exist */ }
+
+    const entry = log.find(e => e.id === id);
+    if (!entry) return res.status(404).json({ error: "Bestellung nicht im Log gefunden" });
+
+    // Reconstruct order object for receipt builders
+    const order = {
+      id: entry.id,
+      customerName: entry.customerName,
+      paymentMethod: entry.paymentMethod,
+      dineOption: entry.dineOption,
+      carBrand: entry.carBrand || null,
+      carColor: entry.carColor || null,
+      createdAt: new Date(entry.timestamp).getTime(),
+      items: entry.items.map(i => ({
+        name: i.name,
+        qty: i.qty,
+        price: i.price,
+        options: i.options || [],
+        extras: (i.extras || []).map(e =>
+          typeof e === "string" ? { name: e, price: 0 } : e
+        ),
+        selectedSize: i.selectedSize ? { label: i.selectedSize } : null,
+        tellerSide: i.tellerSide || null
+      }))
+    };
+
+    const randomNum = entry.randomNum || Math.floor(Math.random() * 50) + 1;
+    const printerName = PRINTER_CUSTOMER || PRINTER_STAFF;
+    if (!printerName) {
+      return res.status(500).json({ error: "Kein Drucker konfiguriert" });
+    }
+
+    let payload;
+    if (type === "customer") {
+      payload = await buildCustomerReceipt(order, randomNum);
+    } else if (type === "kitchen") {
+      payload = buildKitchenReceipt(order, randomNum);
+    } else {
+      const customer = await buildCustomerReceipt(order, randomNum);
+      const kitchen = buildKitchenReceipt(order, randomNum);
+      payload = Buffer.concat([customer, kitchen]);
+    }
+
+    const result = await runPrintJob(payload, printerName, `Nachdruck ${order.customerName}`, { raw: true });
+    if (!result.ok) {
+      return res.status(500).json({ error: result.error || "Druckfehler" });
+    }
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // --- Admin Product Management API ---
@@ -1764,6 +1853,10 @@ app.get(["/preise", "/admin-prices", "/admin-prices.html"], (req, res) => {
 app.get(["/admin-products", "/admin-products.html", "/produkte"], (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   return res.sendFile(path.join(PUBLIC_DIR, "admin-products.html"));
+});
+app.get(["/admin-orders", "/admin-orders.html", "/rechnungen"], (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  return res.sendFile(path.join(PUBLIC_DIR, "admin-orders.html"));
 });
 app.get(["/completed", "/completed/", "/completed.html"], (req, res) => {
   res.setHeader("Cache-Control", "no-store");
