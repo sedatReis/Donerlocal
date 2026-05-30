@@ -645,7 +645,7 @@ const PLU_MAP = {
     curry_29: "102", curry_30: "105", curry_31: "103", curry_32: "104",
     chicken_33: "93", chicken_34: "92", chicken_35: "91",
     chicken_36: "92", chicken_37: "91", chicken_38: "94", chicken_39: "94",
-    nuggets_57: "98", nuggets_58: "97",
+    nuggets_57: "97", nuggets_58: "98",
     iskender_43: "61", iskender_44: "62",
     grill_45: "71", fitness_40: "65",
     veg_47: "131", veg_48a: "132", veg_48b: "141", veg_49: "142",

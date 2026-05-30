@@ -1290,7 +1290,7 @@
           "desc": "",
           "desc_en": "",
           "desc_tr": "",
-          "price": 1.5,
+          "price": 1.8,
           "image": "imagesforsark/cornyschoko.webp",
           "optionsEnabled": false,
           "plu": "191"
@@ -1385,12 +1385,12 @@
     },
     {
       "id": "extra_82",
-      "number": 82,
+      "number": 172,
       "name": "Dönersauce in Becher",
       "name_en": "Döner sauce in cup",
       "name_tr": "Bardakta Döner sosu",
       "price": 1.5,
-      "plu": "82"
+      "plu": "172"
     },
     {
       "id": "pfand_dose",
