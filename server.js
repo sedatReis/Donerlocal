@@ -931,19 +931,9 @@ function renderItemFull(chunks, item) {
     displayName += ` ${sideLabel}`;
   }
   const nameText = `${qty}x ${displayName}`;
-  const priceText = formatPrice(lineTotal);
   chunks.push(Buffer.from([ESC, 0x45, 0x01]), escPosTextSize(1, 1));
-  if (nameText.length + priceText.length + 1 <= 32) {
-    // Name and price fit on one line
-    const padding = 32 - nameText.length - priceText.length;
-    chunks.push(cp858Buffer(`${nameText}${" ".repeat(padding)}${priceText}\n`));
-  } else {
-    // Name wraps, price right-aligned on next line
-    const nameLines = wordWrap(nameText, 32);
-    for (const line of nameLines) chunks.push(cp858Buffer(`${line}\n`));
-    const pricePad = 32 - priceText.length;
-    chunks.push(cp858Buffer(`${" ".repeat(pricePad)}${priceText}\n`));
-  }
+  const nameLines = wordWrap(nameText, 32);
+  for (const line of nameLines) chunks.push(cp858Buffer(`${line}\n`));
   chunks.push(Buffer.from([ESC, 0x45, 0x00]));
 
   // Size choice (e.g. 100ml / 300ml)
@@ -1001,7 +991,7 @@ function renderItemFull(chunks, item) {
   // Extras
   if (Array.isArray(item.extras) && item.extras.length > 0) {
     for (const extra of item.extras) {
-      chunks.push(cp858Buffer(`   + ${extra.name.toUpperCase()} (${formatPrice(extra.price)})\n`));
+      chunks.push(cp858Buffer(`   + ${extra.name.toUpperCase()}\n`));
     }
   }
 
@@ -1010,7 +1000,7 @@ function renderItemFull(chunks, item) {
     const piecesTotal = item.extraPieces * (item.extraPiecesPrice || 0);
     chunks.push(
       Buffer.from([ESC, 0x45, 0x01]),
-      cp858Buffer(`   + ${item.extraPieces}x ${item.extraPiecesLabel.toUpperCase()} (${formatPrice(piecesTotal)})\n`),
+      cp858Buffer(`   + ${item.extraPieces}x ${item.extraPiecesLabel.toUpperCase()}\n`),
       Buffer.from([ESC, 0x45, 0x00])
     );
   }
@@ -1141,8 +1131,10 @@ async function buildCustomerReceipt(order, randomNum) {
   chunks.push(
     Buffer.from([ESC, 0x61, 0x01]), // center
     Buffer.from([ESC, 0x45, 0x01]),
+    escPosTextSize(2, 2),
+    cp858Buffer("DIES IST KEINE\n"),
+    cp858Buffer("RECHNUNG\n"),
     escPosTextSize(1, 1),
-    cp858Buffer("(i) DIES IST KEINE RECHNUNG\n"),
     Buffer.from([ESC, 0x45, 0x00]),
     cp858Buffer("Ihre Rechnung / Ihr Kassenbeleg\n"),
     cp858Buffer("erhalten Sie bei der\n"),
@@ -1325,13 +1317,9 @@ async function printOrderReceipt(order) {
   const customerPayload = await buildCustomerReceipt(order, randomNum);
   const kitchenPayload = buildKitchenReceipt(order, randomNum);
 
-  // Both receipts from the same printer (combined into one print job)
-  const combinedPayload = Buffer.concat([customerPayload, kitchenPayload]);
-
   const results = [];
-  const printerName = PRINTER_CUSTOMER || PRINTER_STAFF;
 
-  if (!printerName) {
+  if (!PRINTER_CUSTOMER && !PRINTER_STAFF) {
     console.warn("Keine Drucker konfiguriert. Setze DONER_PRINTER_CUSTOMER und/oder DONER_PRINTER_STAFF.");
     return {
       ok: false,
@@ -1339,17 +1327,34 @@ async function printOrderReceipt(order) {
     };
   }
 
-  {
-    const result = await runPrintJob(combinedPayload, printerName, `Bestellung ${order.customerName}`, { raw: true });
+  // Staff-Drucker: Kundenbon + Küchenbon
+  if (PRINTER_STAFF) {
+    const staffPayload = Buffer.concat([customerPayload, kitchenPayload]);
+    const result = await runPrintJob(staffPayload, PRINTER_STAFF, `Bestellung ${order.customerName}`, { raw: true });
     results.push({
-      printer: printerName,
-      label: "Drucker",
+      printer: PRINTER_STAFF,
+      label: "Staff-Drucker",
       ok: result.ok,
       error: result.error || null,
       output: result.output || null
     });
     if (!result.ok) {
-      console.error(`Druckfehler (${printerName}): ${result.error}`);
+      console.error(`Druckfehler Staff (${PRINTER_STAFF}): ${result.error}`);
+    }
+  }
+
+  // Kundendrucker: Nur Kundenbon
+  if (PRINTER_CUSTOMER) {
+    const result = await runPrintJob(customerPayload, PRINTER_CUSTOMER, `Kundenbon ${order.customerName}`, { raw: true });
+    results.push({
+      printer: PRINTER_CUSTOMER,
+      label: "Kundendrucker",
+      ok: result.ok,
+      error: result.error || null,
+      output: result.output || null
+    });
+    if (!result.ok) {
+      console.error(`Druckfehler Kunde (${PRINTER_CUSTOMER}): ${result.error}`);
     }
   }
 
@@ -1628,26 +1633,30 @@ app.post("/api/admin/reprint/:id", async (req, res) => {
     };
 
     const randomNum = entry.randomNum || Math.floor(Math.random() * 50) + 1;
-    const printerName = PRINTER_CUSTOMER || PRINTER_STAFF;
-    if (!printerName) {
+    if (!PRINTER_CUSTOMER && !PRINTER_STAFF) {
       return res.status(500).json({ error: "Kein Drucker konfiguriert" });
     }
 
-    let payload;
-    if (type === "customer") {
-      payload = await buildCustomerReceipt(order, randomNum);
-    } else if (type === "kitchen") {
-      payload = buildKitchenReceipt(order, randomNum);
-    } else {
-      const customer = await buildCustomerReceipt(order, randomNum);
-      const kitchen = buildKitchenReceipt(order, randomNum);
-      payload = Buffer.concat([customer, kitchen]);
+    const customerPayload = await buildCustomerReceipt(order, randomNum);
+    const kitchenPayload = buildKitchenReceipt(order, randomNum);
+    const reprintResults = [];
+
+    if (type === "customer" || type === "both") {
+      // Kundenbon zum Kundendrucker (oder Staff als Fallback)
+      const printer = PRINTER_CUSTOMER || PRINTER_STAFF;
+      const result = await runPrintJob(customerPayload, printer, `Nachdruck Kundenbon ${order.customerName}`, { raw: true });
+      reprintResults.push(result);
+      if (!result.ok) return res.status(500).json({ error: result.error || "Druckfehler Kundenbon" });
     }
 
-    const result = await runPrintJob(payload, printerName, `Nachdruck ${order.customerName}`, { raw: true });
-    if (!result.ok) {
-      return res.status(500).json({ error: result.error || "Druckfehler" });
+    if (type === "kitchen" || type === "both") {
+      // Küchenbon zum Staff-Drucker (oder Kundendrucker als Fallback)
+      const printer = PRINTER_STAFF || PRINTER_CUSTOMER;
+      const result = await runPrintJob(kitchenPayload, printer, `Nachdruck Kuechenbon ${order.customerName}`, { raw: true });
+      reprintResults.push(result);
+      if (!result.ok) return res.status(500).json({ error: result.error || "Druckfehler Kuechenbon" });
     }
+
     res.json({ ok: true });
   } catch (e) {
     res.status(500).json({ error: e.message });
