@@ -664,6 +664,7 @@ const PLU_MAP = {
     donerbox_extra_salat: "50",
     teller_extra_pommes: "180", teller_extra_reis: "185",
     extra_kofte: "184", extra_falafel: "186",
+    extra_fleisch: "384",
     pfand_dose: "1501"
   }
 };

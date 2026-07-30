@@ -1416,6 +1416,15 @@
       "name_en": "Extra Rice for Plate",
       "name_tr": "Tabak için Ekstra Pilav",
       "price": 2
+    },
+    {
+      "id": "extra_fleisch",
+      "number": 384,
+      "name": "Extra Fleisch",
+      "name_en": "Extra Meat",
+      "name_tr": "Ekstra Et",
+      "price": 2.9,
+      "plu": "384"
     }
   ],
   "defaultOptions": [

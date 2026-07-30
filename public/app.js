@@ -379,7 +379,9 @@ const EXTRA_ICONS = {
   "extra_62": `<svg viewBox="0 0 28 28" width="26" height="26"><ellipse cx="14" cy="14" rx="11" ry="9" fill="#d4a060" stroke="#a07840" stroke-width=".8"/><ellipse cx="14" cy="12" rx="8" ry="5" fill="#e8c890" stroke="#c8a060" stroke-width=".6"/><path d="M8 15c3 2 9 2 12 0" stroke="#a07840" stroke-width=".6" fill="none"/></svg>`,
   "extra_63": `<svg viewBox="0 0 28 28" width="26" height="26"><ellipse cx="14" cy="14" rx="9" ry="7" fill="#d4a060" stroke="#a07840" stroke-width=".8"/><ellipse cx="14" cy="12.5" rx="6" ry="4" fill="#e8c890" stroke="#c8a060" stroke-width=".6"/><path d="M9.5 15c2.5 1.5 6.5 1.5 9 0" stroke="#a07840" stroke-width=".6" fill="none"/></svg>`,
   "extra_64": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M5 8h18l-1 16H6z" fill="#fdd835" stroke="#c8a415" stroke-width=".8"/><path d="M7 12h14" stroke="#e8c020" stroke-width=".6"/><path d="M7 16h14" stroke="#e8c020" stroke-width=".6"/><path d="M7 20h14" stroke="#e8c020" stroke-width=".6"/><circle cx="18" cy="10" r="3" fill="#fff" stroke="#ddd" stroke-width=".5"/></svg>`,
-  "extra_65": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M16 3h-4a1 1 0 00-1 1v3l-2 1v1h10v-1l-2-1V4a1 1 0 00-1-1z" fill="#e8e0d0" stroke="#b0a090" stroke-width=".6"/><path d="M9 9l1 15h8l1-15z" fill="#f5f0e0" stroke="#b0a090" stroke-width=".6"/><path d="M10.5 13c1.5 2 5.5 2 7 0" stroke="#e8a030" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M11 17c1 1 5 1 6 0" stroke="#e8a030" stroke-width="1" fill="none" stroke-linecap="round"/></svg>`
+  "extra_65": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M16 3h-4a1 1 0 00-1 1v3l-2 1v1h10v-1l-2-1V4a1 1 0 00-1-1z" fill="#e8e0d0" stroke="#b0a090" stroke-width=".6"/><path d="M9 9l1 15h8l1-15z" fill="#f5f0e0" stroke="#b0a090" stroke-width=".6"/><path d="M10.5 13c1.5 2 5.5 2 7 0" stroke="#e8a030" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M11 17c1 1 5 1 6 0" stroke="#e8a030" stroke-width="1" fill="none" stroke-linecap="round"/></svg>`,
+  "extra_82": `<svg viewBox="0 0 28 28" width="26" height="26"><path d="M8 6h12v2H8z" fill="#d4a060" stroke="#a07840" stroke-width=".5" rx="1"/><path d="M7 8h14l-1.5 16H8.5z" fill="#f5f0e0" stroke="#b0a090" stroke-width=".7" rx="1"/><path d="M9.5 14c2 2.5 7 2.5 9 0" stroke="#e8a030" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M10 18c1.5 1.5 5.5 1.5 7 0" stroke="#e8a030" stroke-width="1.2" fill="none" stroke-linecap="round"/><ellipse cx="14" cy="11" rx="4" ry="1.5" fill="#e8a030" opacity=".4"/></svg>`,
+  "extra_fleisch": `<svg viewBox="0 0 28 28" width="26" height="26"><ellipse cx="14" cy="15" rx="10" ry="7" fill="#b71c1c"/><ellipse cx="14" cy="13" rx="10" ry="7" fill="#d32f2f"/><ellipse cx="14" cy="13" rx="7" ry="4.5" fill="#e57373"/><path d="M10 11c1-1 3-1.5 5-.5s3 1 4 .5" stroke="#ffcdd2" stroke-width=".8" fill="none"/></svg>`
 };
 
 /* ── Teller IDs (for bread question) ── */
@@ -1587,9 +1589,11 @@ function renderExtrasInModal(area) {
 
   const isTellerProduct = TELLER_IDS.has(state.selectedProduct?.id);
   const HIDDEN_EXTRAS = new Set(["pfand_dose", "teller_extra_pommes", "teller_extra_reis"]);
+  const EXTRA_FLEISCH_IDS = new Set(["doner_08", "doner_09", "donerbox_19", "donerbox_20", "grill_45", "iskender_44"]);
   const filteredExtras = state.extras.filter(e => {
     if (HIDDEN_EXTRAS.has(e.id)) return false;
     if (isTellerProduct && e.id === "extra_60") return false;
+    if (e.id === "extra_fleisch" && !EXTRA_FLEISCH_IDS.has(state.selectedProduct?.id)) return false;
     return true;
   });
   for (const extra of filteredExtras) {
@@ -2089,6 +2093,7 @@ async function sendOrder() {
       sauceWanted: item.sauceWanted ?? null,
       currySauceWanted: item.currySauceWanted ?? null,
       donerboxBase: item.donerboxBase || null,
+      donerboxExtraFee: item.donerboxExtraFee || 0,
       selectedSize: item.selectedSize || null,
       note: item.note || null,
       isDrink: item.isDrink || false,
